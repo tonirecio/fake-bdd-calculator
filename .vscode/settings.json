@@ -1,0 +1,13 @@
+{
+  "editor.autoIndent": "none",
+  "editor.autoSurround": "never",
+  "editor.defaultFormatter": "standard.vscode-standard",
+  "javascript.format.enable": true,
+  "cucumberautocomplete.syncfeatures": "tests/features/*.feature",
+  "cucumberautocomplete.steps": [
+    "tests/steps/*.js"
+  ],
+  "editor.quickSuggestions": {  
+    "strings": true
+  }
+}
