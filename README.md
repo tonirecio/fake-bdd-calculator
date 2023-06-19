@@ -2,4 +2,6 @@
 
 ## FEEDBACK (Jordi Marmi)
 
-*Scenario: Default display screen* : Ben fet, pero en la funció "setDisplay()" podríes utilitzar la variable que es pasa per paràmetre, ja que en la funció de reset s'executa la funció "setDisplay(0)" i així pots utilitzar la mateixa funció per mostrar altres valors que no sigui només el numero 0
+*Scenario: Default display screen* : Ben fet, pero en la funció "setDisplay()" podríes utilitzar la variable que es pasa per paràmetre, ja que en la funció de reset s'executa la funció "setDisplay(0)" i així pots utilitzar la mateixa funció per mostrar altres valors que no sigui només el numero 0.
+
+*Scenario Outline: Pressing non-operators screen buttons* : Molt be, tot i que penso que les accions que fas dins la funció setDisplay, per exemple: setDisplay(display.innerHTML.concat(value)), penso que podríes crear una variable que obtingués aquests valors.
