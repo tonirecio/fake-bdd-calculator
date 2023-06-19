@@ -31,7 +31,7 @@ Examples:
 |            -1 |     +- |             1 |
 
 
-@current
+
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -54,6 +54,8 @@ Examples:
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
 
+
+@current
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button

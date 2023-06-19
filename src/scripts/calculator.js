@@ -7,20 +7,20 @@ let negated = false
 
 const setDisplay = (value) => {
 
-  if ( display.length < MAX_DIGITS_IN_DISPLAY ){}
+  if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY) {
 
-  if (display.innerHTML === '0' && value !== ',') {
-    display.innerHTML = value;
+    if (display.innerHTML === '0' && value !== ',') {
+      display.innerHTML = value;
 
-  } else if (value === ',' && !point) {
-    display.innerHTML = display.innerHTML + value;
-    point = true;
+    } else if (value === ',' && !point) {
+      display.innerHTML = display.innerHTML + value;
+      point = true;
 
-  } else if (value !== ',' && value !== '-') {
-    display.innerHTML = display.innerHTML + value;
+    } else if (value !== ',') {
+      display.innerHTML = display.innerHTML + value;
 
+    }
   }
-
 }
 
 const sayHello = () => {
@@ -37,7 +37,7 @@ const reset = () => {
 
 const negate = () => {
 
-  if (negated == false && display.innerHTML != '0') {
+  if (negated == false && display.innerHTML != '0' && display.innerHTML != '0,') {
     display.innerHTML = '-' + display.innerHTML
     negated = true
   }
@@ -58,20 +58,25 @@ document.addEventListener('keydown', (event) => {
 
   console.log(event.key)
   const key = event.key;
-  const allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '-'];
+  const allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','];
 
-  if (event.key === 'Escape'){
-  reset()
-}
+  if (event.key === 'Escape') {
+    reset()
+  }
 
-  if (event.key === 'Control'){
-  negate()
-}
+  if (event.key === 'Control') {
+    negate()
+  }
+
+  if (event.key === '-') {
+    negate()
+  }
+
 
 
   if (allowedCharacters.includes(key)) {
 
-    setDisplay(event.key)    
+    setDisplay(event.key)
 
   }
 });
@@ -85,6 +90,8 @@ document.addEventListener('keydown', (event) => {
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
+
+////////////////////////////
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   setDisplay('0')
@@ -126,6 +133,8 @@ document.getElementsByName('nine')[0].addEventListener('click', () => {
   setDisplay('9')
 })
 
+
+////////////////////////////////
 document.getElementsByName('point')[0].addEventListener('click', () => {
   setDisplay(',')
 })
@@ -133,10 +142,6 @@ document.getElementsByName('point')[0].addEventListener('click', () => {
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   negate()
 })
-
-
-
-
 
 
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
