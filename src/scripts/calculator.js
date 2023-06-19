@@ -17,9 +17,9 @@ const display = document.querySelector('div[name="display"] span')
 // Buttons in Display
 
 const appendNumber = (value) => {
-  if ((display.innerHTML != 0) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)){
+  if ((display.innerHTML != 0)){
   display.innerHTML = display.innerHTML + value
-  } else {
+  } else if (display.innerHTML == 0){
   display.innerHTML = value}
 }
 
@@ -28,18 +28,19 @@ const appendPoint = (value) => {
   if (!display.innerHTML.match(regex)) {
     display.innerHTML = display.innerHTML + value
   }
+
 }
 
 const setNegation = () => {
 
   if ((display.innerHTML != 0) && (display.innerHTML != '0,')) {
-    if (display.innerHTML.slice(0, 1) === '-') {
+    if (display.innerHTML.slice(0, 1) == '-') {
       display.innerHTML = display.innerHTML.slice(1)
     } else {
       display.innerHTML = '-' + display.innerHTML
     }
   }
-};
+}
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   appendNumber(0)
