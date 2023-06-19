@@ -12,12 +12,21 @@ const reset = () => {
   setDisplay(0)
 }
 
+const negate = () => {
+  setDisplay((-1 * (display.innerHTML).replace(',', '.')).toString().replace('.', ','))
+}
+
+const append = (content) => {
+  setDisplay(display.innerHTML.toString() + content.toString())
+}
+
 const display = document.querySelector('div[name="display"] span')
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   sayHello()
 })
 reset()
 
+// Button handling
 const buttons = document.querySelectorAll('div[name="keypad"] button')
 
 buttons.forEach(button => button.addEventListener('click', () => {
@@ -25,13 +34,13 @@ buttons.forEach(button => button.addEventListener('click', () => {
     if (display.innerHTML === '0') {
       setDisplay(button.innerHTML.toString())
     } else {
-      setDisplay(display.innerHTML.toString() + button.innerHTML.toString())
+      append(button.innerHTML)
     }
   } else {
     switch (button.getAttribute('name')) {
       case 'point':
         if (!display.innerHTML.includes(button.innerHTML)) {
-          setDisplay(display.innerHTML.toString() + button.innerHTML.toString())
+          append(button.innerHTML)
         }
         break
 
@@ -40,7 +49,7 @@ buttons.forEach(button => button.addEventListener('click', () => {
         break
 
       case 'negate':
-        setDisplay((-1 * (display.innerHTML).replace(',', '.')).toString().replace('.', ','))
+        negate()
         break
       default:
         console.log('Error')
@@ -48,3 +57,23 @@ buttons.forEach(button => button.addEventListener('click', () => {
   }
 })
 )
+
+// Keyboard handling
+document.addEventListener('keydown', (event) => {
+  const name = event.key
+  if (!isNaN(name)) {
+    if (display.innerHTML === '0') {
+      setDisplay(name)
+    } else {
+      append(name)
+    }
+  } else {
+    if (name === ',') {
+      if (!display.innerHTML.includes(',')) { append(',') }
+    } else if (name === 'Escape') {
+      reset()
+    } else if (name === 'Control') {
+      negate()
+    }
+  }
+})
