@@ -9,9 +9,13 @@ const setDisplay = (value) => {
   if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
     maxNumberWarning();
   }
+  else if(value === "," && valueDisplay.includes(",")){
+  
+  }
   else if(valueDisplay === "0" && value != ","){
     valueDisplay = value;
-  }else{
+  }
+  else{
     valueDisplay = valueDisplay + value;
   }
     display.innerHTML = valueDisplay
