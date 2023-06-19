@@ -1,11 +1,13 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
+//function setDisplay (value) { [...] }
 const setDisplay = (value) => {
-  display.innerHTML = 'INTERNS'
+  display.innerHTML = '0'
 }
 
 const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+  console.log('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+  //window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
 }
 
 const reset = () => {
