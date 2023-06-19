@@ -9,7 +9,7 @@ const sayHello = () => {
 }
 
 const reset = () => {
-  setDisplay(0)
+  setDisplay('INTERNS')
 }
 
 const display = document.querySelector('div[name="display"] span')

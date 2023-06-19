@@ -10,7 +10,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"@cucumber/cucumber": "^8.5.1",
-		"playwright": "^1.35.1"
+		"playwright": "^1.25.0"
 	},
 	"devDependencies": {
 		"@cucumber/messages": "*",
@@ -19,13 +19,13 @@
 		"standard": "^17.1.0"
 	},
 	"standard": {
-		"globals": [
-			"test",
-			"expect",
-			"beforeEach",
+    "globals": [
+      "test",
+      "expect",
+      "beforeEach",
 			"page"
-		]
-	},
+    ]
+  },
 	"repository": "https://github.com/tonirecio/fake-bdd-calculator",
 	"author": "Toni Recio <mail@tonirecio.com>"
 }
