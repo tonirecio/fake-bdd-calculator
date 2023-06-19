@@ -3,9 +3,10 @@ Feature: Calculator
 Background:
 Given a user opens the app
 
-@wip
+@sc1
 Scenario: Default display screen
 Then the display should show the following value: "0"
+
 
 Scenario Outline: Pressing non-operators screen buttons
 Given the user writes the following value: "<displayNumber>"
