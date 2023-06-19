@@ -7,6 +7,8 @@ let negated = false
 
 const setDisplay = (value) => {
 
+  if ( display.length < MAX_DIGITS_IN_DISPLAY ){}
+
   if (display.innerHTML === '0' && value !== ',') {
     display.innerHTML = value;
 
@@ -18,6 +20,7 @@ const setDisplay = (value) => {
     display.innerHTML = display.innerHTML + value;
 
   }
+
 }
 
 const sayHello = () => {
@@ -46,6 +49,33 @@ const negate = () => {
   }
 
 }
+
+
+
+//Events teclas
+
+document.addEventListener('keydown', (event) => {
+
+  console.log(event.key)
+  const key = event.key;
+  const allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '-'];
+
+  if (event.key === 'Escape'){
+  reset()
+}
+
+  if (event.key === 'Control'){
+  negate()
+}
+
+
+  if (allowedCharacters.includes(key)) {
+
+    setDisplay(event.key)    
+
+  }
+});
+
 
 
 
