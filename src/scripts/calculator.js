@@ -5,24 +5,50 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
+// SAY HELLO
 const sayHello = () => {
   console.log('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
-  // window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+  // window.alert([...])
 }
 
+// RESET CALCULATOR
 const reset = () => {
   setDisplay(0)
 }
 
+// SHARED FUNCTIONS
+function negateDisplay () {
+  let displayNum = display.innerHTML.replace(',', '.')
+  displayNum = -1 * displayNum
+  displayNum = displayNum.toString().replace('.', ',')
+  setDisplay(displayNum)
+}
+
+function pressNumber (buttonContent) {
+  let displayNum = display.innerHTML
+  if (displayNum !== '0') {
+    displayNum += buttonContent
+  } else {
+    displayNum = buttonContent
+  }
+  setDisplay(displayNum)
+}
+
+function floatDisplay (pointType) {
+  const displayNum = display.innerHTML
+  if (!displayNum.includes(pointType)) {
+    setDisplay(displayNum + pointType)
+  }
+}
+
+// SCREEN OP BUTTONS
 const display = document.querySelector('div[name="display"] span')
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   sayHello()
 })
 
-console.log('Test')
+// SCREEN NON-OP BUTTONS
 const keypad = document.querySelectorAll('div[name="keypad"] button')
-console.log('keypad')
-
 keypad.forEach(element => {
   const buttonContent = parseInt(element.innerHTML)
 
@@ -33,32 +59,34 @@ keypad.forEach(element => {
       })
     } else if (element.getAttribute('name') === 'negate') {
       element.addEventListener('click', () => {
-        let displayNum = display.innerHTML.replace(',', '.')
-        displayNum = -1 * displayNum
-        displayNum = displayNum.toString().replace('.', ',')
-        setDisplay(displayNum)
+        negateDisplay()
       })
     } else if (element.getAttribute('name') === 'point') {
       element.addEventListener('click', () => {
-        const displayNum = display.innerHTML
-        const pointType = element.innerHTML
-        if (!displayNum.includes(pointType)) {
-          setDisplay(displayNum + pointType)
-        }
+        floatDisplay(element.innerHTML)
       })
     }
   } else {
     element.addEventListener('click', () => {
-      let displayNum = display.innerHTML
-
-      if (displayNum !== '0') {
-        displayNum += buttonContent
-      } else {
-        displayNum = buttonContent
-      }
-
-      setDisplay(displayNum)
+      pressNumber(buttonContent)
     })
+  }
+})
+
+// NON-OP KEYBOARD
+document.addEventListener('keyup', (event) => {
+  const keyName = event.key
+
+  if (isNaN(keyName)) {
+    if (keyName === 'Escape') {
+      setDisplay(0)
+    } else if (keyName === 'Control') {
+      negateDisplay()
+    } else if (keyName === '.' || keyName === ',') {
+      floatDisplay(keyName)
+    }
+  } else {
+    pressNumber(keyName)
   }
 })
 
