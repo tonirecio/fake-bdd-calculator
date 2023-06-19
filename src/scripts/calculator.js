@@ -1,7 +1,7 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
 const setDisplay = (value) => {
-  display.innerHTML = 'INTERNS'
+  display.innerHTML = value
 }
 
 const sayHello = () => {
