@@ -36,7 +36,7 @@ buttons.forEach(button => button.addEventListener('click', () => {
     switch (button.getAttribute("name")) {
 
       case "point":
-        if (!display.innerHTML.includes(",")) {
+        if (!display.innerHTML.includes(button.innerHTML)) {
           setDisplay(display.innerHTML.toString() + button.innerHTML.toString());
         }
         break;
