@@ -1,19 +1,14 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-
-const setDisplay = (value) => {
-  display.innerHTML = '0'
-}
+const displayNumber = document.getElementById('displayNumber')
 
 const sayHello = () => {
   window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
 }
 
-const reset = () => {
-  setDisplay(0)
+function setDisplay (value) {
+  displayNumber.value = value
 }
 
-const display = document.querySelector('div[name="display"] span')
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  sayHello()
-})
-reset()
+function reset (value = 0) {
+  setDisplay(value)
+}
