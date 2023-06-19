@@ -18,6 +18,7 @@ document.getElementsByName('multiply')[0].addEventListener('click', () => {
 })
 reset()
 
+/* My Functions */
 const addNumber = (num) => {
   const actualNumber = display.innerHTML
 
@@ -96,5 +97,18 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
 })
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
-  setDisplay(0)
+  reset()
+})
+
+/* Keyboard input */
+document.addEventListener('keypress', (event) => {
+  if (event.key >= 0 && event.key <= 9) {
+    addNumber(event.key)
+  } else if (event.key === ',') {
+    addPoint()
+  } else if (event.key === 'Control') {
+    negateNumber()
+  } else if (event.key === 'Escape') {
+    reset()
+  }
 })
