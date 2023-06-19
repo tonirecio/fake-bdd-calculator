@@ -44,6 +44,24 @@ const listeners = (buttons) => {
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   addNum('negate')
 })
+
+document.addEventListener('keyup', (key) => {
+  console.log(key.key)
+  if (!isNaN(key.key)) {
+    addNum(key.key)
+  } else {
+    if (key.key === 'Control') {
+      addNum('negate')
+    } else if (key.key === 'Escape') {
+      addNum('C')
+    } else if (key.key === ",") {
+      addNum(",")
+    }
+  }
+})
+
+
+
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   sayHello()
 })
