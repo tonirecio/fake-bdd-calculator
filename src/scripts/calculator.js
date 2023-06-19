@@ -17,3 +17,45 @@ document.getElementsByName('multiply')[0].addEventListener('click', () => {
   sayHello()
 })
 reset()
+
+const buttons = document.querySelectorAll('div[name="keypad"] button')
+
+buttons.forEach(button => button.addEventListener('click', () => {
+
+
+  if (!isNaN(button.innerHTML)) {
+    if (display.innerHTML == 0) {
+      setDisplay(button.innerHTML.toString());
+    } else {
+      setDisplay(display.innerHTML.toString() + button.innerHTML.toString());
+    }
+
+
+  } else {
+
+    switch (button.getAttribute("name")) {
+
+      case "point":
+        if (!display.innerHTML.includes(",")) {
+          setDisplay(display.innerHTML.toString() + button.innerHTML.toString());
+        }
+        break;
+
+      case "clean":
+        reset();
+        break;
+
+      case "negate":
+        setDisplay(-1 * display.innerHTML.toString());
+        break;
+      default:
+        console.log("Error");
+    }
+  }
+
+
+
+})
+)
+
+
