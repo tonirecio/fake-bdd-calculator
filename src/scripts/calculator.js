@@ -17,14 +17,20 @@ const reset = () => {
 }
 
 // SHARED FUNCTIONS
-function negateDisplay () {
-  let displayNum = display.innerHTML.replace(',', '.')
-  displayNum = -1 * displayNum
-  displayNum = displayNum.toString().replace('.', ',')
+function negateDisplay() {
+  let displayNum = display.innerHTML
+  if (displayNum !== '0' && displayNum !== '0,') {
+    if (displayNum.startsWith("-")) {
+      displayNum = displayNum.replace("-", "")
+    } else {
+      displayNum = "-" + displayNum
+    }
+  }
+
   setDisplay(displayNum)
 }
 
-function pressNumber (buttonContent) {
+function pressNumber(buttonContent) {
   let displayNum = display.innerHTML
   if (displayNum !== '0') {
     displayNum += buttonContent
@@ -34,7 +40,7 @@ function pressNumber (buttonContent) {
   setDisplay(displayNum)
 }
 
-function floatDisplay (pointType) {
+function floatDisplay(pointType) {
   const displayNum = display.innerHTML
   if (!displayNum.includes(pointType)) {
     setDisplay(displayNum + pointType)
