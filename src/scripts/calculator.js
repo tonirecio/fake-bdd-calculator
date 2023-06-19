@@ -46,7 +46,7 @@ buttons.forEach(button => button.addEventListener('click', () => {
         break;
 
       case "negate":
-        setDisplay(-1 * display.innerHTML.toString());
+        setDisplay((-1 * (display.innerHTML).replace(",", ".")).toString().replace(".", ","));
         break;
       default:
         console.log("Error");
