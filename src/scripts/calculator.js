@@ -1,8 +1,5 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-/*const setDisplay = (value) => {
-  display.innerHTML = value
-}*/
 let currentValue = '0';
 
 const setDisplay = (value) => {
@@ -17,8 +14,8 @@ const setDisplay = (value) => {
   display.innerHTML = currentValue;
 }
 
-const resetButton = document.querySelector('button[name="clean"]');
-resetButton.addEventListener('click', () => {
+const reset = document.querySelector('button[name="clean"]');
+reset.addEventListener('click', () => {
   currentValue = '0';
   setDisplay(currentValue);
 });
@@ -40,6 +37,43 @@ buttons.forEach((buttonName) => {
   button.addEventListener('click', () => {
     setDisplay(button.innerHTML);
   });
+});
+
+const keyCodes = {
+  '48': '0',
+  '49': '1',
+  '50': '2',
+  '51': '3',
+  '52': '4',
+  '53': '5',
+  '54': '6',
+  '55': '7',
+  '56': '8',
+  '57': '9',
+  '96': '0',
+  '97': '1',
+  '98': '2',
+  '99': '3',
+  '100': '4',
+  '101': '5',
+  '102': '6',
+  '103': '7',
+  '104': '8',
+  '105': '9',
+  '188': ','
+};
+
+document.addEventListener('keydown', (event) => {
+  const keyCode = event.keyCode.toString();
+  if (keyCodes.hasOwnProperty(keyCode)) {
+    setDisplay(keyCodes[keyCode]);
+  } else if (event.keyCode === 17) {
+    currentValue = currentValue * -1;
+    setDisplay(currentValue);
+  } else if (event.keyCode === 27) {
+    currentValue = '0';
+    setDisplay(currentValue);
+  }
 });
 
 const sayHello = () => {
