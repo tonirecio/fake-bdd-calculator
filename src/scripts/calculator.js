@@ -1,7 +1,7 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
 const setDisplay = (value) => {
-  display.innerHTML = 0
+  display.innerHTML = value
 }
 
 const sayHello = () => {
@@ -23,18 +23,20 @@ const appendNumber = (value) => {
   display.innerHTML = value}
 }
 
-const appendSymbol = (value) => {
-  display.innerHTML = display.innerHTML + value
+const appendPoint = (value) => {
+  let regex = '([,])+'
+  if (!display.innerHTML.match(regex)) {
+    display.innerHTML = display.innerHTML + value
+  }
 }
 
 const setNegation = () => {
-  let displayValue = display.innerHTML;
 
-  if (displayValue !== "0") {
-    if (displayValue.slice(0, 1) === "-") {
-      display.innerHTML = displayValue.slice(1);
+  if ((display.innerHTML != 0) && (display.innerHTML != '0,')) {
+    if (display.innerHTML.slice(0, 1) === '-') {
+      display.innerHTML = display.innerHTML.slice(1)
     } else {
-      display.innerHTML = "-" + displayValue;
+      display.innerHTML = '-' + display.innerHTML
     }
   }
 };
@@ -80,7 +82,7 @@ document.getElementsByName('nine')[0].addEventListener('click', () => {
 })
 
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  appendSymbol(',')
+  appendPoint(',')
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
@@ -117,7 +119,7 @@ document.addEventListener('keydown', (event) => {
   } else if (key === '9') {
     appendNumber(9);
   } else if (key === ',') {
-    appendSymbol(',');
+    appendPoint(',');
   } else if (key === 'Escape') {
     reset();
   } else if (key === 'Control') {
