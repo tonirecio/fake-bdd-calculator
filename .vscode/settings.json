@@ -9,5 +9,8 @@
   ],
   "editor.quickSuggestions": {  
     "strings": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
