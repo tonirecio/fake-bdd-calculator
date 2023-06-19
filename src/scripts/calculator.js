@@ -1,22 +1,28 @@
+
+
 const MAX_DIGITS_IN_DISPLAY = 10
 let valueDisplay = "";
 
 const display = document.querySelector('div[name="display"] span')
 
+const getValueDisplay = () => {
+
+    return valueDisplay.toString();
+}
 
 const setDisplay = (value) => {
   
   if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
     maxNumberWarning();
   }
-  else if(value === "," && valueDisplay.includes(",")){
+  else if(value === "," && getValueDisplay().includes(",")){
   
   }
   else if(valueDisplay === "0" && value != ","){
     valueDisplay = value;
   }
   else{
-    valueDisplay = valueDisplay + value;
+    valueDisplay = getValueDisplay() + value;
   }
     display.innerHTML = valueDisplay
 }
@@ -61,15 +67,36 @@ document.getElementsByName('zero')[0].addEventListener('click', () => {
 })
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   valueDisplay = "0";
-  setDisplay(valueDisplay)
+  setDisplay(getValueDisplay())
 })
 document.getElementsByName('point')[0].addEventListener('click', () => {
   setDisplay(",")
 })
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  valueDisplay = valueDisplay * -1
-  display.innerHTML = valueDisplay;
+
+      valueDisplay = valueDisplay * -1
+      display.innerHTML = getValueDisplay();
 })
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    valueDisplay = "0"
+    display.innerHTML = getValueDisplay()
+
+  }
+  else if (event.key === "Control") {
+      valueDisplay = parseInt(valueDisplay) * -1
+      display.innerHTML = getValueDisplay()
+  }
+  
+  arrNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ','];
+  arrNumbers.forEach(num => {
+    if(event.key == num){
+      setDisplay(num)
+    }
+  });
+
+});
 
 
 reset()

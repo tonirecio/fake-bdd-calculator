@@ -3,10 +3,11 @@ Feature: Calculator
 Background:
 Given a user opens the app
 
-
+@done
 Scenario: Default display screen
 Then the display should show the following value: "0"
-@wip
+
+@done
 Scenario Outline: Pressing non-operators screen buttons
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -29,6 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
+@wip
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
