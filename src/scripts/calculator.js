@@ -1,7 +1,7 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-const setDisplay = (value) => {
-  display.innerHTML = 'INTERNS'
+const updateDisplay = (value) => {
+  display.innerHTML = 0
 }
 
 const sayHello = () => {
@@ -9,7 +9,7 @@ const sayHello = () => {
 }
 
 const reset = () => {
-  setDisplay(0)
+  updateDisplay(0)
 }
 
 const display = document.querySelector('div[name="display"] span')
@@ -17,3 +17,28 @@ document.getElementsByName('multiply')[0].addEventListener('click', () => {
   sayHello()
 })
 reset()
+
+
+let symbol
+let number
+/*
+
+const compute = () => {
+
+}
+
+const clear = () {
+
+}
+
+appendNumber = (number) => {
+
+}
+
+chooseOperation = (operation) {
+}
+
+
+*/
+
+//
