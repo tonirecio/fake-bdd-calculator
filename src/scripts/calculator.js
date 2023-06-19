@@ -7,7 +7,7 @@ let negated = false
 
 const setDisplay = (value) => {
 
-  if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY) {
+  if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY || ( display.innerHTML.length < MAX_DIGITS_IN_DISPLAY+1 && point == true  )) {
 
     if (display.innerHTML === '0' && value !== ',') {
       display.innerHTML = value;
@@ -15,7 +15,6 @@ const setDisplay = (value) => {
     } else if (value === ',' && !point) {
       display.innerHTML = display.innerHTML + value;
       point = true;
-
     } else if (value !== ',') {
       display.innerHTML = display.innerHTML + value;
 
@@ -26,7 +25,6 @@ const setDisplay = (value) => {
 const sayHello = () => {
   window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
 }
-
 
 
 const reset = () => {
