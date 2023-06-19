@@ -7,6 +7,7 @@ Given a user opens the app
 Scenario: Default display screen
 Then the display should show the following value: "0"
 
+@test2
 Scenario Outline: Pressing non-operators screen buttons
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -29,6 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
+@test3
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -51,6 +53,7 @@ Examples:
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
 
+@test4
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
