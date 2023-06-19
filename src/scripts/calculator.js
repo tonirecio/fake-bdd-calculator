@@ -17,7 +17,7 @@ const display = document.querySelector('div[name="display"] span')
 // Buttons
 
 const appendNumber = (value) => {
-  if (display.innerHTML != 0){
+  if ((display.innerHTML != 0) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)){
   display.innerHTML = display.innerHTML + value
   } else {
   display.innerHTML = value}
@@ -38,7 +38,6 @@ const setNegation = () => {
     }
   }
 };
-
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   appendNumber(0)
