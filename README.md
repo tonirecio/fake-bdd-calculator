@@ -9,4 +9,5 @@ document.getElementsByName('seven')[0].addEventListener('click', () => {
   setDisplay("7")
 })
 
-Pero esta divertido interesante que hayas creado una alerta para cuando el usuario llegue al limite de digitos.
+# Scenario Outline: Pressing non-operators screen buttons(keys)
+Me parece que todo esta correcto a simple vista, lo has optimizado mucho más que yo.
