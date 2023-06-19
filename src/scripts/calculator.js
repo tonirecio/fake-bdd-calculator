@@ -13,7 +13,13 @@ const reset = () => {
 }
 
 const negate = () => {
-  setDisplay((-1 * (display.innerHTML).replace(',', '.')).toString().replace('.', ','))
+  if (display.innerHTML !== '0' && display.innerHTML !== '0,') {
+    if (display.innerHTML[0] === '-') {
+      display.innerHTML = display.innerHTML.substring(1)
+    } else {
+      display.innerHTML = '-' + display.innerHTML
+    }
+  }
 }
 
 const append = (content) => {
