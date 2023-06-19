@@ -21,41 +21,30 @@ reset()
 const buttons = document.querySelectorAll('div[name="keypad"] button')
 
 buttons.forEach(button => button.addEventListener('click', () => {
-
-
   if (!isNaN(button.innerHTML)) {
-    if (display.innerHTML == 0) {
-      setDisplay(button.innerHTML.toString());
+    if (display.innerHTML === '0') {
+      setDisplay(button.innerHTML.toString())
     } else {
-      setDisplay(display.innerHTML.toString() + button.innerHTML.toString());
+      setDisplay(display.innerHTML.toString() + button.innerHTML.toString())
     }
-
-
   } else {
-
-    switch (button.getAttribute("name")) {
-
-      case "point":
+    switch (button.getAttribute('name')) {
+      case 'point':
         if (!display.innerHTML.includes(button.innerHTML)) {
-          setDisplay(display.innerHTML.toString() + button.innerHTML.toString());
+          setDisplay(display.innerHTML.toString() + button.innerHTML.toString())
         }
-        break;
+        break
 
-      case "clean":
-        reset();
-        break;
+      case 'clean':
+        reset()
+        break
 
-      case "negate":
-        setDisplay((-1 * (display.innerHTML).replace(",", ".")).toString().replace(".", ","));
-        break;
+      case 'negate':
+        setDisplay((-1 * (display.innerHTML).replace(',', '.')).toString().replace('.', ','))
+        break
       default:
-        console.log("Error");
+        console.log('Error')
     }
   }
-
-
-
 })
 )
-
-
