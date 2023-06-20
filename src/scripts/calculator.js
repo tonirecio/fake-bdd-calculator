@@ -1,6 +1,7 @@
 
 
 const MAX_DIGITS_IN_DISPLAY = 10
+const MAX_DIGITS_IN_DISPLAY_WHIT_COMMA = 11
 let valueDisplay = "";
 
 const display = document.querySelector('div[name="display"] span')
@@ -34,14 +35,23 @@ const negateValueDisplay = () => {
 }
 
 const setDisplay = (value) => {
+
+  valueDisplay = getValueDisplay()
+  if(valueDisplay.includes(",")){
+    maxDigitNumber = MAX_DIGITS_IN_DISPLAY_WHIT_COMMA
+  }
+  else{
+    maxDigitNumber = MAX_DIGITS_IN_DISPLAY
+  }
+  console.log(maxDigitNumber)
   
-  if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
-    maxNumberWarning();
+  if(valueDisplay.length + 1 > maxDigitNumber){
+    return
   }
   else if(value === "," && getValueDisplay().includes(",")){
-  
+    return
   }
-else if(valueDisplay === "0" && value != ","){
+  else if(valueDisplay === "0" && value != ","){
     valueDisplay = value;
   }
   else{
