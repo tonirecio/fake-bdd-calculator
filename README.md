@@ -7,3 +7,6 @@ Scenario Outline: Pressing non-operators screen buttons
 
 Scenario Outline: Pressing non-operators keys
     Todo funciona correctamente pero la sintaxis empleada es complicada de entender y esta escrito de forma mas díficil de lo que en realdiad es (no hacia falta un diccionario).
+
+Scenario Outline: Writing numbers 
+    Pasa el test correctamente y todo parece funcionar bien, la sintaxis de alguna funcion es complicada de entender pero todo funciona correctamente segun los tests
