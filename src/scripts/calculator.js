@@ -5,20 +5,24 @@ const setDisplay = (value) => {
 }
 
 const appendNumber = (value) => {
-  if (display.innerHTML != 0){
+  if (display.innerHTML != 0) {
   display.innerHTML = display.innerHTML + value
   } else {
-  display.innerHTML = value}
+  display.innerHTML = value
+  }
 }
 
 const setDecimal = (value) => {
-  display.innerHTML = display.innerHTML + value
+  let regex = '([,])+'
+  if (!display.innerHTML.match(regex) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
+    display.innerHTML = display.innerHTML + value
+  }
 }
 
 const setNegation = () => {
   let displayValue = display.innerHTML;
 
-  if (displayValue != "0") {
+  if (display.innerHTML != '0' && display.innerHTML != '0,') {
     if (displayValue.slice(0, 1) === "-") {
       display.innerHTML = displayValue.slice(1);
     } else {
