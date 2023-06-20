@@ -5,10 +5,16 @@ const setDisplay = (value) => {
 }
 
 const appendNumber = (value) => {
-  if (display.innerHTML != 0){
-  display.innerHTML = display.innerHTML + value
-  } else {
-  display.innerHTML = value}
+  const displayValue = display.innerHTML.replace(/,|-/g, '');
+  const digitCount = displayValue.length;
+
+  if (digitCount < MAX_DIGITS_IN_DISPLAY) {
+    if (display.innerHTML !== "0") {
+      display.innerHTML += value;
+    } else {
+      display.innerHTML = value;
+    }
+  }
 }
 
 const setDecimal = (value) => {
@@ -28,7 +34,7 @@ const setNegation = () => {
       display.innerHTML = "-" + displayValue;
     }
   }
-};
+}
 
 const sayHello = () => {
   window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
