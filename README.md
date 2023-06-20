@@ -20,3 +20,9 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Implementació correcta i solucionat el problema del negar amb números decimals.
 
+## @writing_long_numbers
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🔼 **Sintaxis:** Millor restructurat comparat amb els commits anteriors evitant fer "navalla suïssa" en els events dels buttons. Noves funcions ben implementades.
+
+
