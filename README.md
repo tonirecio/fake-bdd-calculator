@@ -30,4 +30,7 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟧 **Sintaxis:** Bona sintaxi pero a vegades acaba concatenant diferents funcions per a una variable (ex: result.toString().replace().replace() )
 
-
+## @before_equal
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🔼 **Sintaxis:** Codi refactoritzat i millorat la implementació del display (separant strings de integers). Escenari plantejat ben fet.
