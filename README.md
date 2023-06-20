@@ -4,3 +4,6 @@
 
 ## Scenario Outline: Pressing non-operators screen buttons
 ### All right.
+
+## Scenario Outline: Pressing non-operators keys
+### Instead of using IF to check the keys, I would have used a switch
