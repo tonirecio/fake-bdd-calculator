@@ -23,7 +23,17 @@ const negate = () => {
 }
 
 const append = (content) => {
-  setDisplay(display.innerHTML.toString() + content.toString())
+  if (display.innerHTML.replace(',', '').replace('-', '').length < MAX_DIGITS_IN_DISPLAY) {
+    setDisplay(display.innerHTML.toString() + content.toString())
+  }
+}
+
+const writeNumber = (button) => {
+  if (display.innerHTML === '0') {
+    setDisplay(button.innerHTML.toString())
+  } else {
+    append(button.innerHTML)
+  }
 }
 
 const display = document.querySelector('div[name="display"] span')
@@ -35,34 +45,37 @@ reset()
 // Button handling
 const buttons = document.querySelectorAll('div[name="keypad"] button')
 
-buttons.forEach(button => button.addEventListener('click', () => {
+buttons.forEach(button => {
   if (!isNaN(button.innerHTML)) {
-    if (display.innerHTML === '0') {
-      setDisplay(button.innerHTML.toString())
-    } else {
-      append(button.innerHTML)
-    }
+    button.addEventListener('click', () => {
+      writeNumber(button)
+    })
   } else {
     switch (button.getAttribute('name')) {
       case 'point':
-        if (!display.innerHTML.includes(button.innerHTML)) {
-          append(button.innerHTML)
-        }
+        button.addEventListener('click', () => {
+          if (!display.innerHTML.includes(button.innerHTML)) {
+            append(button.innerHTML)
+          }
+        })
         break
 
       case 'clean':
-        reset()
+        button.addEventListener('click', () => {
+          reset()
+        })
         break
 
       case 'negate':
-        negate()
+        button.addEventListener('click', () => {
+          negate()
+        })
         break
       default:
         console.log('Error')
     }
   }
 })
-)
 
 // Keyboard handling
 document.addEventListener('keydown', (event) => {
