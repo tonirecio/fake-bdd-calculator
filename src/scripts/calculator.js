@@ -66,7 +66,7 @@ const performOperation = () => {
 }
 
 const formatResult = (result) => {
-  if (result > Math.pow(10, MAX_DIGITS_IN_DISPLAY)) result = 'ERROR'
+  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY)) result = 'ERROR'
   if (result !== 'ERROR') {
     if (getDigitNumber(result) > MAX_DIGITS_IN_DISPLAY) {
       const integerPartDigits = parseInt(result.toString()).toString().length
