@@ -15,7 +15,12 @@ Comentaris:
 * Ha passat el lint 
 
 ## @sc_NonOpKeys:
-Ha passat el test!
+Ha passat el test!  
 Comentaris:
 * Molt ben separat el codi en funcions (tot i que es podria fer amb "const" en comptes de "function")
 * Ha passat el lint
+
+## @sc_NumberCheck
+Ha passat el test!  
+Comentaris:
+* No ha passat el lint
