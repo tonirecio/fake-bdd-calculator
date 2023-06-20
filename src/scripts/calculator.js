@@ -1,4 +1,5 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+const pointLocale = document.getElementsByName('point')[0].innerHTML
 
 // function setDisplay (value) { [...] }
 const setDisplay = (value) => {
@@ -20,10 +21,10 @@ const reset = () => {
 function negateDisplay() {
   let displayNum = display.innerHTML
   if (displayNum !== '0' && displayNum !== '0,') {
-    if (displayNum.startsWith("-")) {
-      displayNum = displayNum.replace("-", "")
+    if (displayNum.startsWith('-')) {
+      displayNum = displayNum.replace('-', '')
     } else {
-      displayNum = "-" + displayNum
+      displayNum = '-' + displayNum
     }
   }
 
@@ -32,18 +33,22 @@ function negateDisplay() {
 
 function pressNumber(buttonContent) {
   let displayNum = display.innerHTML
-  if (displayNum !== '0') {
-    displayNum += buttonContent
-  } else {
-    displayNum = buttonContent
+
+  if (displayNum.length < MAX_DIGITS_IN_DISPLAY || (displayNum.includes(pointLocale) && displayNum.length <= MAX_DIGITS_IN_DISPLAY)) {
+    if (displayNum !== '0') {
+      displayNum += buttonContent
+    } else {
+      displayNum = buttonContent
+    }
   }
+
   setDisplay(displayNum)
 }
 
-function floatDisplay(pointType) {
+function floatDisplay() {
   const displayNum = display.innerHTML
-  if (!displayNum.includes(pointType)) {
-    setDisplay(displayNum + pointType)
+  if (!displayNum.includes(pointLocale) && displayNum.length < MAX_DIGITS_IN_DISPLAY) {
+    setDisplay(displayNum + pointLocale)
   }
 }
 
@@ -69,7 +74,7 @@ keypad.forEach(element => {
       })
     } else if (element.getAttribute('name') === 'point') {
       element.addEventListener('click', () => {
-        floatDisplay(element.innerHTML)
+        floatDisplay()
       })
     }
   } else {
@@ -88,7 +93,7 @@ document.addEventListener('keyup', (event) => {
       setDisplay(0)
     } else if (keyName === 'Control') {
       negateDisplay()
-    } else if (keyName === '.' || keyName === ',') {
+    } else if (keyName === pointLocale) {
       floatDisplay(keyName)
     }
   } else {
