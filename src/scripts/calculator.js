@@ -25,16 +25,18 @@ const addNumber = (num) => {
   if (Number(actualNumber) === 0) {
     setDisplay(num)
   } else {
-    const newNumber = actualNumber + num
+    if (!tenNumbers()) {
+      const newNumber = actualNumber + num
 
-    setDisplay(newNumber)
+      setDisplay(newNumber)
+    }
   }
 }
 
 const addPoint = () => {
   const actualNumber = display.innerHTML
 
-  if (Number(actualNumber) % 1 === 0 || Number(actualNumber) === 0) {
+  if ((Number(actualNumber) % 1 === 0 || Number(actualNumber) === 0) && !tenNumbers()) {
     const newDisplay = actualNumber + ','
 
     setDisplay(newDisplay)
@@ -61,58 +63,60 @@ const negateNumber = () => {
   }
 }
 
+/* Check if there are 10 numbers */
+const tenNumbers = () => {
+  const num = display.innerHTML.split('-')
+  const decimals = display.innerHTML.split(',')
+  let result = ''
+
+  if (num[1]) {
+    if (decimals[1]) {
+      result = '' + num[1] + decimals[1]
+    } else {
+      result = '' + num[1]
+    }
+  } else {
+    if (decimals[1]) {
+      result = '' + decimals[0] + decimals[1]
+    } else {
+      result = '' + decimals[0]
+    }
+  }
+
+  if (result.length >= 10) {
+    return true
+  } else {
+    return false
+  }
+}
+
 /* Listeners for buttons */
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  addNumber(1)
-})
+const buttons = document.getElementsByTagName('button')
+const addNumberListeners = (button) => {
+  for (const element of button) {
+    if (Number(element.innerHTML) >= 0 && Number(element.innerHTML) <= 9) {
+      const num = Number(element.innerHTML)
 
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  addNumber(2)
-})
+      element.addEventListener('click', () => {
+        addNumber(num)
+      })
+    } else if (element.innerHTML === 'C') {
+      element.addEventListener('click', () => {
+        reset()
+      })
+    } else if (element.innerHTML === ',') {
+      element.addEventListener('click', () => {
+        addPoint()
+      })
+    } else if (element.name === 'negate') {
+      element.addEventListener('click', () => {
+        negateNumber()
+      })
+    }
+  }
+}
 
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  addNumber(3)
-})
-
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  addNumber(4)
-})
-
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  addNumber(5)
-})
-
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  addNumber(6)
-})
-
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  addNumber(7)
-})
-
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  addNumber(8)
-})
-
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  addNumber(9)
-})
-
-document.getElementsByName('zero')[0].addEventListener('click', () => {
-  addNumber(0)
-})
-
-document.getElementsByName('point')[0].addEventListener('click', () => {
-  addPoint()
-})
-
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-  negateNumber()
-})
-
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
-})
+addNumberListeners(buttons)
 
 /* Keyboard input */
 document.addEventListener('keydown', (event) => {

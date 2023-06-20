@@ -53,8 +53,8 @@ Examples:
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
 
-@wip
-Scenario Outline: Writing numbers 
+@done
+Scenario Outline: Writing numbers
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
 Then the display should show the following value: "<displayResult>"
@@ -80,6 +80,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
+@wip
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
