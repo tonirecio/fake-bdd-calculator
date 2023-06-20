@@ -1,4 +1,7 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+let operation = ''
+let firstNumber = ''
+let operationClicked = false
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -9,7 +12,8 @@ const sayHello = () => {
 }
 
 const reset = () => {
-  setDisplay('INTERNS')
+  firstNumber = null
+  setDisplay(0)
 }
 
 const display = document.querySelector('div[name="display"] span')
@@ -22,8 +26,9 @@ reset()
 const addNumber = (num) => {
   const actualNumber = display.innerHTML
 
-  if (Number(actualNumber) === 0) {
+  if (Number(actualNumber) === 0 || operationClicked === true) {
     setDisplay(num)
+    operationClicked = false
   } else {
     if (!tenNumbers()) {
       const newNumber = actualNumber + num
@@ -83,10 +88,120 @@ const tenNumbers = () => {
     }
   }
 
-  if (result.length >= 10) {
+  if (result.length >= MAX_DIGITS_IN_DISPLAY) {
     return true
   } else {
     return false
+  }
+}
+
+const numWithTenChar = (num) => {
+  let checkLength = Number(num)
+
+  if (checkLength.toString().length >= MAX_DIGITS_IN_DISPLAY) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/* Operations */
+const sum = () => {
+  firstNumber = display.innerHTML
+  operationClicked = true
+  operation = '+'
+}
+
+const subtract = () => {
+  firstNumber = display.innerHTML
+  operationClicked = true
+  operation = '-'
+}
+
+const multiply = () => {
+  firstNumber = display.innerHTML
+  operationClicked = true
+  operation = '*'
+}
+
+const divide = () => {
+  firstNumber = display.innerHTML
+  operationClicked = true
+  operation = '/'
+}
+
+const operate = () => {
+  let result = 0
+  let text = ''
+  let show = ''
+
+  switch (operation) {
+    case '+':
+      result = toNumber(firstNumber) + toNumber(display.innerHTML)
+
+      text = '' + aproxNumber(result)
+      show = text.replace('.', ',')
+
+      setDisplay(show)
+      break
+    case '-':
+      result = toNumber(firstNumber) - toNumber(display.innerHTML)
+
+      text = '' + aproxNumber(result)
+      show = text.replace('.', ',')
+
+      setDisplay(show)
+      break
+    case '*':
+      result = toNumber(firstNumber) * toNumber(display.innerHTML)
+
+      text = '' + aproxNumber(result)
+      show = text.replace('.', ',')
+
+      setDisplay(show)
+      break
+    case '/':
+      result = toNumber(firstNumber) / toNumber(display.innerHTML)
+
+      text = '' + aproxNumber(result)
+      show = text.replace('.', ',')
+
+      setDisplay(show)
+      break
+  }
+}
+
+/* String to number */
+const toNumber = (num) => {
+  const numWithDecimals = num.split(',')
+
+  if (numWithDecimals[1]) {
+    return Number(numWithDecimals[0] + '.' + numWithDecimals[1])
+  } else {
+    return Number(numWithDecimals[0])
+  }
+}
+
+/* Aprox infinite number */
+const aproxNumber = (num) => {
+  const text = '' + num
+  const result = Number(num)
+  const decimals = text.split('.')
+
+  if (numWithTenChar(num)) {
+    if (decimals[1]) {
+      let numberDecimals = MAX_DIGITS_IN_DISPLAY - decimals[0].length
+
+      let numberToFix = result.toFixed(numberDecimals).split('.')
+
+      let decimalToFix = numberToFix[1].split(0)
+
+      return Number(numberToFix[0] + '.' + decimalToFix[0])
+    } else {
+      return result
+    }
+  } else {
+    return result
   }
 }
 
@@ -111,6 +226,26 @@ const addNumberListeners = (button) => {
     } else if (element.name === 'negate') {
       element.addEventListener('click', () => {
         negateNumber()
+      })
+    } else if (element.name === 'sum') {
+      element.addEventListener('click', () => {
+        sum()
+      })
+    } else if (element.name === 'subtract') {
+      element.addEventListener('click', () => {
+        subtract()
+      })
+    } else if (element.name === 'multiply') {
+      element.addEventListener('click', () => {
+        multiply()
+      })
+    } else if (element.name === 'divide') {
+      element.addEventListener('click', () => {
+        divide()
+      })
+    } else if (element.name === 'equal') {
+      element.addEventListener('click', () => {
+        operate()
       })
     }
   }
