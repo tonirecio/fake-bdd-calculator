@@ -81,7 +81,6 @@ Examples:
 |         -1234 |     +- |          1234 |
 
 @sc5
-
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -95,6 +94,8 @@ Examples:
 |     123456789 |      , |    123456789, |
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
+
+@sc6
 
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
