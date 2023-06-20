@@ -8,11 +8,12 @@ const setDisplay = (value) => {
   }
   if (currentValue === '0' && value !== ',') {
     currentValue = value;
-  } else if (currentValue.length < MAX_DIGITS_IN_DISPLAY) {
+  } else if (currentValue.length < MAX_DIGITS_IN_DISPLAY && value !== currentValue) {
     currentValue += value;
   }
   display.innerHTML = currentValue;
 }
+
 
 const reset = document.querySelector('button[name="clean"]');
 reset.addEventListener('click', () => {
@@ -22,9 +23,19 @@ reset.addEventListener('click', () => {
 
 const negate = document.querySelector('button[name="negate"]');
 negate.addEventListener('click', () => {
-  currentValue = currentValue * -1;
+  if (currentValue === '0' || /^0,0*$/.test(currentValue)) {
+    return;
+  }
+  if (currentValue.startsWith('-')) {
+    currentValue = currentValue.slice(1);
+  } else {
+    currentValue = '-' + currentValue;
+  }
   setDisplay(currentValue);
 })
+
+
+
 
 const display = document.querySelector('div[name="display"] span')
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
