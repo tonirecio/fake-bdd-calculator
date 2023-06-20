@@ -53,6 +53,7 @@ Examples:
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
 
+@scn4
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
