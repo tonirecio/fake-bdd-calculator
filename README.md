@@ -25,4 +25,9 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🔼 **Sintaxis:** Millor restructurat comparat amb els commits anteriors evitant fer "navalla suïssa" en els events dels buttons. Noves funcions ben implementades.
 
+## @simple_operations
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟧 **Sintaxis:** Bona sintaxi pero a vegades acaba concatenant diferents funcions per a una variable (ex: result.toString().replace().replace() )
+
 
