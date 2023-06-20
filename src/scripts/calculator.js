@@ -2,7 +2,13 @@ const MAX_DIGITS_IN_DISPLAY = 10
 let currentOperation = null
 let previousOperand = null
 
+const currentOperand = () => {
+  const formattedDisplay = display.innerHTML.replace(',', '.')
+  return Number(formattedDisplay)
+}
+
 const setDisplay = (value) => {
+  value = value.toString().replace('.', ',')
   display.innerHTML = value
 }
 
@@ -25,14 +31,18 @@ const negate = () => {
 }
 
 const append = (content) => {
-  if (display.innerHTML.replace(',', '').replace('-', '').length < MAX_DIGITS_IN_DISPLAY) {
-    setDisplay(display.innerHTML.toString() + content.toString())
+  if (getDigitNumber(currentOperand()) < MAX_DIGITS_IN_DISPLAY) {
+    setDisplay(display.innerHTML + content.toString())
   }
+}
+
+const getDigitNumber = (number) => {
+  return number.toString().replace('.', '').length
 }
 
 const writeNumber = (button) => {
   if (display.innerHTML === '0') {
-    setDisplay(button.innerHTML.toString())
+    setDisplay(button.innerHTML)
   } else {
     append(button.innerHTML)
   }
@@ -40,16 +50,15 @@ const writeNumber = (button) => {
 
 const performOperation = () => {
   if (previousOperand !== null) {
-    const currentOperand = Number(display.innerHTML.replace(',', '.'))
     let result = 'ERROR'
     if (currentOperation === 'sum') {
-      result = previousOperand + currentOperand
+      result = previousOperand + currentOperand()
     } else if (currentOperation === 'subtract') {
-      result = previousOperand - currentOperand
+      result = previousOperand - currentOperand()
     } else if (currentOperation === 'multiply') {
-      result = previousOperand * currentOperand
+      result = previousOperand * currentOperand()
     } else if (currentOperation === 'divide') {
-      result = previousOperand / currentOperand
+      result = previousOperand / currentOperand()
     }
     result = formatResult(result)
     setDisplay(result)
@@ -59,12 +68,10 @@ const performOperation = () => {
 const formatResult = (result) => {
   if (result > Math.pow(10, MAX_DIGITS_IN_DISPLAY)) result = 'ERROR'
   if (result !== 'ERROR') {
-    if (result.toString().replace('.', '').replace('-', '').length > MAX_DIGITS_IN_DISPLAY) {
+    if (getDigitNumber(result) > MAX_DIGITS_IN_DISPLAY) {
       const integerPartDigits = parseInt(result.toString()).toString().length
       result = 1 * result.toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits)
     }
-    result = result.toString().replace('.', ',')
-    console.log('result3' + result)
   }
   return result
 }
