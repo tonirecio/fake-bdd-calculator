@@ -12,3 +12,7 @@
 ## Scenario Pressing non-operator keys
 
 - El unico aspecto que creo que sería mejorable es primero los numeros podrían ponerse sin comillas ya que no se necesita que sean cadenas y que se podría haber optimizado más el codigo en la parte de definir las teclas que responden a los numeros si se hubiese usado una expresión regular, algo así: `\[0-9]\`.
+
+## Scenario Writting Numbers
+
+- Lo veo todo correcto.
