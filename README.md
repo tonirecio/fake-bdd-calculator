@@ -13,4 +13,7 @@ document.getElementsByName('seven')[0].addEventListener('click', () => {
 Me parece que todo esta correcto a simple vista, lo has optimizado mucho más que yo.
 
 # Scenario Outline: Writing numbers
-Haces correcto el ir teniendo en cuenta las comas y los puntos, y usando el replace, haces el juego para que se muestre en el display lo que te interesa, también esta muy bien la forma en la que haces el que aparezca la coma. 
+Haces correcto el ir teniendo en cuenta las comas y los puntos, y usando el replace, haces el juego para que se muestre en el display lo que te interesa, también esta muy bien la forma en la que haces el que aparezca la coma.
+
+# Scenario Outline: Performing two number operations
+Una opcion también muy correcta el jugar con el tamaño máximo de digitos, dependiendo de si hay coma o no, en general bien empleado el tamaño de los digitos.
