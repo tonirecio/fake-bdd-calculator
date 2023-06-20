@@ -31,3 +31,10 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Tot correcte, molt bé que no està hardcoded el valor de la coma/punt
+
+
+## @sc_Operations
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* A la part de gestionar events de les operacions, hi ha codi repetit que es podria posar en una mateixa funció, i la part de 'equal' també es podria separar per no omplir més el bloc de codi dels botons
