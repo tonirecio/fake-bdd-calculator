@@ -17,15 +17,24 @@ const display = document.querySelector('div[name="display"] span')
 // Buttons in Display
 
 const appendNumber = (value) => {
-  if ((display.innerHTML != 0)){
-  display.innerHTML = display.innerHTML + value
-  } else if (display.innerHTML == 0){
-  display.innerHTML = value}
-}
+  const displayValue = display.innerHTML.replace(/,|-/g, ''); // Remove comma and negative sign
+  const digitCount = displayValue.length;
+
+  if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
+    return;
+  }
+
+  if (display.innerHTML == '0') {
+    display.innerHTML = value;
+  } else {
+    display.innerHTML += value;
+  }
+};
+
 
 const appendPoint = (value) => {
   let regex = '([,])+'
-  if (!display.innerHTML.match(regex)) {
+  if (!display.innerHTML.match(regex) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
     display.innerHTML = display.innerHTML + value
   }
 
