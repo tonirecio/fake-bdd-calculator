@@ -9,3 +9,5 @@
 *Scenario Outline: Pressing non-operators keys*: No funcionen les tecles de control i escape perquè els codis no estan bé, caldira canviar 'keypress' per 'keyup'. 
 
 *Scenario Outline: Writing numbers*: Crec que el codi està bé.
+
+*Scenario Outline: Writing numbers of more than 10 digits*: A la funció tenNumbers en comptes de posar un 10 manualment, podries haver utilitzat la variable global MAX_DIGITS_IN_DISPLAY.
