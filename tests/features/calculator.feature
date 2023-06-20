@@ -95,6 +95,7 @@ Examples:
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
 
+@simple_operations
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
