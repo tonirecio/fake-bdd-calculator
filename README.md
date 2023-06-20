@@ -14,3 +14,9 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Correcta implementació del event de Keys, hagués possiblement també posat el "." per si acás, pero esta tot correcte.
+
+## @writing_numbers
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Implementació correcta i solucionat el problema del negar amb números decimals.
+
