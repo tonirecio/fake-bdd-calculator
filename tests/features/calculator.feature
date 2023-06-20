@@ -56,6 +56,7 @@ Examples:
 
 
 
+
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -162,17 +163,18 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
-@current
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
 
 
+@current
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
+
 
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
