@@ -147,7 +147,7 @@ Examples:
 |         13,14 |      * |      2,781 |
 |            84 |      / |       -4,3 |
 
-@current
+
 Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -162,7 +162,7 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
-
+@current
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
