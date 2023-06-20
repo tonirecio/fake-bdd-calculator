@@ -6,8 +6,31 @@ let valueDisplay = "";
 const display = document.querySelector('div[name="display"] span')
 
 const getValueDisplay = () => {
+    valueDisplay = valueDisplay.toString()
+    valueDisplay = valueDisplay.replace(".", ",")
+    return valueDisplay
+}
 
-    return valueDisplay.toString();
+const getFloatValueDisplay = () => {
+    valueDisplay = valueDisplay.replace(",", ".")
+    return parseFloat(valueDisplay, 10)
+}
+
+const negateValueDisplay = () => {
+
+    comma = false
+    if(valueDisplay.slice(-1) === ","){
+      comma = true
+    }
+      
+
+    currentFloatValor = getFloatValueDisplay()
+    currentFloatValor = currentFloatValor * -1
+    valueDisplay = currentFloatValor
+
+    if(comma === true){
+      valueDisplay = getValueDisplay() + ','
+    }
 }
 
 const setDisplay = (value) => {
@@ -18,7 +41,7 @@ const setDisplay = (value) => {
   else if(value === "," && getValueDisplay().includes(",")){
   
   }
-  else if(valueDisplay === "0" && value != ","){
+else if(valueDisplay === "0" && value != ","){
     valueDisplay = value;
   }
   else{
@@ -73,8 +96,7 @@ document.getElementsByName('point')[0].addEventListener('click', () => {
   setDisplay(",")
 })
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-
-      valueDisplay = valueDisplay * -1
+      negateValueDisplay()
       display.innerHTML = getValueDisplay();
 })
 
@@ -85,7 +107,7 @@ document.addEventListener("keydown", function(event) {
 
   }
   else if (event.key === "Control") {
-      valueDisplay = parseInt(valueDisplay) * -1
+      negateValueDisplay()  
       display.innerHTML = getValueDisplay()
   }
   
