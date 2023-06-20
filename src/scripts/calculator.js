@@ -5,11 +5,10 @@ const setDisplay = (value) => {
 }
 
 const appendNumber = (value) => {
-  if (display.innerHTML != 0) {
+  if (display.innerHTML != 0){
   display.innerHTML = display.innerHTML + value
   } else {
-  display.innerHTML = value
-  }
+  display.innerHTML = value}
 }
 
 const setDecimal = (value) => {
