@@ -5,21 +5,26 @@ const display = document.querySelector('div[name="display"] span')
 let point = false
 let negated = false
 
+let operators = 0;
+let type
+
 const setDisplay = (value) => {
 
-  if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY || ( display.innerHTML.length < MAX_DIGITS_IN_DISPLAY+1 && point == true  )) {
+  if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY || (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY + 1 && point == true)) {
 
     if (display.innerHTML === '0' && value !== ',') {
       display.innerHTML = value;
 
     } else if (value === ',' && !point) {
-      display.innerHTML = display.innerHTML + value;
+      display.innerHTML = display.innerHTML + ',';
       point = true;
     } else if (value !== ',') {
       display.innerHTML = display.innerHTML + value;
 
     }
   }
+
+  console.log(display.innerHTML)
 }
 
 const sayHello = () => {
@@ -39,16 +44,50 @@ const negate = () => {
     display.innerHTML = '-' + display.innerHTML
     negated = true
   }
+
   else if (negated == true) {
 
-    display.innerHTML = display.innerHTML.slice(1)
+    display.innerHTML = display.innerHTML * -1
     negated = false
 
   }
 
 }
+const getNum = () => {
+  operators = parseFloat(display.innerHTML.replace(/,/g, '.'));
+  display.innerHTML = 0;
+  if (!display.innerHTML.includes(",")) {
+    point = false;
+  }
+}
+
+const equal = () => {
+  var result = 0;
+  if (type === '+') {
+    result = operators + parseFloat(display.innerHTML.replace(/,/g, '.'));
+  }
+  if (type === '-') {
+    result = operators - parseFloat(display.innerHTML.replace(/,/g, '.'));
+  }
+  if (type === '*') {
+    result = operators * parseFloat(display.innerHTML.replace(/,/g, '.'));
+  }
+  if (type === '/') {
+    result = operators / parseFloat(display.innerHTML.replace(/,/g, '.'));
+  }
+  if (!display.innerHTML.includes(".")) {
+    point = false;
+  }
 
 
+  display.innerHTML = parseFloat(result).toLocaleString(undefined, { maximumFractionDigits: 10 }).replace(/\./g, ',');
+
+  if (point = false){
+  display.innerHTML =display.innerHTML.substring(0, 10)}
+else {
+  display.innerHTML =display.innerHTML.substring(0, 11)
+}
+}
 
 //Events teclas
 
@@ -66,8 +105,11 @@ document.addEventListener('keydown', (event) => {
     negate()
   }
 
-  if (event.key === '-') {
-    negate()
+  if (event.key === '-' && display.innerHTML == 0) {
+
+    display.innerHTML = '-'
+    negated = true
+
   }
 
 
@@ -79,6 +121,33 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+
+// OPERATIONS
+
+document.getElementsByName('sum')[0].addEventListener('click', () => {
+  type = '+'
+  getNum()
+})
+
+document.getElementsByName('subtract')[0].addEventListener('click', () => {
+  type = '-'
+  getNum()
+})
+
+document.getElementsByName('multiply')[0].addEventListener('click', () => {
+  type = '*'
+  getNum()
+})
+
+document.getElementsByName('divide')[0].addEventListener('click', () => {
+  type = '/'
+  getNum()
+})
+
+
+document.getElementsByName('equal')[0].addEventListener('click', () => {
+  equal()
+})
 
 
 
@@ -142,9 +211,7 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
 })
 
 
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  sayHello()
-})
+
 
 
 reset()
