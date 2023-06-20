@@ -8,7 +8,7 @@ const setDisplay = (value) => {
   }
   if (currentValue === '0' && value !== ',') {
     currentValue = value;
-  } else if (currentValue.length < MAX_DIGITS_IN_DISPLAY && value !== currentValue) {
+  } else if ((currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY && value !== currentValue) {
     currentValue += value;
   }
   display.innerHTML = currentValue;
