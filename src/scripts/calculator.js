@@ -41,13 +41,24 @@ const appendPoint = (value) => {
 }
 
 const setNegation = () => {
+  let displayValue = display.innerHTML
+  let valueLength = displayValue.length
+  let hasPoint = false
 
-  if ((display.innerHTML != 0) && (display.innerHTML != '0,')) {
-    if (display.innerHTML.slice(0, 1) == '-') {
-      display.innerHTML = display.innerHTML.slice(1)
-    } else {
-      display.innerHTML = '-' + display.innerHTML
-    }
+  if (displayValue.charAt(valueLength - 1) == ','){
+    hasPoint = true
+  }
+
+  if ((displayValue != 0) && (displayValue != '0,')) {
+    displayValue = displayValue.replace(',', '.')
+    displayValue = parseFloat(displayValue) * (-1)
+    displayValue = displayValue.toString().replace('.', ',')
+
+
+    if (hasPoint == true){
+    displayValue += ','	
+  }
+    display.innerHTML = displayValue
   }
 }
 
@@ -136,3 +147,65 @@ document.addEventListener('keydown', (event) => {
     setNegation();
   }
 })
+
+// Operations
+let firstOperand
+let operation
+  // Sum
+document.getElementsByName('sum')[0].addEventListener('click', () => {
+  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+  operation = '+'
+  reset()
+})
+  // Subtract
+document.getElementsByName('subtract')[0].addEventListener('click', () => {
+  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+  operation = '-'
+  reset()
+})
+  // Multiply
+document.getElementsByName('multiply')[0].addEventListener('click', () => {
+  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+  operation = '*'
+  reset()
+})
+  // Divide
+document.getElementsByName('divide')[0].addEventListener('click', () => {
+  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+  operation = '/'
+  reset()
+})
+  // Equal
+document.getElementsByName('equal')[0].addEventListener('click', () => {
+  let secondOperand = parseFloat(display.innerHTML.replace(',','.'))
+  reset()
+  calculate(firstOperand, secondOperand, operation)
+})
+
+const calculate = (firstOperand, secondOperand, operation) => {
+  let result
+
+  if (operation == '+'){
+    result = firstOperand + secondOperand
+  } else if (operation == '-'){
+    result = firstOperand - secondOperand
+  } else if (operation == '*') {
+    result = firstOperand * secondOperand
+  } else {
+    result = firstOperand / secondOperand
+  }
+
+  result = fixNumber(result)
+
+  display.innerHTML = result.toString().replace('.', ',')
+}
+
+const fixNumber = (result) => {
+  resultLength = result.toString().replace('.', )
+
+  if (resultLength > MAX_DIGITS_IN_DISPLAY) {
+    result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
+    return result
+  }
+
+}
