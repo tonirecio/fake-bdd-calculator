@@ -128,6 +128,7 @@ Examples:
 |           -10 |      / |          2 |            -5 |
 |           -10 |      / |         -2 |             5 |
 
+@sc_BeforeEqual
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
