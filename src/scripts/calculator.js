@@ -104,6 +104,8 @@ keypad.forEach(element => {
       element.addEventListener('click', () => {
         const currentNum = parseFloat(display.innerHTML.replace(',', '.'))
         let resultNum = null
+        let resultOp = null
+
         console.log('----------------------------EQUAL')
         if (currentOp === 'sum') {
           resultNum = prevNum + currentNum
@@ -118,6 +120,8 @@ keypad.forEach(element => {
           resultNum = prevNum / currentNum
           console.log(resultNum)
         }
+
+        if(Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)){
         // character length of the integer number (including - sign if applicable)
         const integerLength = (Math.round(resultNum)).toString().length
         // forcing this number to not have trailing of 0s (1 *) and have a maximum
@@ -125,9 +129,12 @@ keypad.forEach(element => {
         // decimal part
         const fixedNum = 1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength)
         // set locale replacement
-        const localeNum = fixedNum.toString().replace('.', ',')
+          resultOp = fixedNum.toString().replace('.', ',')
+        } else {
+          resultOp = 'ERROR'
+        }
 
-        setDisplay(localeNum)
+        setDisplay(resultOp)
       })
     }
   } else {
