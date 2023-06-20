@@ -11,3 +11,7 @@
 ## Scenario Outline: Pressing non-operators keys
 
 - Todo bien.
+
+## Scenario Outline: Writing numbers
+
+- Todo bien.
