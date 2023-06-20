@@ -5,31 +5,22 @@ const display = document.querySelector('div[name="display"] span')
 let point = false
 let negated = false
 
-let operators = 0;
+let operators = 0
 let type
 
 const setDisplay = (value) => {
-
   if (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY || (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY + 1 && point == true)) {
-
     if (display.innerHTML === '0' && value !== ',') {
-      display.innerHTML = value;
-
+      display.innerHTML = value
     } else if (value === ',' && !point) {
-      display.innerHTML = display.innerHTML + ',';
-      point = true;
+      display.innerHTML = display.innerHTML + ','
+      point = true
     } else if (value !== ',') {
-      display.innerHTML = display.innerHTML + value;
-
+      display.innerHTML = display.innerHTML + value
     }
   }
-
-  console.log(display.innerHTML)
 }
 
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
-}
 
 
 const reset = () => {
@@ -39,63 +30,62 @@ const reset = () => {
 }
 
 const negate = () => {
-
-  if (negated == false && display.innerHTML != '0' && display.innerHTML != '0,') {
+  if (negated === false && display.innerHTML !== '0' && display.innerHTML !== '0,') {
     display.innerHTML = '-' + display.innerHTML
     negated = true
-  }
-
-  else if (negated == true) {
-
+  } else {
     display.innerHTML = display.innerHTML * -1
     negated = false
-
   }
-
 }
 const getNum = () => {
-  operators = parseFloat(display.innerHTML.replace(/,/g, '.'));
-  display.innerHTML = 0;
-  if (!display.innerHTML.includes(",")) {
-    point = false;
+  operators = parseFloat(display.innerHTML.replace(/,/g, '.'))
+  display.innerHTML = 0
+  if (!display.innerHTML.includes(',')) {
+    point = false
   }
 }
 
 const equal = () => {
-  var result = 0;
+  let result = 0
   if (type === '+') {
-    result = operators + parseFloat(display.innerHTML.replace(/,/g, '.'));
+    result = operators + parseFloat(display.innerHTML.replace(/,/g, '.'))
   }
   if (type === '-') {
-    result = operators - parseFloat(display.innerHTML.replace(/,/g, '.'));
+    result = operators - parseFloat(display.innerHTML.replace(/,/g, '.'))
   }
   if (type === '*') {
-    result = operators * parseFloat(display.innerHTML.replace(/,/g, '.'));
+    result = operators * parseFloat(display.innerHTML.replace(/,/g, '.'))
   }
   if (type === '/') {
-    result = operators / parseFloat(display.innerHTML.replace(/,/g, '.'));
+    result = operators / parseFloat(display.innerHTML.replace(/,/g, '.'))
   }
-  if (!display.innerHTML.includes(".")) {
-    point = false;
+  if (!display.innerHTML.includes('.')) {
+    point = false
   }
 
+  console.log(result)
 
-  display.innerHTML = parseFloat(result).toLocaleString(undefined, { maximumFractionDigits: 10 }).replace(/\./g, ',');
+  if (result % 1 === 0) {
+    point = false
 
-  if (point = false){
-  display.innerHTML =display.innerHTML.substring(0, 10)}
-else {
-  display.innerHTML =display.innerHTML.substring(0, 11)
+    if (result.toString().length > MAX_DIGITS_IN_DISPLAY) {
+      display.innerHTML = 'ERROR'
+    } else {
+      display.innerHTML = result
+    }
+
+  } else {
+    point = true
+    result = parseFloat(result).toLocaleString(undefined, { maximumFractionDigits: 10 }).replace(/\./g, ',')
+    display.innerHTML = result.substring(0, MAX_DIGITS_IN_DISPLAY + 1)
+  }
+
 }
-}
-
-//Events teclas
 
 document.addEventListener('keydown', (event) => {
-
-  console.log(event.key)
-  const key = event.key;
-  const allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','];
+  const key = event.key
+  const allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',']
 
   if (event.key === 'Escape') {
     reset()
@@ -105,24 +95,15 @@ document.addEventListener('keydown', (event) => {
     negate()
   }
 
-  if (event.key === '-' && display.innerHTML == 0) {
-
+  if (event.key === '-' && display.innerHTML === 0) {
     display.innerHTML = '-'
     negated = true
-
   }
-
-
 
   if (allowedCharacters.includes(key)) {
-
     setDisplay(event.key)
-
   }
-});
-
-
-// OPERATIONS
+})
 
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   type = '+'
@@ -144,21 +125,13 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
   getNum()
 })
 
-
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   equal()
 })
 
-
-
-
-//EVENT LISTENERS BUTTONS
-
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
-
-////////////////////////////
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   setDisplay('0')
@@ -200,8 +173,7 @@ document.getElementsByName('nine')[0].addEventListener('click', () => {
   setDisplay('9')
 })
 
-
-////////////////////////////////
+/// /////////////////////////////
 document.getElementsByName('point')[0].addEventListener('click', () => {
   setDisplay(',')
 })
@@ -209,9 +181,4 @@ document.getElementsByName('point')[0].addEventListener('click', () => {
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   negate()
 })
-
-
-
-
-
 reset()
