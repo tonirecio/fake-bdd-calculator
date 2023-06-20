@@ -24,3 +24,10 @@ Comentaris:
 Ha passat el test!  
 Comentaris:
 * No ha passat el lint
+
+
+## @sc_DigitExceedTest
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Tot correcte, molt bé que no està hardcoded el valor de la coma/punt
