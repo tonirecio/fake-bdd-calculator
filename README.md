@@ -7,3 +7,7 @@
 ## Scenario Outline: Pressing non-operators screen buttons
 
 - Cambiar comillas dobles por simples en función setNegation para mantener formato. El resto todo correcto.
+
+## Scenario Outline: Pressing non-operators keys
+
+- Todo bien.
