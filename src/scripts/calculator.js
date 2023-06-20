@@ -42,9 +42,23 @@ const addPoint = () => {
 }
 
 const negateNumber = () => {
-  const negated = Number(display.innerHTML) * -1
+  const value = display.innerHTML
 
-  setDisplay(negated)
+  if (value !== '0' && value !== '0,') {
+    const numbers = value.split(',')
+
+    const positive = value.split('-')
+
+    if (Number(numbers[0]) >= 0 && !positive[1]) {
+      const negated = '-' + value
+
+      setDisplay(negated)
+    } else {
+      const positive = value.split('-')
+
+      setDisplay(positive[1])
+    }
+  }
 }
 
 /* Listeners for buttons */
@@ -101,7 +115,7 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
 })
 
 /* Keyboard input */
-document.addEventListener('keypress', (event) => {
+document.addEventListener('keydown', (event) => {
   if (event.key >= 0 && event.key <= 9) {
     addNumber(event.key)
   } else if (event.key === ',') {
