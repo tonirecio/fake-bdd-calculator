@@ -1,8 +1,8 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 const DEFAULT_DISPLAY = '0'
 
-const setDisplay = (value) => {
-  let updatedValue = value.replace('.', ',')
+const setDisplay = value => {
+  const updatedValue = value.replace('.', ',')
   display.innerHTML = updatedValue
 }
 
@@ -11,8 +11,13 @@ const reset = () => {
   setDisplay(storedNumber)
 }
 
-const negate = () => {
-  storedNumber = (parseFloat(storedNumber) * -1).toString()
+const negate = value => {
+  const temp = value
+  value = (parseFloat(storedNumber) * -1).toString()
+  if (temp.endsWith('.')) {
+    value += '.'
+  }
+  storedNumber = value
   setDisplay(storedNumber)
 }
 
@@ -32,7 +37,7 @@ const numbers = [
 ]
 let storedNumber = ''
 
-numbers.forEach((number) => {
+numbers.forEach(number => {
   const value = document.getElementsByName(number)[0]
   value.addEventListener('click', () => {
     if (storedNumber === '0') {
@@ -53,14 +58,14 @@ document.getElementsByName('point')[0].addEventListener('click', () => {
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  negate()
+  negate(storedNumber)
 })
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
 
-document.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', event => {
   const key = event.key
   if (key >= '0' && key <= '9') {
     const value = parseInt(key, 10)
@@ -75,7 +80,7 @@ document.addEventListener('keydown', (event) => {
   }
 
   if (key === 'Control') {
-    negate();
+    negate(storedNumber)
   }
 
   if (key === 'Escape') {
