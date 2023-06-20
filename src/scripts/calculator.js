@@ -35,6 +35,27 @@ const reset = () => {
   setDisplay(0)
 }
 
+document.addEventListener('keydown', (event) => {
+  const key = event.key
+
+  // Números del 0 al 9
+  if (/[0-9]/.test(key)) {
+    appendNumber(Number(key));
+  }
+  // Tecla de punto decimal
+  if (key === ',') {
+    setDecimal(',');
+  }
+  // Tecla de limpiar
+  if (key === 'Escape') {
+    reset();
+  }
+  // Tecla de negación
+  if (key === 'Control') {
+    setNegation();
+  }
+})
+
 const display = document.querySelector('div[name="display"] span')
 
 
