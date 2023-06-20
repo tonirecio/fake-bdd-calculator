@@ -117,33 +117,18 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
 // Buttons in Keys
 
 document.addEventListener('keydown', (event) => {
-  const key = event.key;
+  const key = event.key
 
-  if (key === '0') {
-    appendNumber(0);
-  } else if (key === '1') {
-    appendNumber(1);
-  } else if (key === '2') {
-    appendNumber(2);
-  } else if (key === '3') {
-    appendNumber(3);
-  } else if (key === '4') {
-    appendNumber(4);
-  } else if (key === '5') {
-    appendNumber(5);
-  } else if (key === '6') {
-    appendNumber(6);
-  } else if (key === '7') {
-    appendNumber(7);
-  } else if (key === '8') {
-    appendNumber(8);
-  } else if (key === '9') {
-    appendNumber(9);
-  } else if (key === ',') {
+  if (/[0-9]/.test(key)) {
+    appendNumber(Number(key));
+  }
+  if (key === ',') {
     appendPoint(',');
-  } else if (key === 'Escape') {
+  }
+  if (key === 'Escape') {
     reset();
-  } else if (key === 'Control') {
+  }
+  if (key === 'Control') {
     setNegation();
   }
 })
