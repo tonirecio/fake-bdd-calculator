@@ -12,4 +12,6 @@
 
 *Scenario Outline: Writing numbers of more than 10 digits*: A la funció tenNumbers en comptes de posar un 10 manualment, podries haver utilitzat la variable global MAX_DIGITS_IN_DISPLAY.
 
-*Scenario Outline: Performing two number operations*: falla la guia d'estil, caldria arreglar els erros que surten amb la comanda yarn lint. El codi està correcte.
+*Scenario Outline: Performing two number operations*: Falla la guia d'estil, caldria arreglar els erros que surten amb la comanda yarn lint. El codi està correcte.
+
+*Scenario Outline: Before clicking the equal button*: Ja estan arreglats els erros d'estil. El codi és el mateix que a l'anterior escenari.
