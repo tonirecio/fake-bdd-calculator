@@ -21,3 +21,5 @@
 *Scenario: Clicking the C button* : Perfecte
 
 *Scenario: Pressing the escape key* : Perfecte
+
+*Scenario: Clicking two different operation buttons* : Perfecte
