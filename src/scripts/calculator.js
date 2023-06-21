@@ -1,14 +1,40 @@
-const MAX_DIGITS_IN_DISPLAY = 10
-const displayNumber = document.getElementById('displayNumber')
+const MAX_DIGITS_IN_DISPLAY = 10;
+let currentValue = '0';
 
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
-}
+const setDisplay = (value) => {
+  display.innerHTML = value;
+  currentValue = value;
+};
 
-function setDisplay (value) {
-  displayNumber.value = value
-}
+const handleButtonPress = (buttonValue) => {
+  if (buttonValue === 'C') {
+    setDisplay('0');
+  } else if (buttonValue === ',' && !currentValue.includes(',')) {
+    setDisplay(currentValue + buttonValue);
+  } else if (buttonValue === '+-') {
+    setDisplay(parseFloat(currentValue) * -1);
+  } else if (currentValue === '0') {
+    setDisplay(buttonValue);
+  } else {
+    setDisplay(currentValue + buttonValue);
+  }
+};
 
-function reset (value = 0) {
-  setDisplay(value)
-}
+const display = document.querySelector('div[name="display"] span');
+
+document.querySelectorAll('[data-testid]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const buttonValue = button.textContent;
+    handleButtonPress(buttonValue);
+  });
+});
+
+document.getElementsByName('clean')[0].addEventListener('click', () => {
+  setDisplay('0');
+});
+
+document.getElementsByName('negate')[0].addEventListener('click', () => {
+  setDisplay(parseFloat(currentValue) * -1);
+});
+
+reset();
