@@ -109,7 +109,7 @@ const operate = () => {
   } else {
     setDisplay(result)
   }
-
+  newNumber = true
   operator = false
 }
 
