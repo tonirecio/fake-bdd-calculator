@@ -96,7 +96,7 @@ const tenNumbers = () => {
 }
 
 const numWithTenChar = (num) => {
-  let checkLength = Number(num)
+  const checkLength = Number(num)
 
   if (checkLength.toString().length >= MAX_DIGITS_IN_DISPLAY) {
     return true
@@ -190,11 +190,11 @@ const aproxNumber = (num) => {
 
   if (numWithTenChar(num)) {
     if (decimals[1]) {
-      let numberDecimals = MAX_DIGITS_IN_DISPLAY - decimals[0].length
+      const numberDecimals = MAX_DIGITS_IN_DISPLAY - decimals[0].length
 
-      let numberToFix = result.toFixed(numberDecimals).split('.')
+      const numberToFix = result.toFixed(numberDecimals).split('.')
 
-      let decimalToFix = numberToFix[1].split(0)
+      const decimalToFix = numberToFix[1].split(0)
 
       return Number(numberToFix[0] + '.' + decimalToFix[0])
     } else {
