@@ -132,36 +132,42 @@ document.addEventListener('keydown', (event) => {
 // Operations
 let firstOperand
 let operation
+
 // Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '+'
+  handleOperator(firstOperand)
   reset()
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '-'
+  handleOperator(firstOperand)
   reset()
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '*'
+  handleOperator(firstOperand)
   reset()
 })
 // Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '/'
+  handleOperator(firstOperand)
   reset()
 })
 // Equal
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = parseFloat(display.innerHTML.replace(',', '.'))
-  reset()
   calculate(firstOperand, secondOperand, operation)
 })
+
+const handleOperator = () => {
+  if (firstOperand === undefined) {
+    firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+  }
+}
 
 const calculate = (firstOperand, secondOperand, operation) => {
   let result
@@ -185,7 +191,7 @@ const calculate = (firstOperand, secondOperand, operation) => {
 
   result = parseFloat(result.toString())
 
-  if (!result.toString().match(regexPoint) && resultLength > MAX_DIGITS_IN_DISPLAY){
+  if (!result.toString().replace('.', ',').match(regexPoint) && resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = 'ERROR'
   }
 
