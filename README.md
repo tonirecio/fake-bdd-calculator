@@ -63,3 +63,10 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
+
+
+## @sc_OverlapOps
+Ha passat el test!
+Comentaris:
+* No ha passat el lint
+* Codi ben implementat
