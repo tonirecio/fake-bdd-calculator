@@ -45,7 +45,7 @@ const addNum = (value) => {
       let newNumber
       if (point) {
         const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1
-        newNumber = number + (value * (Math.pow(0.1,numDecimals)))
+        newNumber = number + (value * (Math.pow(0.1, numDecimals)))
       } else {
         newNumber = number * 10 + value
       }
@@ -56,7 +56,7 @@ const addNum = (value) => {
 }
 
 const negateNum = () => {
-  let number = getDisplay()
+  const number = getDisplay()
   if (number !== 0) {
     setDisplay(number * -1)
   }
@@ -78,7 +78,7 @@ const addOperation = (operation) => {
 }
 
 const operate = () => {
-  let number = getDisplay()
+  const number = getDisplay()
   let result
   console.log(accumulated)
   console.log(operator)
@@ -150,10 +150,10 @@ document.addEventListener('keyup', (key) => {
 })
 
 const display = document.querySelector('div[name="display"] span')
-var operator = false
-var accumulated = false
-var newNumber = true
-var point = false
+let operator = false
+let accumulated = false
+let newNumber = true
+let point = false
 
 reset()
 listeners(buttons)
