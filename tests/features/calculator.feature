@@ -27,7 +27,7 @@ Examples:
 |             1 |      C |             0 |
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
-@wip
+@done
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -49,7 +49,7 @@ Examples:
 |             1 |     Escape |             0 |
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
-
+@done
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button

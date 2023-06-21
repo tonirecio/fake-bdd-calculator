@@ -1,51 +1,79 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-let digits = 0
+let countDigits = 0
+//Scenario Writing numbers
+let comaUsage = false
+
+const display = document.querySelector('div[name="display"] span')
+
+let currentOperand = 0
+let pastOperand
+let currentNumber = 0
+let pastNumber = 0
+
+
 
 const updateDisplay = (value) => {
-  display.innerHTML = value
-  currentNumber = value
+  value = value.toString();
+  valueComas = value.replace(/\./, ",")
+  display.innerHTML = valueComas
 }
 
 const reset = () => {
   updateDisplay(0)
-  digits = 0
+  countDigits = 0
+  currentOperand = 0
+  dotUsage = false
 }
 
-const negate = (displayedValues) => {
-  displayedValues = displayedValues * -1
-  updateDisplay(displayedValues)
+const negate = (operand) => {
+  operand = operand.toString()
+  operandFloat = parseFloat(operand)
+  operandFloat = operandFloat * -1
+  if (operand.charAt(operand.length - 1) == '.'){
+    operandFloat += '.'
+  }
+  updateDisplay(operandFloat)
+  currentOperand = operandFloat
 }
-
-const display = document.querySelector('div[name="display"] span')
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  negate(display.innerHTML)
+  console.log(currentOperand)
+  negate(currentOperand)
 })
 
 
-const buttons = document.querySelectorAll('button:not([aria-label])')
 
-let currentOperand
-let pastOperand 
-
-//const calculator = new Calculator (pastOperand, currentOperand)
-let currentNumber = display.innerHTML
-let pastNumber
+reset()
 
 
-buttons.forEach(button => {
-  button.addEventListener('click', () => {
-    
-    if (digits < MAX_DIGITS_IN_DISPLAY){
-      if(display.innerHTML != 0 || button.textContent == ','){      
-        currentNumber = currentNumber + button.textContent
-        
-      } else{
-        currentNumber = button.textContent
+
+document.getElementsByName('clean')[0].addEventListener('click', () => {
+  reset()
+})
+
+
+// Scenario Pressing non-operators screen buttons
+const nonOperatorButtons = document.querySelectorAll('button:not([aria-label])')
+
+nonOperatorButtons.forEach(nonOperatorButton => {
+  nonOperatorButton.addEventListener('click', () => {
+    console.log("LOL", parseFloat(currentOperand))
+    if (countDigits < MAX_DIGITS_IN_DISPLAY){
+      if (nonOperatorButton.textContent == ',' && !dotUsage) {        
+        currentOperand += '.'
+        dotUsage = true
+      } else if ( nonOperatorButton.textContent == ',' && dotUsage) {
+        window.alert("Is not possible to add more dots")      
+      } else if (currentOperand != 0 || currentOperand.toString().includes('.')) {
+        currentOperand += nonOperatorButton.textContent        
+        countDigits++
+      } else {
+        currentOperand = nonOperatorButton.textContent
+        countDigits++
       }
-      digits++
-      updateDisplay(currentNumber)
+      
+      updateDisplay(currentOperand)
     } else{
       window.alert('Maximum digit capacity reached')
     }
@@ -53,36 +81,52 @@ buttons.forEach(button => {
   })
 })
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
-})
+//Scenario Pressing non-operators keys
 
-
-/*
+const nonDigitKeys = ['Escape', 'Control', '/', '*', '-', '+']
 
 document.addEventListener('keydown', (event) => {
-      var keyPressed = event.key; // Get the key code or character code
+  let keyPressed = event.key; 
       
-      // Handle the key based on its value
-      switch (keyPressed) {
-        case '1':
-          console.log('Menu option 1 selected.');
-          // Add your logic for option A here
-          break;
-        case 'B':
-          console.log('Menu option B selected.');
-          // Add your logic for option B here
-          break;
-        case 'C':
-          console.log('Menu option C selected.');
-          // Add your logic for option C here
-          break;
-        // Add more cases for additional menu options as needed
+if (countDigits < MAX_DIGITS_IN_DISPLAY){      
+  if (((keyPressed >= '0' && keyPressed <= '9') || keyPressed == ',')) {
+    if (keyPressed == ',' && !dotUsage){
+      currentOperand += '.'
+      dotUsage = true
+      
+    } else if(keyPressed == ',' && dotUsage){      
+      window.alert("Is not possible to add more dots")        
+    } else if (currentOperand != 0 || currentOperand.toString().includes('.')){
+      currentOperand += keyPressed      
+      countDigits++
+    } else {
+      currentOperand = keyPressed
+      countDigits++
+    }
+    updateDisplay(currentOperand)
+        
+  } else if (nonDigitKeys.includes(keyPressed)){
+    switch (keyPressed) {
+      case 'Escape':
+        reset()
+      case 'Control':
+        negate(currentOperand)
+    }
+  }
+} else{
+        window.alert('Maximum digit capacity reached')
       }
-    });
+  })
 
 
-*/
+//Scenario Writing numbers
+
+
+
+
+
+
+
 
 /*
 
