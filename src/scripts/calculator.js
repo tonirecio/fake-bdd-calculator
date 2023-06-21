@@ -1,12 +1,24 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 const DEFAULT_DISPLAY = '0'
 
-const setDisplay = (value) => {
-  display.innerHTML = value
+const setDisplay = value => {
+  const updatedValue = value.replace('.', ',')
+  display.innerHTML = updatedValue
 }
 
 const reset = () => {
-  setDisplay(DEFAULT_DISPLAY)
+  storedNumber = DEFAULT_DISPLAY
+  setDisplay(storedNumber)
+}
+
+const negate = value => {
+  const temp = value
+  value = (parseFloat(storedNumber) * -1).toString()
+  if (temp.endsWith('.')) {
+    value += '.'
+  }
+  storedNumber = value
+  setDisplay(storedNumber)
 }
 
 const display = document.querySelector('div[name="display"] span')
@@ -23,15 +35,15 @@ const numbers = [
   'eight',
   'nine'
 ]
-let storedNumber = ''
+let storedNumber = DEFAULT_DISPLAY
 
-numbers.forEach((number) => {
+numbers.forEach(number => {
   const value = document.getElementsByName(number)[0]
   value.addEventListener('click', () => {
     if (storedNumber === '0') {
       storedNumber = ''
     }
-    if (storedNumber.length < MAX_DIGITS_IN_DISPLAY) {
+    if (storedNumber.replace('.', '').length < MAX_DIGITS_IN_DISPLAY) {
       storedNumber += value.innerHTML
     }
     setDisplay(storedNumber)
@@ -39,51 +51,51 @@ numbers.forEach((number) => {
 })
 
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  if (!storedNumber.includes(',')) {
-    storedNumber += ','
+  if (
+    !storedNumber.includes('.') &&
+    storedNumber.length < MAX_DIGITS_IN_DISPLAY
+  ) {
+    storedNumber += '.'
   }
   setDisplay(storedNumber)
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  storedNumber = (parseFloat(storedNumber) * -1).toString()
-  setDisplay(storedNumber)
+  negate(storedNumber)
 })
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
-  storedNumber = DEFAULT_DISPLAY
-  setDisplay(storedNumber)
+  reset()
 })
 
-document.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', event => {
   const key = event.key
   if (key >= '0' && key <= '9') {
-    const numberIndex = parseInt(key, 10)
-    const numberName = numbers[numberIndex]
-    const value = document.getElementsByName(numberName)[0]
+    const value = parseInt(key, 10)
 
     if (storedNumber === '0') {
       storedNumber = ''
     }
-    if (storedNumber.length < MAX_DIGITS_IN_DISPLAY) {
-      storedNumber += value.innerHTML
+    if (storedNumber.replace('.', '').length < MAX_DIGITS_IN_DISPLAY) {
+      storedNumber += value
     }
     setDisplay(storedNumber)
   }
 
   if (key === 'Control') {
-    storedNumber = (parseFloat(storedNumber) * -1).toString()
-    setDisplay(storedNumber)
+    negate(storedNumber)
   }
 
   if (key === 'Escape') {
-    storedNumber = DEFAULT_DISPLAY
-    setDisplay(storedNumber)
+    reset()
   }
 
   if (key === ',') {
-    if (!storedNumber.includes(',')) {
-      storedNumber += ','
+    if (
+      !storedNumber.includes('.') &&
+      storedNumber.length < MAX_DIGITS_IN_DISPLAY
+    ) {
+      storedNumber += '.'
     }
     setDisplay(storedNumber)
   }
