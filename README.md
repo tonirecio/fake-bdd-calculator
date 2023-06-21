@@ -17,3 +17,5 @@
 *Scenario Outline: Before clicking the equal button*: Ja estan arreglats els erros d'estil. El codi és el mateix que a l'anterior escenari.
 
 *Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits*: Correcte.
+
+*Scenario: Clicking the C button*: Correcte. 
