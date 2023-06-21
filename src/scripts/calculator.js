@@ -1,22 +1,46 @@
-//const MAX_DIGITS_IN_DISPLAY = 10
-let currentValue = '0'
-
 const setDisplay = (value) => {
   display.innerHTML = value
-  currentValue = value
+}
+// Limpia la pantalla
+const clean = () => {
+  setDisplay('0')
+}
+// Cambia el signo
+const negate = () => {
+  const currentValue = display.innerHTML
+  setDisplay(parseFloat(currentValue) * -1)
 }
 
 const handleButtonPress = (buttonValue) => {
-  if (buttonValue === 'C') {
-    setDisplay('0')
+  const currentValue = display.innerHTML
+
+  if (buttonValue === 'C' || buttonValue === 'Escape') {
+    clean()
   } else if (buttonValue === ',' && !currentValue.includes(',')) {
     setDisplay(currentValue + buttonValue)
   } else if (buttonValue === '+-') {
-    setDisplay(parseFloat(currentValue) * -1)
+    negate()
   } else if (currentValue === '0') {
     setDisplay(buttonValue)
   } else {
     setDisplay(currentValue + buttonValue)
+  }
+}
+
+const handleKeyPress = (event) => {
+  const key = event.key
+  const currentValue = display.innerHTML
+
+  if (key === 'Escape') {
+    clean()
+  } else if (key === 'Control') {
+    negate()
+  } else if (key === ',') {
+    if (!currentValue.includes(',')) {
+      setDisplay(currentValue + ',')
+    }
+  } else if (/[0-9]/.test(key)) {
+    setDisplay(currentValue === '0' ? key : currentValue + key)
   }
 }
 
@@ -29,12 +53,11 @@ document.querySelectorAll('[data-testid]').forEach((button) => {
   })
 })
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  setDisplay('0')
-})
+document.getElementsByName('clean')[0].addEventListener('click', clean)
+document.getElementsByName('negate')[0].addEventListener('click', negate)
 
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-  setDisplay(parseFloat(currentValue) * -1)
-})
+document.addEventListener('keydown', handleKeyPress)
 
-//reset()
+// const reset = () => {
+// setDisplay('0')
+// }
