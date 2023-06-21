@@ -19,11 +19,17 @@ const getDisplay = () => {
 }
 
 const setDisplay = (value) => {
-  value = round(value)
-  let displayValue = String(value).replace('.', ',')
-  if (point && !displayValue.includes(',')) {
-    displayValue = displayValue.concat(',')
+  let displayValue
+  if (value === 'ERROR') {
+    displayValue = value
+  } else {
+    value = round(value)
+    displayValue = String(value).replace('.', ',')
+    if (point && !displayValue.includes(',')) {
+      displayValue = displayValue.concat(',')
+    }
   }
+
   display.innerHTML = displayValue
 }
 
@@ -98,7 +104,12 @@ const operate = () => {
       break
   }
   console.log(result)
-  setDisplay(result)
+  if (lenNumber(Math.round(result)) > MAX_DIGITS_IN_DISPLAY) {
+    setDisplay('ERROR')
+  } else {
+    setDisplay(result)
+  }
+
   operator = false
 }
 
