@@ -19,3 +19,5 @@
 *Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits*: Correcte.
 
 *Scenario: Clicking the C button*: Correcte. 
+
+*Scenario: Pressing the escape key*: Correcte.
