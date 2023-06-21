@@ -35,7 +35,7 @@ const numbers = [
   'eight',
   'nine'
 ]
-let storedNumber = ''
+let storedNumber = DEFAULT_DISPLAY
 
 numbers.forEach(number => {
   const value = document.getElementsByName(number)[0]
@@ -43,7 +43,7 @@ numbers.forEach(number => {
     if (storedNumber === '0') {
       storedNumber = ''
     }
-    if (storedNumber.length < MAX_DIGITS_IN_DISPLAY) {
+    if (storedNumber.replace('.', '').length < MAX_DIGITS_IN_DISPLAY) {
       storedNumber += value.innerHTML
     }
     setDisplay(storedNumber)
@@ -51,7 +51,10 @@ numbers.forEach(number => {
 })
 
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  if (!storedNumber.includes('.')) {
+  if (
+    !storedNumber.includes('.') &&
+    storedNumber.length < MAX_DIGITS_IN_DISPLAY
+  ) {
     storedNumber += '.'
   }
   setDisplay(storedNumber)
@@ -73,7 +76,7 @@ document.addEventListener('keydown', event => {
     if (storedNumber === '0') {
       storedNumber = ''
     }
-    if (storedNumber.length < MAX_DIGITS_IN_DISPLAY) {
+    if (storedNumber.replace('.', '').length < MAX_DIGITS_IN_DISPLAY) {
       storedNumber += value
     }
     setDisplay(storedNumber)
@@ -88,8 +91,11 @@ document.addEventListener('keydown', event => {
   }
 
   if (key === ',') {
-    if (!storedNumber.includes(',')) {
-      storedNumber += ','
+    if (
+      !storedNumber.includes('.') &&
+      storedNumber.length < MAX_DIGITS_IN_DISPLAY
+    ) {
+      storedNumber += '.'
     }
     setDisplay(storedNumber)
   }

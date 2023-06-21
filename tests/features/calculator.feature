@@ -30,7 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
-@done   
+@done
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -80,6 +80,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
+@done
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -94,6 +95,7 @@ Examples:
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
 
+@wip
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
