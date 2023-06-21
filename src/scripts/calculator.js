@@ -94,9 +94,6 @@ const operate = () => {
   }
   const number = getDisplay()
   let result
-  console.log(accumulated)
-  console.log(operator)
-  console.log(number)
   switch (operator) {
     case '+':
       result = accumulated + number
@@ -115,7 +112,7 @@ const operate = () => {
       }
       break
   }
-  console.log(result)
+  point = false
   if (result === 'ERROR' || lenNumber(Math.round(result)) > MAX_DIGITS_IN_DISPLAY) {
     setDisplay('ERROR')
   } else {
@@ -169,6 +166,14 @@ document.addEventListener('keyup', (key) => {
       reset()
     } else if (key.key === ',') {
       addPoint()
+    } else if (key.key === '-') {
+      addOperation('-')
+    } else if (key.key === '+') {
+      addOperation('+')
+    } else if (key.key === '*') {
+      addOperation('*')
+    } else if (key.key === '/') {
+      addOperation('/')
     }
   }
 })
