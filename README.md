@@ -40,3 +40,7 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Implementació del escenari d'errors ben fet.
 
+## @clicking_clear
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Mateix codi que l'anteior commit, ben implementat amb futureproofing.
