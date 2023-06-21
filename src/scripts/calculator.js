@@ -2,7 +2,7 @@ const MAX_DIGITS_IN_DISPLAY = 10
 let currentOperation = null
 let previousOperand = 0
 let currentOperand = null
-let operationPressed = false
+let overrideDisplay = false
 
 const displayedNumber = () => {
   const formattedDisplay = display.innerHTML.replace(',', '.')
@@ -42,8 +42,8 @@ const getDigitNumber = (number) => {
 }
 
 const writeNumber = (button) => {
-  if (display.innerHTML === '0' || operationPressed) {
-    operationPressed = false
+  if (display.innerHTML === '0' || overrideDisplay) {
+    overrideDisplay = false
     setDisplay(button.innerHTML)
   } else {
     append(button.innerHTML)
@@ -51,7 +51,7 @@ const writeNumber = (button) => {
 }
 
 const performOperation = () => {
-  if (currentOperation !== null && !operationPressed) {
+  if (currentOperation !== null && !overrideDisplay) {
     currentOperand = displayedNumber()
   }
   let result = 'ERROR'
@@ -72,7 +72,7 @@ const performOperation = () => {
   }
   result = formatResult(result)
   setDisplay(result)
-  operationPressed = true
+  overrideDisplay = true
 }
 
 const formatResult = (result) => {
@@ -123,7 +123,7 @@ buttons.forEach(button => {
         button.addEventListener('click', () => {
           currentOperation = button.getAttribute('name')
           previousOperand = displayedNumber()
-          operationPressed = true
+          overrideDisplay = true
         })
     }
   }
