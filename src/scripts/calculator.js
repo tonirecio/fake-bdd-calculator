@@ -1,57 +1,105 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-const lenNumber = () => {
-  let number = display.innerHTML
-  number = number.replace('-', '')
-  number = number.replace(',', '')
-  console.log(number)
-  return (number.length)
+const lenNumber = (number) => {
+  let stringNumber = String(number)
+  stringNumber = stringNumber.replace('-', '')
+  stringNumber = stringNumber.replace('.', '')
+  return (stringNumber.length)
+}
+
+const round = (number) => {
+  const maxDecimals = MAX_DIGITS_IN_DISPLAY - lenNumber(Math.round(number))
+  number = number.toFixed(maxDecimals) * 1
+  return (number)
 }
 
 const getDisplay = () => {
   const num = display.innerHTML
-  return (num.replace(',', '.'))
+  return (Number(num.replace(',', '.')))
 }
 
 const setDisplay = (value) => {
-  display.innerHTML = value
-}
-
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+  value = round(value)
+  let displayValue = String(value).replace('.', ',')
+  if (point && !displayValue.includes(',')) {
+    displayValue = displayValue.concat(',')
+  }
+  display.innerHTML = displayValue
 }
 
 const reset = () => {
+  operator = false
+  accumulated = false
+  newNumber = true
+  point = false
   setDisplay(0)
 }
 
 const addNum = (value) => {
-  if (display.innerHTML === '0') {
+  const number = getDisplay()
+  value = Number(value)
+  if ((number === 0 && !point) || newNumber) {
     setDisplay(value)
   } else {
-    if (lenNumber() < MAX_DIGITS_IN_DISPLAY) {
-      setDisplay(display.innerHTML.concat(value))
+    if (lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
+      let newNumber
+      if (point) {
+        const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1
+        newNumber = number + (value * (Math.pow(0.1,numDecimals)))
+      } else {
+        newNumber = number * 10 + value
+      }
+      setDisplay(Number(newNumber))
     }
   }
+  newNumber = false
 }
 
 const negateNum = () => {
-  let num = display.innerHTML
-  if (Number(getDisplay()) !== 0) {
-    if (num.startsWith('-')) {
-      num = num.slice(1)
-    } else {
-      num = '-' + num
-    }
-    setDisplay(num)
+  let number = getDisplay()
+  if (number !== 0) {
+    setDisplay(number * -1)
   }
 }
 
 const addPoint = () => {
-  const num = display.innerHTML
-  if (!num.includes(',') && lenNumber() < MAX_DIGITS_IN_DISPLAY) {
-    setDisplay(num.concat(','))
+  const number = getDisplay()
+  if (!point && lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
+    point = true
+    setDisplay(number)
   }
+}
+
+const addOperation = (operation) => {
+  operator = operation
+  newNumber = true
+  point = false
+  accumulated = getDisplay()
+}
+
+const operate = () => {
+  let number = getDisplay()
+  let result
+  console.log(accumulated)
+  console.log(operator)
+  console.log(number)
+  switch (operator) {
+    case '+':
+      result = accumulated + number
+      break
+    case '-':
+      result = accumulated - number
+      break
+    case '*':
+      result = accumulated * number
+      break
+    case '/':
+      result = accumulated / number
+      break
+  }
+  console.log(result)
+  setDisplay(result)
+  operator = false
 }
 
 // Buttons events
@@ -67,22 +115,27 @@ const listeners = (buttons) => {
           reset()
         } else if (button.innerHTML === ',') {
           addPoint()
-        } else if (button.innerHTML === 'negate') {
+        } else if (button.name === 'negate') {
           negateNum()
+        } else if (button.name === 'divide') {
+          addOperation('/')
+        } else if (button.name === 'multiply') {
+          addOperation('*')
+        } else if (button.name === 'subtract') {
+          addOperation('-')
+        } else if (button.name === 'sum') {
+          addOperation('+')
+        } else if (button.name === 'equal') {
+          operate()
         }
       }
     })
   }
 }
 
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-  negateNum()
-})
-
 // Keys events
 
 document.addEventListener('keyup', (key) => {
-  console.log(key.key)
   if (!isNaN(key.key)) {
     addNum(key.key)
   } else {
@@ -96,11 +149,11 @@ document.addEventListener('keyup', (key) => {
   }
 })
 
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  sayHello()
-})
-
 const display = document.querySelector('div[name="display"] span')
+var operator = false
+var accumulated = false
+var newNumber = true
+var point = false
 
 reset()
 listeners(buttons)
