@@ -15,3 +15,5 @@
 *Scenario Outline: Performing two number operations*: Falla la guia d'estil, caldria arreglar els erros que surten amb la comanda yarn lint. El codi està correcte.
 
 *Scenario Outline: Before clicking the equal button*: Ja estan arreglats els erros d'estil. El codi és el mateix que a l'anterior escenari.
+
+*Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits*: Correcte.
