@@ -8,6 +8,7 @@ const setDisplay = (value) => {
 
 const reset = () => {
   setDisplay(0);
+  isNegative = false;
   hasDecimal = false;
 };
 
@@ -17,16 +18,25 @@ const DisplayAcu = (value) => {
   if (value === "+-") {
     isNegative = !isNegative;
     const sign = isNegative ? "-" : "";
-    display.innerHTML = sign + currentValue;
+    display.innerHTML = sign + currentValue.replace("-", "").replace("+", "");
   } else if (value === ",") {
-    if (!hasDecimal && currentValue.indexOf(",") === -1) {
+    if (!hasDecimal && currentValue.indexOf(",") === -1 && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
       const newValue = currentValue === "0" ? "0" + value : currentValue + value;
       display.innerHTML = newValue;
       hasDecimal = true;
     }
+  } else if (value === "+" || value === "-") {
+    if (currentValue === "0") {
+      display.innerHTML = value;
+    } else if (currentValue === "+" || currentValue === "-") {
+      display.innerHTML = value === currentValue ? value : value === "+" ? "-" : "+";
+    } else {
+      const newValue = currentValue + value;
+      display.innerHTML = newValue;
+    }
   } else {
     const newValue = currentValue === "0" && value !== "," ? value : currentValue + value;
-    if (newValue.length <= MAX_DIGITS_IN_DISPLAY) {
+    if (newValue.replace(",", "").replace("+", "").replace("-", "").length <= MAX_DIGITS_IN_DISPLAY) {
       display.innerHTML = newValue;
     } else {
       window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.');
@@ -36,8 +46,7 @@ const DisplayAcu = (value) => {
 };
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
-  setDisplay("0");
-  hasDecimal = false;
+  reset();
 });
 
 const display = document.querySelector('div[name="display"] span');
@@ -70,13 +79,23 @@ document.getElementsByName('point')[0].addEventListener('click', () => {
 const displaynegate = document.querySelector('div[name="display"] span');
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   const currentValue = display.innerHTML;
-  const newValue = parseFloat(currentValue) * -1;
-  display.innerHTML = newValue.toString();
-});
+  const decimalIndex = currentValue.indexOf(",");
+  if (decimalIndex !== -1) {
+    const integerPart = currentValue.substring(0, decimalIndex);
+    const decimalPart = currentValue.substring(decimalIndex);
+    const newValue = (parseFloat(integerPart) * -1).toString() + decimalPart;
+    display.innerHTML = newValue;
+  } else {
+    const newValue = (parseFloat(currentValue) * -1).toString();
+    display.innerHTML = newValue;
+  } 
+  isNegative = !isNegative;
+})
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   DisplayAcu("0");
 });
+
 document.getElementsByName('one')[0].addEventListener('click', () => {
   DisplayAcu("1");
 });

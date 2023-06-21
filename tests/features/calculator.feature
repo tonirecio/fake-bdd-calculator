@@ -80,7 +80,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
-@test5
+@test5 
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
