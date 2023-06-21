@@ -95,7 +95,6 @@ document.addEventListener('keydown', () => {
 })
 
 const addToDisplay = (value) => {
-    //setDisplay(value)
 
     let currentValue = display.innerHTML;
 
@@ -104,24 +103,30 @@ const addToDisplay = (value) => {
     
     if (!isSign && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
 
-        if (currentValue === '0' && value !== '0') {
-
-            if (value === ',') {
+        if (currentValue === '0') {
+            if (value === DIGITO_COMA) {
                 currentValue += value;
             } else {
                 currentValue = value;
-            }
+            } 
 
         } else {
-        currentValue += value;
+            if (value === DIGITO_COMA ) {
+                if (!currentValue.includes(DIGITO_COMA)){
+                  currentValue += value;
+                }
+            } else {
+              currentValue += value;
+            }
+
         }
 
-      if (seleccionarOperador === '') {
+      /*if (seleccionarOperador === '') {
         operando = currentValue;
         setDisplay(value);
       } else {
         setDisplay(currentValue + value);
-      }
+      }*/
 
     }
     setDisplay(currentValue);
@@ -157,8 +162,8 @@ const operar = () => {
 const invertNumberDisplay = () => {
   let currentValue = display.innerHTML;
 
-  if (currentValue !== '0') {
-    console.log(currentValue.startsWith('-'));
+  if (currentValue !== '0' && currentValue !== '0,'  ) {
+    //console.log(currentValue.startsWith('-'));
     if (currentValue.startsWith('-')) {
       currentValue = currentValue.slice(1);
 
