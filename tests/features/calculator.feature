@@ -169,7 +169,7 @@ Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
-@wip
+@done
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -184,6 +184,7 @@ Examples:
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
 
+@wip
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button

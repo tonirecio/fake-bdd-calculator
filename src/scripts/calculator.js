@@ -4,8 +4,10 @@ const MIN_NUMBER = -9999999999
 let operation = ''
 let firstNumber = ''
 let operationClicked = false
+let pressedequals = false
 
 const setDisplay = (value) => {
+  console.log(value)
   display.innerHTML = value
 }
 
@@ -26,7 +28,14 @@ reset()
 
 /* My Functions */
 const addNumber = (num) => {
-  const actualNumber = display.innerHTML
+  let actualNumber = display.innerHTML
+
+  if (pressedequals) {
+    console.log()
+    setDisplay('0')
+    actualNumber = display.innerHTML
+    pressedequals = false
+  }
 
   if (Number(actualNumber) === 0 || operationClicked === true) {
     setDisplay(num)
@@ -134,6 +143,8 @@ const divide = () => {
 
 const operate = () => {
   let result = 0
+
+  pressedequals = true
 
   switch (operation) {
     case '+':
