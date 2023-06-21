@@ -59,3 +59,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Renomenclatura de variable amb un nom més especific del que fa, permet que d'aquesta manera es pugui reutilitzar y evitar tenir mes d'una variable amb el mateix valor en el moment de runtime amb noms diferents.
+
+## @previous_result
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Sintaxis correcta i sense modificacions destacables.
