@@ -13,3 +13,5 @@
 *Scenario Outline: Writing numbers of more than 10 digits* : Perfecte
 
 *Scenario Outline: Performing two number operations* : Està molt bé, pero el yarn lint m'ha informat d'alguns errors
+
+*Scenario Outline: Before clicking the equal button* : Perfecte
