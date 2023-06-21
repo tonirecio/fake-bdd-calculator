@@ -48,14 +48,14 @@ const addNum = (value) => {
     setDisplay(value)
   } else {
     if (lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-      let newNumber
+      let result
       if (point) {
         const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1
-        newNumber = number + (value * (Math.pow(0.1, numDecimals)))
+        result = number + (value * (Math.pow(0.1, numDecimals)))
       } else {
-        newNumber = number * 10 + value
+        result = number * 10 + value
       }
-      setDisplay(Number(newNumber))
+      setDisplay(Number(result))
     }
   }
   newNumber = false
@@ -77,10 +77,14 @@ const addPoint = () => {
 }
 
 const addOperation = (operation) => {
+  if (operator !== false && !newNumber) {
+    accumulated = operate()
+  } else {
+    accumulated = getDisplay()
+  }
   operator = operation
   newNumber = true
   point = false
-  accumulated = getDisplay()
 }
 
 const operate = () => {
@@ -111,6 +115,7 @@ const operate = () => {
   }
   newNumber = true
   operator = false
+  return (result)
 }
 
 // Buttons events
