@@ -1,4 +1,5 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+const regexPoint = '([,])+'
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -14,8 +15,7 @@ const reset = () => {
 
 const display = document.querySelector('div[name="display"] span')
 
-// Buttons in Display
-
+// Display Functions
 const appendNumber = (value) => {
   const displayValue = display.innerHTML.replace(/,|-/g, '') // Remove comma and negative sign
   const digitCount = displayValue.length
@@ -32,8 +32,7 @@ const appendNumber = (value) => {
 }
 
 const appendPoint = (value) => {
-  const regex = '([,])+'
-  if (!display.innerHTML.match(regex) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
+  if (!display.innerHTML.match(regexPoint) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
     display.innerHTML = display.innerHTML + value
   }
 }
@@ -59,6 +58,7 @@ const setNegation = () => {
   }
 }
 
+// Buttons in Display
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   appendNumber(0)
 })
@@ -112,7 +112,6 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
 })
 
 // Buttons in Keys
-
 document.addEventListener('keydown', (event) => {
   const key = event.key
 
@@ -180,11 +179,15 @@ const calculate = (firstOperand, secondOperand, operation) => {
 
   resultLength = result.toString().replace(',', '').length
 
-  if (resultLength > MAX_DIGITS_IN_DISPLAY) {
+  if ((resultLength > MAX_DIGITS_IN_DISPLAY)) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
   }
 
   result = parseFloat(result.toString())
+
+  if (!result.toString().match(regexPoint) && resultLength > MAX_DIGITS_IN_DISPLAY){
+    result = 'ERROR'
+  }
 
   display.innerHTML = result.toString().replace('.', ',')
 }
