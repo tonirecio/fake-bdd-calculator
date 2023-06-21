@@ -47,26 +47,32 @@ Comentaris:
 * Cap canvi visible en el codi, sense comentaris
 
 ## @sc_LongNumber
-Ha passat el test!
+Ha passat el test!  
 Comentaris:
 * No ha passat el lint
 * Codi ben implementat
 
 ## @sc_Reset
-Ha passat el test!
+Ha passat el test!  
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
 
 ## @sc_ResetKey
-Ha passat el test!
+Ha passat el test!  
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
 
 
 ## @sc_OverlapOps
-Ha passat el test!
+Ha passat el test!  
 Comentaris:
 * No ha passat el lint
 * Codi ben implementat
+
+## @sc_NewOp
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Funcionalitat ben implementada amb reutilització de variable booleana del codi anterior
