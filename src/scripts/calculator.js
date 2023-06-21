@@ -104,11 +104,15 @@ const operate = () => {
       result = accumulated * number
       break
     case '/':
-      result = accumulated / number
+      if (number === 0) {
+        result = 'ERROR'
+      } else {
+        result = accumulated / number
+      }
       break
   }
   console.log(result)
-  if (lenNumber(Math.round(result)) > MAX_DIGITS_IN_DISPLAY) {
+  if (result === 'ERROR' || lenNumber(Math.round(result)) > MAX_DIGITS_IN_DISPLAY) {
     setDisplay('ERROR')
   } else {
     setDisplay(result)
