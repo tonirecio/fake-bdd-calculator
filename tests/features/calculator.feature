@@ -157,16 +157,19 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
+@clicking_clear
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
 
+@pressing_escape
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
+@clicking_two_operators
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button

@@ -1,8 +1,10 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 let currentOperation = null
-let previousOperand = null
+let previousOperand = 0
+let currentOperand = null
+let opeationPressed = false
 
-const currentOperand = () => {
+const displayedNumber = () => {
   const formattedDisplay = display.innerHTML.replace(',', '.')
   return Number(formattedDisplay)
 }
@@ -17,6 +19,9 @@ const sayHello = () => {
 }
 
 const reset = () => {
+  previousOperand = null
+  currentOperand = null
+  currentOperation = null
   setDisplay(0)
 }
 
@@ -31,7 +36,7 @@ const negate = () => {
 }
 
 const append = (content) => {
-  if (getDigitNumber(currentOperand()) < MAX_DIGITS_IN_DISPLAY) {
+  if (getDigitNumber(displayedNumber()) < MAX_DIGITS_IN_DISPLAY) {
     setDisplay(display.innerHTML + content.toString())
   }
 }
@@ -41,7 +46,8 @@ const getDigitNumber = (number) => {
 }
 
 const writeNumber = (button) => {
-  if (display.innerHTML === '0') {
+  if (display.innerHTML === '0' || opeationPressed) {
+    opeationPressed = false
     setDisplay(button.innerHTML)
   } else {
     append(button.innerHTML)
@@ -49,20 +55,27 @@ const writeNumber = (button) => {
 }
 
 const performOperation = () => {
-  if (previousOperand !== null) {
-    let result = 'ERROR'
-    if (currentOperation === 'sum') {
-      result = previousOperand + currentOperand()
-    } else if (currentOperation === 'subtract') {
-      result = previousOperand - currentOperand()
-    } else if (currentOperation === 'multiply') {
-      result = previousOperand * currentOperand()
-    } else if (currentOperation === 'divide') {
-      result = previousOperand / currentOperand()
-    }
-    result = formatResult(result)
-    setDisplay(result)
+  if (currentOperation !== null && !opeationPressed) {
+    currentOperand = displayedNumber()
   }
+  let result = 'ERROR'
+  if (currentOperation === 'sum') {
+    result = previousOperand + currentOperand
+  } else if (currentOperation === 'subtract') {
+    result = previousOperand - currentOperand
+  } else if (currentOperation === 'multiply') {
+    result = previousOperand * currentOperand
+  } else if (currentOperation === 'divide') {
+    result = previousOperand / currentOperand
+  } else {
+    result = currentOperand
+  }
+
+  if (currentOperand === null) {
+    result = 'ERROR'
+  }
+  result = formatResult(result)
+  setDisplay(result)
 }
 
 const formatResult = (result) => {
@@ -115,8 +128,9 @@ buttons.forEach(button => {
       default:
         button.addEventListener('click', () => {
           currentOperation = button.getAttribute('name')
-          previousOperand = Number(display.innerHTML.replace(',', '.'))
-          reset()
+          previousOperand = displayedNumber()
+          opeationPressed = true
+          // reset()
         })
     }
   }
