@@ -23,3 +23,5 @@
 *Scenario: Pressing the escape key*: Correcte.
 
 *Scenario Outline: Clicking two different operation buttons*: Correcte.
+
+*Scenario Outline: Doing a new operation*: Correcte.
