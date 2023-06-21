@@ -198,6 +198,7 @@ Examples:
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
 
+@sc_ConcatResult
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
