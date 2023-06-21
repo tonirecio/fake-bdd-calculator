@@ -25,3 +25,5 @@
 *Scenario: Clicking two different operation buttons* : Perfecte
 
 *Scenario Outline: Doing a new operation* : La variable newNumber està com a global i dins d'una funció addNum també es crea un altre variable amb el mateix nom
+
+*Scenario Outline: Using the previous result in a new operation* : Ok
