@@ -34,3 +34,9 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🔼 **Sintaxis:** Codi refactoritzat i millorat la implementació del display (separant strings de integers). Escenari plantejat ben fet.
+
+## @big_result
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Implementació del escenari d'errors ben fet.
+
