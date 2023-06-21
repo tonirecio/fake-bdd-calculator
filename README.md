@@ -49,3 +49,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Mateix codi que l'anteior commit, ben implementat amb futureproofing.
+
+## @clicking_two_operators
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Bona implementació del escenari sense molts canvis i mantenint la estructura del codi anterior.
