@@ -1,63 +1,89 @@
-const setDisplay = (value) => {
-  display.innerHTML = value
-}
-// Limpia la pantalla
+let value = '0'; 
+
+const display = document.querySelector('div[name="display"] span');
+
+const setDisplay = () => {
+  display.innerHTML = value;
+};
+
 const clean = () => {
-  setDisplay('0')
-}
-// Cambia el signo
+  value = '0';
+  setDisplay();
+};
+
 const negate = () => {
-  const currentValue = display.innerHTML
-  setDisplay(parseFloat(currentValue) * -1)
-}
+  value = parseFloat(value) * -1;
+  setDisplay();
+};
 
 const handleButtonPress = (buttonValue) => {
-  const currentValue = display.innerHTML
-
-  if (buttonValue === 'C' || buttonValue === 'Escape') {
-    clean()
-  } else if (buttonValue === ',' && !currentValue.includes(',')) {
-    setDisplay(currentValue + buttonValue)
-  } else if (buttonValue === '+-') {
-    negate()
-  } else if (currentValue === '0') {
-    setDisplay(buttonValue)
-  } else {
-    setDisplay(currentValue + buttonValue)
+  switch (buttonValue) {
+    case 'C':
+    case 'Escape':
+      clean(); 
+      break;
+    case ',':
+      if (!value.includes(',')) {
+        value += buttonValue; 
+        setDisplay();
+      }
+      break;
+    case '+-':
+      negate(); 
+      break;
+    default:
+      // Si el botón presionado es un numero del 0 al 9
+      if (/^[0-9]$/.test(buttonValue)) {
+        
+        if (value === '0') {
+          value = buttonValue; 
+        } else {
+          value += buttonValue; 
+        }
+        setDisplay();
+      }
+      break;
   }
-}
+};
 
 const handleKeyPress = (event) => {
-  const key = event.key
-  const currentValue = display.innerHTML
+  const key = event.key;
 
-  if (key === 'Escape') {
-    clean()
-  } else if (key === 'Control') {
-    negate()
-  } else if (key === ',') {
-    if (!currentValue.includes(',')) {
-      setDisplay(currentValue + ',')
-    }
-  } else if (/[0-9]/.test(key)) {
-    setDisplay(currentValue === '0' ? key : currentValue + key)
+  switch (key) {
+    case 'Escape':
+      clean(); 
+      break;
+    case 'Control':
+      negate(); 
+      break;
+    case ',':
+      if (!value.includes(',')) {
+        value += key; 
+        setDisplay();
+      }
+      break;
+    default:
+      // Si la tecla presionada es un numero del 0 al 9
+      if (/^[0-9]$/.test(key)) {
+          if (value === '0') {
+          value = key; 
+        } else {
+          value += key; 
+        }
+        setDisplay();
+      }
+      break;
   }
-}
-
-const display = document.querySelector('div[name="display"] span')
+};
 
 document.querySelectorAll('[data-testid]').forEach((button) => {
   button.addEventListener('click', () => {
-    const buttonValue = button.textContent
-    handleButtonPress(buttonValue)
-  })
-})
+    const buttonValue = button.textContent;
+    handleButtonPress(buttonValue); 
+  });
+});
 
-document.getElementsByName('clean')[0].addEventListener('click', clean)
-document.getElementsByName('negate')[0].addEventListener('click', negate)
+document.getElementsByName('clean')[0].addEventListener('click', clean); 
+document.getElementsByName('negate')[0].addEventListener('click', negate);
 
-document.addEventListener('keydown', handleKeyPress)
-
-// const reset = () => {
-// setDisplay('0')
-// }
+document.addEventListener('keydown', handleKeyPress); 
