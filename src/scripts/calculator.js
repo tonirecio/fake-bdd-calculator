@@ -169,6 +169,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
 
 const calculate = (firstOperand, secondOperand, operation) => {
   let result
+  let resultLength
 
   if (operation == '+'){
     result = firstOperand + secondOperand
@@ -180,17 +181,11 @@ const calculate = (firstOperand, secondOperand, operation) => {
     result = firstOperand / secondOperand
   }
 
-  result = fixNumber(result)
-
-  display.innerHTML = result.toString().replace('.', ',')
-}
-
-const fixNumber = (result) => {
-  resultLength = result.toString().replace('.', )
+  resultLength = result.toString().replace(',', '').length
 
   if (resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
-    return result
   }
 
+  display.innerHTML = result.toString().replace('.', ',')
 }
