@@ -88,6 +88,10 @@ const addOperation = (operation) => {
 }
 
 const operate = () => {
+  if (newNumber) {
+    setDisplay('ERROR')
+    return
+  }
   const number = getDisplay()
   let result
   console.log(accumulated)
