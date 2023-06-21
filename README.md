@@ -44,3 +44,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Mateix codi que l'anteior commit, ben implementat amb futureproofing.
+
+## @pressing_escape
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Mateix codi que l'anteior commit, ben implementat amb futureproofing.
