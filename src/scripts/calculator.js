@@ -1,4 +1,6 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+const MAX_NUMBER = 9999999999
+const MIN_NUMBER = -9999999999
 let operation = ''
 let firstNumber = ''
 let operationClicked = false
@@ -132,42 +134,44 @@ const divide = () => {
 
 const operate = () => {
   let result = 0
-  let text = ''
-  let show = ''
 
   switch (operation) {
     case '+':
       result = toNumber(firstNumber) + toNumber(display.innerHTML)
 
-      text = '' + aproxNumber(result)
-      show = text.replace('.', ',')
-
-      setDisplay(show)
+      checkResult(result)
       break
     case '-':
       result = toNumber(firstNumber) - toNumber(display.innerHTML)
 
-      text = '' + aproxNumber(result)
-      show = text.replace('.', ',')
-
-      setDisplay(show)
+      checkResult(result)
       break
     case '*':
       result = toNumber(firstNumber) * toNumber(display.innerHTML)
 
-      text = '' + aproxNumber(result)
-      show = text.replace('.', ',')
-
-      setDisplay(show)
+      checkResult(result)
       break
     case '/':
       result = toNumber(firstNumber) / toNumber(display.innerHTML)
 
-      text = '' + aproxNumber(result)
-      show = text.replace('.', ',')
-
-      setDisplay(show)
+      checkResult(result)
       break
+  }
+}
+
+const checkResult = (result) => {
+  let text = ''
+  let show = ''
+
+  if (result > MAX_NUMBER) {
+    setDisplay('ERROR')
+  } else if (result < MIN_NUMBER) {
+    setDisplay('ERROR')
+  } else {
+    text = '' + aproxNumber(result)
+    show = text.replace('.', ',')
+
+    setDisplay(show)
   }
 }
 
