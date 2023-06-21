@@ -16,4 +16,4 @@
 
 *Scenario Outline: Before clicking the equal button* : Perfecte
 
-*Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits* : Molt bé. Penso que podríes comprovar comprovar si es passa del número de dígits avans de fer les operacións
+*Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits* : Molt bé. Penso que podríes comprovar si es passa del número de dígits avans de fer les operacions
