@@ -9,3 +9,5 @@
 *Scenario Outline: Pressing non-operators keys* : Molt be. L'únic que veig, és que en la nova funció tens dobles cometes al comprovar si la tecla pitjada és ',' i que al final d'aquesta has deixat uns enters. Aixó ho he descobert al utilitzar la comanda yarn lint
 
 *Scenario Outline: Writing numbers* : Molt be. Ara he vist que tens dos comps un event listener pel mateix botó de negate.
+
+*Scenario Outline: Writing numbers of more than 10 digits* : Perfecte
