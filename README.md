@@ -45,3 +45,9 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Cap canvi visible en el codi, sense comentaris
+
+## @sc_LongNumber
+Ha passat el test!
+Comentaris:
+* No ha passat el lint
+* Codi ben implementat
