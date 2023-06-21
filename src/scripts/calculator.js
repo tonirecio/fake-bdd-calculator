@@ -66,6 +66,45 @@ const floatDisplay = () => {
   }
 }
 
+
+const completeOp = () => {
+  const currentNum = parseFloat(display.innerHTML.replace(',', '.'))
+  let resultNum = null
+  let resultOp = null
+
+  console.log('----------------------------EQUAL')
+  if (currentOp === 'sum') {
+    resultNum = prevNum + currentNum
+    console.log(resultNum)
+  } else if (currentOp === 'subtract') {
+    resultNum = prevNum - currentNum
+    console.log(resultNum)
+  } else if (currentOp === 'multiply') {
+    resultNum = prevNum * currentNum
+    console.log(resultNum)
+  } else if (currentOp === 'divide') {
+    resultNum = prevNum / currentNum
+    console.log(resultNum)
+  }
+
+  if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
+    // character length of the integer number (including - sign if applicable)
+    const integerLength = (Math.round(resultNum)).toString().length
+    // forcing this number to not have trailing of 0s (1 *) and have a maximum
+    // of MAX_DIGITS_IN_DISPLAY number characters between its integer and
+    // decimal part
+    const fixedNum = 1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength)
+    // set locale replacement
+    resultOp = fixedNum.toString().replace('.', ',')
+  } else {
+    resultOp = 'ERROR'
+  }
+
+  clearDisplay = true
+  setDisplay(resultOp)
+}
+
+
 // SCREEN BUTTONS
 const keypad = document.querySelectorAll('div[name="keypad"] button')
 keypad.forEach(element => {
@@ -85,66 +124,15 @@ keypad.forEach(element => {
       element.addEventListener('click', () => {
         floatDisplay()
       })
-    } else if (elementName === 'sum') {
-      element.addEventListener('click', () => {
-        currentOp = 'sum'
-        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        clearDisplay = true
-      })
-    } else if (elementName === 'subtract') {
-      element.addEventListener('click', () => {
-        currentOp = 'subtract'
-        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        clearDisplay = true
-      })
-    } else if (elementName === 'multiply') {
-      element.addEventListener('click', () => {
-        currentOp = 'multiply'
-        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        clearDisplay = true
-      })
-    } else if (elementName === 'divide') {
-      element.addEventListener('click', () => {
-        currentOp = 'divide'
-        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        clearDisplay = true
-      })
     } else if (elementName === 'equal') {
       element.addEventListener('click', () => {
-        const currentNum = parseFloat(display.innerHTML.replace(',', '.'))
-        let resultNum = null
-        let resultOp = null
-
-        console.log('----------------------------EQUAL')
-        if (currentOp === 'sum') {
-          resultNum = prevNum + currentNum
-          console.log(resultNum)
-        } else if (currentOp === 'subtract') {
-          resultNum = prevNum - currentNum
-          console.log(resultNum)
-        } else if (currentOp === 'multiply') {
-          resultNum = prevNum * currentNum
-          console.log(resultNum)
-        } else if (currentOp === 'divide') {
-          resultNum = prevNum / currentNum
-          console.log(resultNum)
-        }
-
-        if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
-        // character length of the integer number (including - sign if applicable)
-          const integerLength = (Math.round(resultNum)).toString().length
-          // forcing this number to not have trailing of 0s (1 *) and have a maximum
-          // of MAX_DIGITS_IN_DISPLAY number characters between its integer and
-          // decimal part
-          const fixedNum = 1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength)
-          // set locale replacement
-          resultOp = fixedNum.toString().replace('.', ',')
-        } else {
-          resultOp = 'ERROR'
-        }
-
+        completeOp()
+      })
+    } else {
+      element.addEventListener('click', () => {
+        currentOp = elementName
+        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
         clearDisplay = true
-        setDisplay(resultOp)
       })
     }
   } else {
