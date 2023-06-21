@@ -27,7 +27,7 @@ Examples:
 |             1 |      C |             0 |
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
-
+@test3
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
