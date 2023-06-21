@@ -17,35 +17,33 @@ const display = document.querySelector('div[name="display"] span')
 // Buttons in Display
 
 const appendNumber = (value) => {
-  const displayValue = display.innerHTML.replace(/,|-/g, ''); // Remove comma and negative sign
-  const digitCount = displayValue.length;
+  const displayValue = display.innerHTML.replace(/,|-/g, '') // Remove comma and negative sign
+  const digitCount = displayValue.length
 
   if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
-    return;
+    return
   }
 
   if (display.innerHTML == '0') {
-    display.innerHTML = value;
+    display.innerHTML = value
   } else {
-    display.innerHTML += value;
+    display.innerHTML += value
   }
-};
-
+}
 
 const appendPoint = (value) => {
-  let regex = '([,])+'
+  const regex = '([,])+'
   if (!display.innerHTML.match(regex) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
     display.innerHTML = display.innerHTML + value
   }
-
 }
 
 const setNegation = () => {
   let displayValue = display.innerHTML
-  let valueLength = displayValue.length
+  const valueLength = displayValue.length
   let hasPoint = false
 
-  if (displayValue.charAt(valueLength - 1) == ','){
+  if (displayValue.charAt(valueLength - 1) == ',') {
     hasPoint = true
   }
 
@@ -54,10 +52,9 @@ const setNegation = () => {
     displayValue = parseFloat(displayValue) * (-1)
     displayValue = displayValue.toString().replace('.', ',')
 
-
-    if (hasPoint == true){
-    displayValue += ','	
-  }
+    if (hasPoint == true) {
+      displayValue += ','
+    }
     display.innerHTML = displayValue
   }
 }
@@ -120,49 +117,49 @@ document.addEventListener('keydown', (event) => {
   const key = event.key
 
   if (/[0-9]/.test(key)) {
-    appendNumber(Number(key));
+    appendNumber(Number(key))
   }
   if (key === ',') {
-    appendPoint(',');
+    appendPoint(',')
   }
   if (key === 'Escape') {
-    reset();
+    reset()
   }
   if (key === 'Control') {
-    setNegation();
+    setNegation()
   }
 })
 
 // Operations
 let firstOperand
 let operation
-  // Sum
+// Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '+'
   reset()
 })
-  // Subtract
+// Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
   firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '-'
   reset()
 })
-  // Multiply
+// Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '*'
   reset()
 })
-  // Divide
+// Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
   firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
   operation = '/'
   reset()
 })
-  // Equal
+// Equal
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  let secondOperand = parseFloat(display.innerHTML.replace(',','.'))
+  const secondOperand = parseFloat(display.innerHTML.replace(',', '.'))
   reset()
   calculate(firstOperand, secondOperand, operation)
 })
@@ -171,9 +168,9 @@ const calculate = (firstOperand, secondOperand, operation) => {
   let result
   let resultLength
 
-  if (operation == '+'){
+  if (operation == '+') {
     result = firstOperand + secondOperand
-  } else if (operation == '-'){
+  } else if (operation == '-') {
     result = firstOperand - secondOperand
   } else if (operation == '*') {
     result = firstOperand * secondOperand
@@ -186,6 +183,8 @@ const calculate = (firstOperand, secondOperand, operation) => {
   if (resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
   }
+
+  result = parseFloat(result.toString())
 
   display.innerHTML = result.toString().replace('.', ',')
 }
