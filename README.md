@@ -76,3 +76,9 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Funcionalitat ben implementada amb reutilització de variable booleana del codi anterior
+
+## @sc_ConcatResult
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Codi ben implementat
