@@ -15,3 +15,7 @@
 ## Scenario Outline: Writing numbers
 
 - Todo bien.
+
+## Scenario Outline: Writing numbers of more than 10 digits
+
+- Cambiar comillas dobles por simples en función appendNumber para mantener formato. El resto todo correcto.
