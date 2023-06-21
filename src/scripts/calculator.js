@@ -25,9 +25,9 @@ const negateValueDisplay = () => {
     }
       
 
-    currentFloatValor = getFloatValueDisplay()
-    currentFloatValor = currentFloatValor * -1
-    valueDisplay = currentFloatValor
+    currentFloatValue = getFloatValueDisplay()
+    currentFloatValue = currentFloatValue * -1
+    valueDisplay = currentFloatValue
 
     if(comma === true){
       valueDisplay = getValueDisplay() + ','
@@ -58,10 +58,6 @@ const setDisplay = (value) => {
     valueDisplay = getValueDisplay() + value;
   }
     display.innerHTML = valueDisplay
-}
-
-const maxNumberWarning = () => {
-  window.alert('The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
 }
 
 const reset = () => {
@@ -112,17 +108,17 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
 
 document.addEventListener("keydown", function(event) {
   if (event.key === "Escape") {
-    valueDisplay = "0"
-    display.innerHTML = getValueDisplay()
+    valueDisplay = "0";
+    setDisplay(getValueDisplay())
 
   }
   else if (event.key === "Control") {
-      negateValueDisplay()  
-      display.innerHTML = getValueDisplay()
+    negateValueDisplay()
+    setDisplay(getValueDisplay())
   }
   
-  arrNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ','];
-  arrNumbers.forEach(num => {
+  arrKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ','];
+  arrKeys.forEach(num => {
     if(event.key == num){
       setDisplay(num)
     }
