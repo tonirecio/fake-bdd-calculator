@@ -107,7 +107,7 @@ const addToTheDisplay = (value) => {
 
 const calculoNumerosAntesDelDecmial = (value) => {
 
-  var numero = value.toString().split('.')[0]
+  var numero = value.toString().split('.')[0].replace('-','')
   return numero.length;
 
 }
@@ -135,11 +135,22 @@ const truncarNumero = (value, decimal) => {
 
   }
 
-  var numero = value * multiple
-  numero = Math.trunc(numero)
-  numero /= multiple
+}
+const redondearNumero = (value, decimal) => {
 
-console.log(numero)
+  console.log(value)
+  var multiple = 1
+
+  for (var i = 0; i < decimal; i++) {
+
+    
+    multiple *= 10
+
+  }
+
+  var numero = value * multiple
+  numero = Math.round(numero)
+  numero /= multiple
 
   return numero
 
@@ -162,29 +173,11 @@ const showResults = (value) => {
 
     if(isOnRangeOfNotError(value)) {
 
-      var longuitudDecimal = calculoNumerosDelDecmial(value)
-      var longuitudAntesDecimal = calculoNumerosAntesDelDecmial(value)
-      
-      if (resultado.length > MAX_DIGITS_IN_DISPLAY) {
+      var numemeroDeNumeros = calculoNumerosAntesDelDecmial(value)
+      if(value < 0) value = redondearNumero(value,MAX_DIGITS_IN_DISPLAY + 2 - numemeroDeNumeros)
+      else value = redondearNumero(value,MAX_DIGITS_IN_DISPLAY - numemeroDeNumeros)
 
-        if (isANegativeNumber(value)) {
-
-          var loguitudARestarAlDecimal = MAX_DIGITS_IN_DISPLAY + 2 - longuitudDecimal - longuitudAntesDecimal
-          longuitudDecimal = longuitudDecimal - loguitudARestarAlDecimal
-          value = value.toFixed(longuitudDecimal)
-
-        }
-        else{
-
-          var loguitudARestarAlDecimal = MAX_DIGITS_IN_DISPLAY + 1 - longuitudDecimal - longuitudAntesDecimal
-          longuitudDecimal = longuitudDecimal - loguitudARestarAlDecimal
-          value = value.toFixed(longuitudDecimal)
-
-        }
-        value = value.truncarNumero(longuitudDecimal)
-      }
-      var resultado = value.toString();
-      resultado = resultado.replace('.', DIGITO_DE_LA_COMA);
+      resultado = value.toString().replace(/\.?0+$/, "").replace('.', DIGITO_DE_LA_COMA)
       setDisplay(resultado)
 
     }
