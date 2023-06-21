@@ -1,8 +1,12 @@
+/// Adrian Lopez Villalba       --      Travelport
+/// yarn test tests/features/calculator.feature --tags "@sc_NonOpScreenBtn or @sc_NumberCheck or @sc_DigitExceedTest or @sc_Operations or @sc_BeforeEqual or @sc_LongNumber or @sc_OverlapOps"
+
 const MAX_DIGITS_IN_DISPLAY = 10
 const pointLocale = document.getElementsByName('point')[0].innerHTML
 const display = document.querySelector('div[name="display"] span')
 let currentOp
 let prevNum
+let pressedOp = false
 
 // function setDisplay (value) { [...] }
 const setDisplay = (value) => {
@@ -38,13 +42,19 @@ const negateDisplay = () => {
 const pressNumber = (buttonContent) => {
   let displayNum = display.innerHTML
 
-  if (displayNum.length < MAX_DIGITS_IN_DISPLAY || (displayNum.includes(pointLocale) && displayNum.length <= MAX_DIGITS_IN_DISPLAY)) {
-    if (displayNum !== '0') {
-      displayNum += buttonContent
-    } else {
-      displayNum = buttonContent
-    }
+  if(pressedOp){
+    displayNum = buttonContent    
+    pressedOp = false
+  } else {
+    if (displayNum.length < MAX_DIGITS_IN_DISPLAY || (displayNum.includes(pointLocale) && displayNum.length <= MAX_DIGITS_IN_DISPLAY)) {
+      if (displayNum !== '0') {
+        displayNum += buttonContent
+      } else {
+        displayNum = buttonContent
+      }
+    } 
   }
+
 
   setDisplay(displayNum)
 }
@@ -79,26 +89,25 @@ keypad.forEach(element => {
       element.addEventListener('click', () => {
         currentOp = 'sum'
         prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        setDisplay(0)
+        pressedOp = true
       })
     } else if (elementName === 'subtract') {
       element.addEventListener('click', () => {
         currentOp = 'subtract'
         prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        console.log(prevNum)
-        setDisplay(0)
+        pressedOp = true
       })
     } else if (elementName === 'multiply') {
       element.addEventListener('click', () => {
         currentOp = 'multiply'
         prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        setDisplay(0)
+        pressedOp = true
       })
     } else if (elementName === 'divide') {
       element.addEventListener('click', () => {
         currentOp = 'divide'
         prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        setDisplay(0)
+        pressedOp = true
       })
     } else if (elementName === 'equal') {
       element.addEventListener('click', () => {

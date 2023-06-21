@@ -169,6 +169,7 @@ Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
+@sc_OverlapOps
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
