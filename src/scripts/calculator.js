@@ -55,6 +55,9 @@ const performOperation = () => {
     currentOperand = displayedNumber()
   }
   let result = 'ERROR'
+  if (currentOperand === null) {
+    result = 'ERROR'
+  }
   if (currentOperation === 'sum') {
     result = previousOperand + currentOperand
   } else if (currentOperation === 'subtract') {
@@ -64,11 +67,7 @@ const performOperation = () => {
   } else if (currentOperation === 'divide') {
     result = previousOperand / currentOperand
   } else {
-    result = currentOperand
-  }
-
-  if (currentOperand === null) {
-    result = 'ERROR'
+    result = displayedNumber()
   }
   result = formatResult(result)
   setDisplay(result)
