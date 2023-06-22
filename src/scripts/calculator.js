@@ -142,13 +142,14 @@ const operate = () => {
         result = parseFloat(result.replace(',', '.')).toFixed(decimalPlaces).replace('.', ',')
         result = result.replace(/0*$/, '').replace(/,$/, '') // Elimina los ceros finales y la coma final si está presente
       } else {
-        result = parseFloat(result.replace(',', '.')).toString().replace('.', ',')
+        result = 'ERROR'
       }
     }
     currentValue = result
     setDisplay(currentValue)
   }
 }
+
 
 const sumButton = document.querySelector('button[name="sum"]')
 sumButton.addEventListener('click', () => {
