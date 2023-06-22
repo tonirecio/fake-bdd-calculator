@@ -82,3 +82,10 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
+
+## @sc_ConcatResultPlus
+Ha passat el test!  
+Comentaris: 
+* No ha passat el lint
+* Codi ben implementat
+* Respecte el codi anterior, ha refactoritzat cap a millor, amb codi més clar i més organitzat, i modificant el display a partir d'una variable i no al revés. 👏
