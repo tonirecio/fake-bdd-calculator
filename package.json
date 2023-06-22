@@ -5,7 +5,7 @@
 	"main": "calculator.js",
 	"scripts": {
 		"lint": "standard",
-		"test": "cucumber-js --require cucumber.conf.js --require tests/steps/**/*.steps.js --format @cucumber/pretty-formatter --format html:tests/reports/cucumber-report.html --tags \"not @Manual\" --parallel 1"
+		"test": "cucumber-js --require cucumber.conf.js --require tests/steps/**/*.steps.js --format @cucumber/pretty-formatter --tags \"not @Manual\" --parallel 1"
 	},
 	"license": "ISC",
 	"dependencies": {
