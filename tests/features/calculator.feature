@@ -3,11 +3,11 @@ Feature: Calculator
 Background:
 Given a user opens the app
 
-@sc1
+@sc1 @done
 Scenario: Default display screen
 Then the display should show the following value: "0"
 
-@sc2
+@sc2 @done
 Scenario Outline: Pressing non-operators screen buttons
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -30,7 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
-@sc3
+@sc3 @done
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -53,7 +53,7 @@ Examples:
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
 
-@sc4
+@sc4 @done
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -80,7 +80,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
-@sc5
+@sc5 @done
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
