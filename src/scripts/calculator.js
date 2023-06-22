@@ -2,12 +2,16 @@
 
 const MAX_DIGITS_IN_DISPLAY = 10
 const MAX_DIGITS_IN_DISPLAY_WHIT_COMMA = 11
+const MAX_DIGITS_IN_DISPLAY_WHIT_COMMA_AND_HYPHEN  = 13
+let inputValue = null
 let valueDisplay = ""
 let firstNumber = null
 let operator = null
 let secondNumber = null
 let isSecondNumber = false
+let comma = false
 let tryNegateSecondNumber = false
+let tryNegateFirstNumber = false
 let arrOperations = []
 const display = document.querySelector('div[name="display"] span')
 
@@ -17,109 +21,179 @@ const getValueDisplay = (value) => {
     return value
 }
 
-const getFloatValueDisplay = (valor) => {
-    valor = getValueDisplay(valueDisplay).replace(",", ".")
-    return parseFloat(valor, 10)
-}
-
-const negateValueDisplay = (valor) => {
-    comma = false
-
-    if(getValueDisplay(valor).slice(-1) === ","){
-      comma = true
-    }
-<<<<<<< Updated upstream
-      
-
-    currentFloatValue = getFloatValueDisplay()
-    currentFloatValue = currentFloatValue * -1
-    valueDisplay = currentFloatValue
-
-    if(comma === true){
-      valueDisplay = getValueDisplay() + ','
-=======
-    
-    if(tryNegateSecondNumber === false){
-      currentFloatValor = getFloatValueDisplay(valor)
-      currentFloatValor = currentFloatValor * -1
-      valueDisplay = currentFloatValor
->>>>>>> Stashed changes
-    }
-    else if(tryNegateSecondNumber === true){
-      currentFloatValor = secondNumber
-      currentFloatValor = currentFloatValor * -1
-      secondNumber = currentFloatValor
-      
-     
-      setDisplay(secondNumber)
-    }
-    
-    if(comma === true){
-      setDisplay(",")
-    }  
-}
-
-const setDisplay = (value) => {
-  if(isSecondNumber === true && tryNegateSecondNumber != true){
-      
-      valueDisplay = getValueDisplay(value)
-      secondNumber = getFloatValueDisplay(value)
+const concatInputsNumbers = (value) => {
+  if(tryNegateFirstNumber === false && !isSecondNumber){
+    inputValue = inputValue.toString()
+    inputValue = inputValue + value
+    setDisplay(inputValue)
+    inputValue = parseFloat(inputValue)
   }
-  else if(isSecondNumber === true && tryNegateSecondNumber === true){
+  else if(isSecondNumber){
+    if(secondNumber === null){
       secondNumber = value
-      valueDisplay = getValueDisplay(firstNumber) + getValueDisplay(operator) + getValueDisplay(secondNumber)
-      display.innerHTML = valueDisplay
-      return
-  }
+      valueDisplay = secondNumber
+      setDisplay(valueDisplay)
+    }
+    else{
+      if(tryNegateSecondNumber === false){
+        valueDisplay = secondNumber
+        valueDisplay = valueDisplay.toString() + value
+        secondNumber = parseFloat(valueDisplay, 10) 
+        inputValue = parseFloat(valueDisplay, 10) 
+        setDisplay(valueDisplay)
+      }
+      else{
+        
+        valueDisplay = inputValue
+        
+        valueDisplay = valueDisplay.toString() + value
+        
+        setDisplay(value)
+        tryNegateSecondNumber = false
+        return
+      }
+      
 
-  if(getValueDisplay(valueDisplay).includes(",")){
-    maxDigitNumber = MAX_DIGITS_IN_DISPLAY_WHIT_COMMA
+return
+    }
+  }
+}
+
+const putCommaAndConcatNumbers = (value) => {
+  if(tryNegateFirstNumber === false){
+    inputValue = inputValue.toString()
+    inputValue = inputValue + "." + value
+    setDisplay(inputValue)
+    inputValue = parseFloat(inputValue)
   }
   else{
-    maxDigitNumber = MAX_DIGITS_IN_DISPLAY
+    inputValue = value
+    setDisplay(inputValue)
+    inputValue = parseFloat(inputValue)
+  }
+  
+}
+
+const negateInputValue = (value) => {
+    
+    comma = false
+    if(!isSecondNumber){
+      tryNegateFirstNumber = true
+    }
+    else{
+      tryNegateSecondNumber = true
+    }
+
+    if(valueDisplay.slice(-1) === ","){
+      comma = true
+    }
+    
+    if(tryNegateFirstNumber === true){
+      
+      
+      value = value * -1
+      inputValue = value
+      return
+    }
+    else if(tryNegateSecondNumber === true){
+      
+      
+      value = value * -1 
+      inputValue = value
+      return
+    }
+}
+
+const setInputValue = (value) => {
+  
+  if(isSecondNumber === true){
+      inputValue = value
+      concatInputsNumbers(inputValue)
+      return
   }
   
 
-  if(getValueDisplay(valueDisplay).length + 1 > maxDigitNumber){
+  if((valueDisplay.replace(",", "")).length + 1 > MAX_DIGITS_IN_DISPLAY && tryNegateFirstNumber === false){
     return
   }
-  else if(value === "," && getValueDisplay(valueDisplay).includes(",") && isSecondNumber === false){
+  else if(value === "." && valueDisplay.includes(",") && isSecondNumber === false){
     return
   }
-  else if(getValueDisplay(valueDisplay) === "0" && value != "," && isSecondNumber === false){
-    valueDisplay = value;
+  else if(inputValue === 0 && value != "." && !valueDisplay.includes(",") && isSecondNumber === false){
+    inputValue = value;
+  }
+  else if(inputValue === 0 && value === "."){
+    
+    valueDisplay = "0,"
+    setDisplay(valueDisplay)
+    return
   }
   else{
-    if(isSecondNumber === false){
-      valueDisplay = getValueDisplay(valueDisplay) + value;
+    if(valueDisplay.slice(-1) === ","){
+      
+      putCommaAndConcatNumbers(value)
+      return
+    }
+    else if(isSecondNumber === false && tryNegateFirstNumber === false){
+      concatInputsNumbers(value)
+      return
+    }
+    else{
+      inputValue = value
     }
   }
+  
+  setDisplay(inputValue)
+  
+}
 
+const setDisplay = (value) => {
+  
+  if(firstNumber != null){
+      valueDisplay = firstNumber + operator
+    }
+
+  valueDisplay = value.toString().replace(".", ",")
+  
   if(isSecondNumber === false){
+    if(comma === true){
+      valueDisplay = valueDisplay + ","
+    }  
+    
     display.innerHTML = valueDisplay
+   
   }
   else if(isSecondNumber === true){
-    valueDisplay = getValueDisplay(firstNumber) + getValueDisplay(operator) + getValueDisplay(secondNumber)
-    display.innerHTML = valueDisplay
+      
+      secondNumber = value
+      valueDisplay = secondNumber
+      valueDisplay =  firstNumber.toString() + operator + valueDisplay.toString().replace(".", ",")
+      
+      display.innerHTML = valueDisplay.replace(".", ",")
+   
+    
   }
-
-
 }
 
-const reset = () => {
-  setDisplay("0")
+const resetDisplay = () => {
+  inputValue = 0
+  valueDisplay = '0'
+  comma = false
+  display.innerHTML = "0"
 }
 
-handleOperator = () => {
-  firstNumber = getFloatValueDisplay(valueDisplay)
-  operator = valueDisplay.slice(-1)
+handleOperator = (operation) => {
+  firstNumber = inputValue
+  operator = operation
+  valueForDisplay = operator
+  setDisplay(operator)
   isSecondNumber = true
-  tryNegateSecondNumber = true
+  
 }
 
 const handleOperation = () => {
   if(tryNegateSecondNumber === false){
-    secondNumber = getFloatValueDisplay(valueDisplay)
+    secondNumber = inputValue
   }
 
   switch (operator){
@@ -145,9 +219,25 @@ const handleOperation = () => {
       console.log(secondNumber)
       console.log(result)
 
+      arrOperations.push(secondNumber)
       isSecondNumber = false
       tryNegateSecondNumber = false
+      inputValue = result
       valueDisplay = ""
+      valueDisplay = result
+      
+      valueDisplay = valueDisplay.toString().replace(".", "")
+      
+      if(){
+
+      }
+      lengthA = valueDisplay.length 
+      if(lengthA > 10){
+        lengthA = 10
+      }
+      console.log(lengthA)
+      result = result.toPrecision(lengthA)
+
       setDisplay(result)
       firstNumber = null
       operator = null
@@ -168,99 +258,91 @@ divideNumbers = (firstNumber, secondNumber) => {
     return firstNumber / secondNumber
 }
 
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  setDisplay("7")
-})
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  setDisplay("8")
-})
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  setDisplay("9")
-})
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  setDisplay("4")
-})
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  setDisplay("5")
-})
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  setDisplay("6")
-})
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  setDisplay("1")
-})
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  setDisplay("2")
-})
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  setDisplay("3")
-})
-document.getElementsByName('zero')[0].addEventListener('click', () => {
-  setDisplay("0")
-})
+writeNumber = () => {
 
+  //Click button numbers
+  document.getElementsByName('seven')[0].addEventListener('click', () => {
+    setInputValue(7)
+  })
+  document.getElementsByName('eight')[0].addEventListener('click', () => {
+    setInputValue(8)
+  })
+  document.getElementsByName('nine')[0].addEventListener('click', () => {
+    setInputValue(9)
+  })
+  document.getElementsByName('four')[0].addEventListener('click', () => {
+    setInputValue(4)
+  })
+  document.getElementsByName('five')[0].addEventListener('click', () => {
+    setInputValue(5)
+  })
+  document.getElementsByName('six')[0].addEventListener('click', () => {
+    setInputValue(6)
+  })
+  document.getElementsByName('one')[0].addEventListener('click', () => {
+    setInputValue(1)
+  })
+  document.getElementsByName('two')[0].addEventListener('click', () => {
+    setInputValue(2)
+  })
+  document.getElementsByName('three')[0].addEventListener('click', () => {
+    setInputValue(3)
+  })
+  document.getElementsByName('zero')[0].addEventListener('click', () => {
+    setInputValue(0)
+  })
+  document.getElementsByName('clean')[0].addEventListener('click', () => {
+    resetDisplay()
+  })
+  document.getElementsByName('point')[0].addEventListener('click', () => {
+    setInputValue('.')
+  })
+  document.getElementsByName('negate')[0].addEventListener('click', () => {
+        negateInputValue(inputValue)
+        setInputValue(inputValue)
+        tryNegateFirstNumber = false
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  valueDisplay = "0";
-  setDisplay(getValueDisplay(valueDisplay))
-})
-document.getElementsByName('point')[0].addEventListener('click', () => {
-  setDisplay(",")
-})
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-      negateValueDisplay(valueDisplay)
-      display.innerHTML = getValueDisplay(valueDisplay);
-})
- 
+  })
+  document.getElementsByName('divide')[0].addEventListener('click', () => {
+    handleOperator("/")
+  })
+  document.getElementsByName('multiply')[0].addEventListener('click', () => { 
+    handleOperator("*")
+  })
+  document.getElementsByName('subtract')[0].addEventListener('click', () => {
+    handleOperator("-")
+  })
+  document.getElementsByName('sum')[0].addEventListener('click', () => {
+    handleOperator("+")
+  })
+  document.getElementsByName('equal')[0].addEventListener('click', () => {
+    handleOperation()
+  })
 
-document.getElementsByName('divide')[0].addEventListener('click', () => {
-  setDisplay("/")
-  handleOperator()
-})
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  setDisplay("*")  
-  handleOperator()
-})
-document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  setDisplay("-")
-  handleOperator()
-})
-document.getElementsByName('sum')[0].addEventListener('click', () => {
-  setDisplay("+")
-  handleOperator()
-})
-document.getElementsByName('equal')[0].addEventListener('click', () => {
-  handleOperation()
-})
-
-document.addEventListener("keydown", function(event) {
-  if (event.key === "Escape") {
-<<<<<<< Updated upstream
-    valueDisplay = "0";
-    setDisplay(getValueDisplay())
-
-  }
-  else if (event.key === "Control") {
-    negateValueDisplay()
-    setDisplay(getValueDisplay())
-=======
-    valueDisplay = "0"
-    display.innerHTML = getValueDisplay(valueDisplay)
-  }
-  else if (event.key === "Control") {
-      negateValueDisplay(valueDisplay)  
-      display.innerHTML = getValueDisplay(valueDisplay)
->>>>>>> Stashed changes
-  }
-  
-  arrKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ','];
-  arrKeys.forEach(num => {
-    if(event.key == num){
-      setDisplay(num)
+  //Click key buttons
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+      resetDisplay()
     }
+    else if (event.key === "Control") {
+      negateInputValue(inputValue)
+      setInputValue(inputValue)
+      tryNegateFirstNumber = false
+    }
+    arrKeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ','];
+    arrKeys.forEach(num => {
+      if(event.key == num){
+        if(num != ','){
+          setInputValue(num)
+        }
+        else{
+           setInputValue('.')
+        }
+      }
+    });
+
   });
+}
 
-});
-
-
-reset()
+writeNumber();
+resetDisplay()
