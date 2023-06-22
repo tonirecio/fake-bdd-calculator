@@ -225,18 +225,20 @@ const handleOperation = () => {
       inputValue = result
       valueDisplay = ""
       valueDisplay = result
+      valueDisplay = valueDisplay.toString()
       
-      valueDisplay = valueDisplay.toString().replace(".", "")
       
-      if(){
-
+      if(valueDisplay.includes(".")){
+        valueDisplay.replace(".", "")
+        lengthA = valueDisplay.length 
+        if(lengthA > 10){
+          lengthA = 10
+        }
+        
+        console.log(lengthA)
+        result = result.toPrecision(lengthA) * 1
       }
-      lengthA = valueDisplay.length 
-      if(lengthA > 10){
-        lengthA = 10
-      }
-      console.log(lengthA)
-      result = result.toPrecision(lengthA)
+      
 
       setDisplay(result)
       firstNumber = null
