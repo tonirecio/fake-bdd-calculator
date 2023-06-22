@@ -13,12 +13,10 @@ const clean = () => {
 const negate = () => {
   if (value === '0' || value === '0,') {
     return
-  }
-
-  if (value.startsWith('-')) {
+  } if (value.startsWith('-')) {
     value = value.slice(1)
   } else {
-    value = `-${value}`// Añade delante el simbolo -
+    value = `-${value}`
   }
 
   setDisplay()
@@ -31,7 +29,7 @@ const handleButtonPress = (buttonValue) => {
       clean()
       break
     case ',':
-      if (!value.includes(',')) {
+      if (!value.includes(',') && value.replace(',', '').length < 10) {
         value += buttonValue
         setDisplay()
       }
@@ -42,13 +40,19 @@ const handleButtonPress = (buttonValue) => {
       }
       break
     default:
-      if (/^[0-9]$/.test(buttonValue)) { // Si se presiona un boton del 0 al 9
-        if (value === '0') {
-          value = buttonValue
-        } else {
-          value += buttonValue
+      if (/^[0-9]$/.test(buttonValue)) { // Si el valor es un numero del 0 al 9
+        const numericValue = value.replace(',', '')
+        if (
+          numericValue.length < 10 ||
+          (numericValue.length === 10 && value.includes(','))
+        ) {
+          if (value === '0') {
+            value = buttonValue
+          } else {
+            value += buttonValue
+          }
+          setDisplay()
         }
-        setDisplay()
       }
       break
   }
@@ -67,20 +71,25 @@ const handleKeyPress = (event) => {
       }
       break
     case ',':
-      if (!value.includes(',')) {
+      if (!value.includes(',') && value.replace(',', '').length < 10) {
         value += key
         setDisplay()
       }
       break
     default:
-      if (/^[0-9]$/.test(key)) { // Si se presiona una tecla del 0 al 9
-        if (value === '0') {
-          value = key
-        } else {
-          value += key
+      if (/^[0-9]$/.test(key)) { // Si el valor es un numero del 0 al 9
+        const numericValue = value.replace(',', '')
+        if (
+          numericValue.length < 10 ||
+          (numericValue.length === 10 && value.includes(','))
+        ) {
+          if (value === '0') {
+            value = key
+          } else {
+            value += key
+          }
+          setDisplay()
         }
-        setDisplay()
-        setDisplay()
       }
       break
   }

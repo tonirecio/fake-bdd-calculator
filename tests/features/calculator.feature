@@ -75,7 +75,7 @@ Examples:
 |             7 |     +- |            -7 |
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
-
+@test5
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -89,7 +89,7 @@ Examples:
 |     123456789 |      , |    123456789, |
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
-
+@test6
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
