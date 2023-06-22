@@ -1,5 +1,4 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-let isNegative = false
 let hasDecimal = false
 
 const setDisplay = (value) => {
@@ -8,24 +7,13 @@ const setDisplay = (value) => {
 
 const reset = () => {
   setDisplay(0)
-  isNegative = false
   hasDecimal = false
 }
 
 const DisplayAcu = (value) => {
   const currentValue = display.innerHTML
 
-  if (value === '+-') {
-    isNegative = !isNegative
-    const sign = isNegative ? '-' : ''
-    display.innerHTML = sign + currentValue.replace('-', '').replace('+', '')
-  } else if (value === ',') {
-    if (!hasDecimal && currentValue.indexOf(',') === -1 && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
-      const newValue = currentValue === '0' ? '0' + value : currentValue + value
-      display.innerHTML = newValue
-      hasDecimal = true
-    }
-  } else if (value === '+' || value === '-') {
+  if (value === '+' || value === '-') {
     if (currentValue === '0') {
       display.innerHTML = value
     } else if (currentValue === '+' || currentValue === '-') {
@@ -72,24 +60,12 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
 const displaypoint = document.querySelector('div[name="display"] span')
 document.getElementsByName('point')[0].addEventListener('click', () => {
   if (!hasDecimal) {
-    DisplayAcu(',')
+    Coma(',')
   }
 })
 
-const displaynegate = document.querySelector('div[name="display"] span')
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  const currentValue = display.innerHTML
-  const decimalIndex = currentValue.indexOf(',')
-  if (decimalIndex !== -1) {
-    const integerPart = currentValue.substring(0, decimalIndex)
-    const decimalPart = currentValue.substring(decimalIndex)
-    const newValue = (parseFloat(integerPart) * -1).toString() + decimalPart
-    display.innerHTML = newValue
-  } else {
-    const newValue = (parseFloat(currentValue) * -1).toString()
-    display.innerHTML = newValue
-  }
-  isNegative = !isNegative
+  negateInvertNumber()
 })
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
@@ -132,13 +108,32 @@ document.getElementsByName('nine')[0].addEventListener('click', () => {
   DisplayAcu('9')
 })
 
-document.addEventListener('keydown', (event) => {
-  const targetElement = document.activeElement
-  const targetTagName = targetElement.tagName.toLowerCase()
-  if (targetTagName === 'input' || targetTagName === 'textarea') {
-    return
-  }
+const negateInvertNumber = () => {
+  let currentValue = display.innerHTML
 
+  if (currentValue !== '0' && currentValue !== '0,') {
+    if (currentValue.startsWith('-')) {
+      currentValue = currentValue.slice(1)
+    } else if (currentValue.startsWith('+')) {
+      currentValue = '-' + currentValue.slice(1)
+    } else {
+      currentValue = '-' + currentValue
+    }
+    setDisplay(currentValue)
+  }
+}
+
+const Coma = (value) => {
+  const currentValue = display.innerHTML
+  if (value === ',') {
+    if (!hasDecimal && currentValue.indexOf(',') === -1 && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
+      const newValue = currentValue === '0' ? '0' + value : currentValue + value
+      display.innerHTML = newValue
+    }
+  }
+}
+
+const pressKey = (event) => {
   const key = event.key
 
   switch (key) {
@@ -191,8 +186,7 @@ document.addEventListener('keydown', (event) => {
       DisplayAcu('9')
       break
     case 'Control':
-      const negateButton = document.getElementsByName('negate')[0]
-      negateButton.click()
+      negateInvertNumber()
       break
     case 'Escape':
       reset()
@@ -200,4 +194,6 @@ document.addEventListener('keydown', (event) => {
     default:
       break
   }
-})
+}
+
+document.addEventListener('keydown', pressKey)

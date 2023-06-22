@@ -30,7 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
-@test3Done 
+@test3Done
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -95,6 +95,7 @@ Examples:
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
 
+@test6
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
