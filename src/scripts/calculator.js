@@ -1,82 +1,78 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////   Aqui voy a poner todas las variables globales de la calculadora   //////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const MAX_DIGITS_IN_DISPLAY = 10 
+const COMMA_CHARACTER = ',' 
+const display = document.querySelector('div[name="display"] span') 
+const COMMA_BUTTON = document.getElementsByName('point')[0]
+const NEGATE_BUTTON = document.getElementsByName('negate')[0]
+const CLEAN_BUTTON = document.getElementsByName('clean')[0]
+const ZERO_BUTTON = document.getElementsByName('zero')[0]
+const ONE_BUTTON = document.getElementsByName('one')[0]
+const TWO_BUTTON = document.getElementsByName('two')[0]
+const THREE_BUTTON = document.getElementsByName('three')[0]
+const FOUR_BUTTON = document.getElementsByName('four')[0]
+const FIVE_BUTTON = document.getElementsByName('five')[0]
+const SIX_BUTTON = document.getElementsByName('six')[0]
+const SEVEN_BUTTON = document.getElementsByName('seven')[0]
+const EIGHT_BUTTON = document.getElementsByName('eight')[0]
+const NINE_BUTTON = document.getElementsByName('nine')[0]
+const DIVIDE_BUTTON = document.getElementsByName('divide')[0]
+const MULTUPLY_BUTTON = document.getElementsByName('multiply')[0]
+const SUBSTRACT_BUTTON = document.getElementsByName('subtract')[0]
+const SUM_BUTTON = document.getElementsByName('sum')[0]
+const EQUAL_BUTTON = document.getElementsByName('equal')[0]
 
-
-const MAX_DIGITS_IN_DISPLAY = 10 // El numero de digitos en numero que podemos llegar a tener en el display de la calculadora
-const DIGITO_DE_LA_COMA = ',' 
-const display = document.querySelector('div[name="display"] span') // El div del display de la calculadora para poder modificarla
-var numeroGuardadoEnMemoria = 0 //El numero que se queda en memoria para poder hacer calculos
-var operacionGuardada = '' 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////// Aqui voy a poner todas las funciones de la caluladora tocando Inputs  ////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Esta funcion lo que hace es mostrar el display pasando un valor
+var inMemoryNumber = 0 //El numero que se queda en memoria para poder hacer calculos
+var savedOperator = '' 
 
 const setDisplay = (value) => {
   display.innerHTML = value
 }
 
-const getDisplay = () => {
-  return display.innerHTML
-}
-
 const getDisplayNumber = () => {
 
-  var numero = getDisplay() 
-  numero = numero.replace(/,/g, '.')
+  var numero = display.innerHTML
+  numero = numero.replace(COMMA_CHARACTER, '.')
   numero = parseFloat(numero)
   return numero
 
 }
 
-//Funcion en desuso que muestra por ventana emergente un hello world con JavaScript
-
 const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '. Number saved = ' + numeroGuardadoEnMemoria)
+  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '. Number saved = ' + inMemoryNumber)
 }
-
-//Esta funcion hace que el valor que hay por el display si es negativo pase a ser positivo y viceversa
 
 const invertNumberDisplay = () => {
   
   if (isOnDisplayZero() == false && isOnDisplayZeroWithDot() == false) {
-    var numeroDelDisplay = getDisplay() 
+    var displayNumber = display.innerHTML
+    if (isANegativeNumberDisplay()) displayNumber = displayNumber.slice(1) 
+    else displayNumber = '-' + displayNumber 
 
-    if (isANegativeNumberDisplay()) numeroDelDisplay = numeroDelDisplay.slice(1) 
-    else numeroDelDisplay = '-' + numeroDelDisplay 
-
-    setDisplay(numeroDelDisplay) 
+    setDisplay(displayNumber) 
   }
 
 }
 
-//Esta funcion cambia el valor que muestra la calculadora por pantalla a 0
-
 const reset = () => {
   setDisplay(0)
-  numeroGuardadoEnMemoria = 0
+  inMemoryNumber = 0
+  savedOperator = ''
 }
-
-//Esta funcion añade al display el caracter que se le pasa por parametros
 
 const addToTheDisplay = (value) => {
 
   if (!isTheMaxLenght()) {
-    var actualDisplay = getDisplay()
+
+    var actualDisplay = display.innerHTML
 
     if (isOnDisplayZero()){
 
-      if (value == DIGITO_DE_LA_COMA)setDisplay('0' + DIGITO_DE_LA_COMA)
+      if (value == COMMA_CHARACTER) setDisplay('0' + COMMA_CHARACTER)
       else setDisplay(value) 
 
     }
     else {
 
-      if (value == DIGITO_DE_LA_COMA){
+      if (value == COMMA_CHARACTER){
 
         if (isADotOnDisplay() == false){
 
@@ -99,33 +95,23 @@ const addToTheDisplay = (value) => {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////             Aqui voy a poner todas las operaciones                  //////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Esta funcion coge dos numeros y lo que hace es conseguir el numero de decimales que tenga mayor longuitud
-
-const calculoNumerosAntesDelDecmial = (value) => {
+const numbersBeforeComma = (value) => {
 
   var numero = value.toString().split('.')[0].replace('-','')
   return numero.length;
 
 }
 
-//Esta funcion coge dos numeros y lo que hace es conseguir el numero de decimales que tenga mayor longuitud
-
-const calculoNumerosDelDecmial = (value) => {
+const numberAfterComma = (value) => {
 
   var numero = value.toString().split('.')[1]
   return numero.length;
 
 }
 
-//Esta funcion nos permite truncar un numero a partir del decimal pasado por parametros
+const truncNumber = (value, decimal) => {
 
-const truncarNumero = (value, decimal) => {
 
-  console.log(value)
   var multiple = 1
 
   for (var i = 0; i < decimal; i++) {
@@ -136,17 +122,12 @@ const truncarNumero = (value, decimal) => {
   }
 
 }
-const redondearNumero = (value, decimal) => {
 
-  console.log(value)
+const roundNumber = (value, decimal) => {
+
   var multiple = 1
 
-  for (var i = 0; i < decimal; i++) {
-
-    
-    multiple *= 10
-
-  }
+  for (var i = 0; i < decimal; i++) multiple *= 10
 
   var numero = value * multiple
   numero = Math.round(numero)
@@ -156,15 +137,13 @@ const redondearNumero = (value, decimal) => {
 
 }
 
-//enseña el resultado de la operacion y cambia el valor de display
-
 const showResults = (value) => {
 
-  var resultado = value.toString();
+  var result = value.toString();
 
   if (isADotOnThis(value) == false) {
     
-    if (isOnRangeOfNotError(value)) setDisplay(resultado)
+    if (isOnRangeOfNotError(value)) setDisplay(result)
     else setDisplay("ERROR") 
 
 
@@ -173,91 +152,80 @@ const showResults = (value) => {
 
     if(isOnRangeOfNotError(value)) {
 
-      var numemeroDeNumeros = calculoNumerosAntesDelDecmial(value)
-      if(value < 0) value = redondearNumero(value,MAX_DIGITS_IN_DISPLAY + 2 - numemeroDeNumeros)
-      else value = redondearNumero(value,MAX_DIGITS_IN_DISPLAY - numemeroDeNumeros)
+      var countOfNumberBeforeComma = numbersBeforeComma(value)
 
-      resultado = value.toString().replace(/\.?0+$/, "").replace('.', DIGITO_DE_LA_COMA)
-      setDisplay(resultado)
+      if(value < 0) value = roundNumber(value,MAX_DIGITS_IN_DISPLAY + 2 - countOfNumberBeforeComma)
+      else value = roundNumber(value,MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
+
+      result = value.toString()
+
+      //In this line we are taking the last numbers that are zeros and we remove them replacing them with nothing
+
+      result = result.replace(/\.?0+$/, "");
+      result = result.replace('.', COMMA_CHARACTER)
+      setDisplay(result)
 
     }
     else setDisplay("ERROR")
 
   }
 
-
 }
 
-//Esta funcion guarda a la memoria el numero del display y le hace un reset pero solo del display
+const emptyStoredMemory = () => {
 
-const vaciarDisplayCargandoMemoria = () => {
-
-  numeroGuardadoEnMemoria = getDisplayNumber()
+  inMemoryNumber = getDisplayNumber()
   setDisplay(0)
 
 }
 
-//Esta  funcion lo que hace es seleccionar un operador si es que no habia sido seleccionado
+const operatorSelect = (value) => {
 
-const seleccionarOperador = (value) => {
-  
   if (operationUnselected()) {
-    operacionGuardada = value 
-    vaciarDisplayCargandoMemoria()
+
+    savedOperator = value 
+    emptyStoredMemory()
+
   }
 
 }
-const operar = () => {
+const operate = () => {
 
-  if (operacionGuardada == '+') ejecutarSuma()
-  else if (operacionGuardada == '-') ejecutarResta()
-  else if (operacionGuardada == '*') ejecutarMultiplicacion()
-  else if (operacionGuardada == '/') ejecutarDivision()
-  operacionGuardada = '' 
+  if (savedOperator == '+') doAddition()
+  else if (savedOperator == '-') doSubstraction()
+  else if (savedOperator == '*') doMultiplication()
+  else if (savedOperator == '/') doDivision()
+  savedOperator = '' 
 
 }
 
-//Simplemente ejecuta una suma
+const doAddition = () => {
 
-const ejecutarSuma = () => {
-
-  var total = numeroGuardadoEnMemoria + getDisplayNumber()
+  var total = inMemoryNumber + getDisplayNumber()
   showResults(total)
 
 }
 
-//Simplemente ejecuta una resta
+const doSubstraction = () => {
 
-const ejecutarResta = () => {
-
-  var total = numeroGuardadoEnMemoria - getDisplayNumber()
+  var total = inMemoryNumber - getDisplayNumber()
   showResults(total)
 
 }
 
-//Ejecuta una multiplicacion
+const doMultiplication = () => {
 
-const ejecutarMultiplicacion = () => {
-
-  var total = numeroGuardadoEnMemoria * getDisplayNumber()
+  var total = inMemoryNumber * getDisplayNumber()
   showResults(total)
 
 }
 
-//Ejecuta una division
+const doDivision = () => {
 
-const ejecutarDivision = () => {
-
-  var total = numeroGuardadoEnMemoria / getDisplayNumber()
+  var total = inMemoryNumber / getDisplayNumber()
   showResults(total)
 
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////             Aqui voy a poner los inputs del usuario                 //////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//teclas en espacifico
 
 document.addEventListener('keydown', () => {
   if (event.key === "Escape" || event.keyCode === 27) reset()
@@ -272,162 +240,103 @@ document.addEventListener('keydown', () => {
   else if (event.key === "7") addToTheDisplay(7)
   else if (event.key === "8") addToTheDisplay(8)
   else if (event.key === "9") addToTheDisplay(9)
-  else if (event.key === "+") seleccionarOperador('+')
-  else if (event.key === "-") seleccionarOperador('-')
-  else if (event.key === "*") seleccionarOperador('*')
-  else if (event.key === "/") seleccionarOperador('/')
-  else if (event.key === DIGITO_DE_LA_COMA) addToTheDisplay(DIGITO_DE_LA_COMA)
+  else if (event.key === "+") operatorSelect('+')
+  else if (event.key === "-") operatorSelect('-')
+  else if (event.key === "*") operatorSelect('*')
+  else if (event.key === "/") operatorSelect('/')
+  else if (event.key === COMMA_CHARACTER) addToTheDisplay(COMMA_CHARACTER)
 })
 
-//botones
-
-document.getElementsByName('point')[0].addEventListener('click', () => {
-  addToTheDisplay(DIGITO_DE_LA_COMA)
-})
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-  invertNumberDisplay() 
-})
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset() 
-})
-document.getElementsByName('zero')[0].addEventListener('click', () => {
-  addToTheDisplay(0)
-})
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  addToTheDisplay(1)
-})
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  addToTheDisplay(2)
-})
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  addToTheDisplay(3)
-})
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  addToTheDisplay(4)
-})
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  addToTheDisplay(5)
-})
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  addToTheDisplay(6)
-})
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  addToTheDisplay(7)
-})
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  addToTheDisplay(8)
-})
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  addToTheDisplay(9)
-})
-document.getElementsByName('divide')[0].addEventListener('click', () => {
-  seleccionarOperador('/')
-})
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  seleccionarOperador('*')
-})
-document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  seleccionarOperador('-')
-})
-document.getElementsByName('sum')[0].addEventListener('click', () => {
-  seleccionarOperador('+')
-})
-document.getElementsByName('equal')[0].addEventListener('click', () => {
-  operar()
-})
+COMMA_BUTTON.addEventListener('click', () => { addToTheDisplay(COMMA_CHARACTER) })
+NEGATE_BUTTON.addEventListener('click', () => { invertNumberDisplay() })
+CLEAN_BUTTON.addEventListener('click', () => { reset() })
+ZERO_BUTTON.addEventListener('click', () => { addToTheDisplay(0) })
+ONE_BUTTON.addEventListener('click', () => { addToTheDisplay(1) })
+TWO_BUTTON.addEventListener('click', () => { addToTheDisplay(2) })
+THREE_BUTTON.addEventListener('click', () => { addToTheDisplay(3) })
+FOUR_BUTTON.addEventListener('click', () => { addToTheDisplay(4) })
+FIVE_BUTTON.addEventListener('click', () => { addToTheDisplay(5) })
+SIX_BUTTON.addEventListener('click', () => { addToTheDisplay(6) })
+SEVEN_BUTTON.addEventListener('click', () => { addToTheDisplay(7) })
+EIGHT_BUTTON.addEventListener('click', () => { addToTheDisplay(8) })
+NINE_BUTTON.addEventListener('click', () => { addToTheDisplay(9) })
+DIVIDE_BUTTON.addEventListener('click', () => { operatorSelect('/') })
+MULTUPLY_BUTTON.addEventListener('click', () => { operatorSelect('*') })
+SUBSTRACT_BUTTON.addEventListener('click', () => { operatorSelect('-') })
+SUM_BUTTON.addEventListener('click', () => { operatorSelect('+') })
+EQUAL_BUTTON.addEventListener('click', () => { operate() })
 reset()
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////          Aqui voy a poner funciones de validacion de escenarios     //////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Esta funcion te devuelve false si aun puedes seguir añadiendo digitos teniendo en cuenta el valor de MAX_DIGITS_IN_DISPLAY
 
 const isTheMaxLenght = () => {
 
-  var textoDelDisplay = display.innerHTML
-  var longuitudTotal = textoDelDisplay.length
+  var displayString = display.innerHTML
+  var totalLenght = displayString.length
 
-  if (textoDelDisplay.includes(",")) longuitudTotal -= 1
-  if (longuitudTotal >= MAX_DIGITS_IN_DISPLAY) return true
+  if (displayString.includes(",")) totalLenght -= 1
+
+  if (totalLenght >= MAX_DIGITS_IN_DISPLAY) return true
   else return false
 
 }
-
-//Esta funcion te devluevle true si el texto que hay en el display es un 0
 
 const isOnDisplayZero = () => {
 
-  var textoDelDisplay = display.innerHTML
+  var displayString = display.innerHTML
 
-  if (textoDelDisplay == 0) return true
+  if (displayString == 0) return true
   else return false
 
 }
 
-//Esta funcion te devluevle true si en el display ya hemos colocado una coma
-
 const isADotOnDisplay = () => {
 
-  var textoDelDisplay = display.innerHTML
+  var displayString = display.innerHTML
 
-  if (textoDelDisplay.includes(DIGITO_DE_LA_COMA)) return true
+  if (displayString.includes(COMMA_CHARACTER)) return true
   else return false
 
 }
 
 const isADotOnThis = (value) => {
 
-  var textoDelDisplay = value.toString() 
+  var displayString = value.toString() 
 
-  if (textoDelDisplay.includes('.')) return true
+  if (displayString.includes('.')) return true
   else return false
 
 }
-
-//Esta funcion te devluevle true si en el display el numero es negativo
 
 const isANegativeNumberDisplay = () => {
 
-  var textoDelDisplay = display.innerHTML
+  var displayString = display.innerHTML
 
-  if (textoDelDisplay.includes('-')) return true
+  if (displayString.includes('-')) return true
   else return false
 
 }
-
-//Esta funcion te devluevle true si en el display el numero es negativo
 
 const isANegativeNumber = (value) => {
 
-  var numeroPasadoPorParametros = value 
-
-  if (numeroPasadoPorParametros < 0) return true
+  if (value < 0) return true
   else return false
 
 }
-
-//Esta funcion te devluevle true si el texto que hay en el display es un 0 con ','
 
 const isOnDisplayZeroWithDot = () => {
 
-  var textoDelDisplay = display.innerHTML
+  var displayString = display.innerHTML
 
-  if (textoDelDisplay == '0' + DIGITO_DE_LA_COMA ) return true
+  if (displayString == '0' + COMMA_CHARACTER ) return true
   else return false
 
 }
-
-//Esta funcion mira si no se ha seleccionado ninguna operacion antes de dar al '='
 
 const operationUnselected = () => {
 
-  if (operacionGuardada == '') return true
+  if (savedOperator == '') return true
   else return false
 
 }
-
-//Mira que el numero este dentro de un rango de limites, en el caso de que no este devuelve false
 
 const isOnRangeOfNotError = (value) => {
 
