@@ -5,7 +5,7 @@
 	"main": "calculator.js",
 	"scripts": {
 		"lint": "standard",
-		"test": "cucumber-js --require cucumber.conf.js --require tests/steps/**/*.steps.js --format @cucumber/pretty-formatter --format html:tests/reports/cucumber-report.html --tags \"not @Manual\" --parallel 1"
+		"test": "cucumber-js --require cucumber.conf.js --require tests/steps/**/*.steps.js --format @cucumber/pretty-formatter --tags \"not @Manual\" --parallel 1"
 	},
 	"license": "ISC",
 	"dependencies": {
@@ -19,13 +19,13 @@
 		"standard": "^17.1.0"
 	},
 	"standard": {
-    "globals": [
-      "test",
-      "expect",
-      "beforeEach",
+		"globals": [
+			"test",
+			"expect",
+			"beforeEach",
 			"page"
-    ]
-  },
+		]
+	},
 	"repository": "https://github.com/tonirecio/fake-bdd-calculator",
 	"author": "Toni Recio <mail@tonirecio.com>"
 }
