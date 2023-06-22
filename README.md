@@ -13,3 +13,6 @@
 
 # Scenario Outline: Writing numbers of more than 10 digits
     Ha pasado el test correctamente, es una solucion interesante la de sustituir momentaneamente la coma con un espacio vacio para controlar los digitos maximos
+
+# Scenario Outline: Performing two number operations
+    Todo parece funcionar perfectamente, despues dle refactor del codigo es mas claro todo, hay muchos parsers, yo podnria dos variables, una que sea una string y otra que sea un number y de esta forma te ahorras muchos parsers, hay un par de expresiones regulares y el 'diccionario' que has hecho para las teclas sigue pareciendome mas complejo de lo que en realidad es :p
