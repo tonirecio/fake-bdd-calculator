@@ -1,146 +1,139 @@
 /// Adrian Lopez Villalba       --      Travelport
 ///
-/// yarn test tests/features/calculator.feature --tags "@sc_NonOpScreenBtn or @sc_NumberCheck or @sc_DigitExceedTest or @sc_Operations or @sc_BeforeEqual or @sc_LongNumber or @sc_OverlapOps or @sc_NewOp"
+/// yarn test tests/features/calculator.feature --tags "@sc_NonOpScreenBtn or @sc_NumberCheck or @sc_DigitExceedTest or @sc_Operations or @sc_BeforeEqual or @sc_LongNumber or @sc_OverlapOps or @sc_NewOp or @sc_ConcatResult or @sc_ConcatResultPlus"
 
 const MAX_DIGITS_IN_DISPLAY = 10
-const pointLocale = document.getElementsByName('point')[0].innerHTML
-const display = document.querySelector('div[name="display"] span')
+const pointLocale = ','
 let currentOp
 let prevNum
+let displayValue = '0'
 let clearDisplay = false
 
-// function setDisplay (value) { [...] }
 const setDisplay = (value) => {
-  display.innerHTML = value
+  const display = document.querySelector('div[name="display"] span')
+  const localeValue = value.replace('.', pointLocale)
+  display.innerHTML = localeValue
 }
 
-// const sayHello = () => {
-//   console.log('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
-//   // window.alert([...])
-// }
-
-// RESET CALCULATOR
+//////////////////// FUNCTIONS
 const reset = () => {
   prevNum = 0
+  displayValue = '0'
   currentOp = null
-  setDisplay(prevNum)
+  clearDisplay = false
+  setDisplay(displayValue)
 }
 
-// SHARED FUNCTIONS
 const negateDisplay = () => {
-  let displayNum = display.innerHTML
-  if (displayNum !== '0' && displayNum !== '0,') {
-    if (displayNum.startsWith('-')) {
-      displayNum = displayNum.replace('-', '')
+  if (displayValue !== '0' && displayValue !== '0.') {
+    if (displayValue.startsWith('-')) {
+      displayValue = displayValue.replace('-', '')
     } else {
-      displayNum = '-' + displayNum
+      displayValue = '-' + displayValue
     }
   }
-
-  setDisplay(displayNum)
+  setDisplay(displayValue)
 }
 
 const pressNumber = (buttonContent) => {
-  let displayNum = display.innerHTML
-
   if (clearDisplay) {
-    displayNum = buttonContent
+    displayValue = buttonContent
     clearDisplay = false
   } else {
-    if (displayNum.length < MAX_DIGITS_IN_DISPLAY || (displayNum.includes(pointLocale) && displayNum.length <= MAX_DIGITS_IN_DISPLAY)) {
-      if (displayNum !== '0') {
-        displayNum += buttonContent
+    if (displayValue.length < MAX_DIGITS_IN_DISPLAY || (displayValue.includes('.') && displayValue.length <= MAX_DIGITS_IN_DISPLAY)) {
+      if (displayValue !== '0') {
+        displayValue += buttonContent
       } else {
-        displayNum = buttonContent
+        displayValue = buttonContent
       }
     }
   }
-
-  setDisplay(displayNum)
+  setDisplay(displayValue)
 }
 
 const floatDisplay = () => {
-  const displayNum = display.innerHTML
-  if (!displayNum.includes(pointLocale) && displayNum.length < MAX_DIGITS_IN_DISPLAY) {
-    setDisplay(displayNum + pointLocale)
+  if (!displayValue.includes('.') && displayValue.length < MAX_DIGITS_IN_DISPLAY) {
+    displayValue += '.'
   }
+  setDisplay(displayValue)
 }
 
-
 const completeOp = () => {
-  const currentNum = parseFloat(display.innerHTML.replace(',', '.'))
+  const currentNum = parseFloat(displayValue)
   let resultNum = null
   let resultOp = null
-
-  console.log('----------------------------EQUAL')
-  if (currentOp === 'sum') {
-    resultNum = prevNum + currentNum
-    console.log(resultNum)
-  } else if (currentOp === 'subtract') {
-    resultNum = prevNum - currentNum
-    console.log(resultNum)
-  } else if (currentOp === 'multiply') {
-    resultNum = prevNum * currentNum
-    console.log(resultNum)
-  } else if (currentOp === 'divide') {
-    resultNum = prevNum / currentNum
-    console.log(resultNum)
+  switch (currentOp) {
+    case 'sum':
+      resultNum = prevNum + currentNum
+      break
+    case 'subtract':
+      resultNum = prevNum - currentNum
+      break
+    case 'multiply':
+      resultNum = prevNum * currentNum
+      break
+    case 'divide':
+      resultNum = prevNum / currentNum
+      break
+    default:
+      console.log('[ERROR] ' + currentOp + ' has not been implemented yet.')
   }
-
   if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
     // character length of the integer number (including - sign if applicable)
     const integerLength = (Math.round(resultNum)).toString().length
-    // forcing this number to not have trailing of 0s (1 *) and have a maximum
-    // of MAX_DIGITS_IN_DISPLAY number characters between its integer and
-    // decimal part
-    const fixedNum = 1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength)
-    // set locale replacement
-    resultOp = fixedNum.toString().replace('.', ',')
+    // (1 * x) forces x to not have trailing 0s
+    resultOp = (1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength)).toString()
   } else {
     resultOp = 'ERROR'
   }
 
+  displayValue = resultOp
+  currentOp = null
   clearDisplay = true
-  setDisplay(resultOp)
+  setDisplay(displayValue)
 }
 
+const addNumericalButtonPress = (buttonName, number) => {
+  document.getElementsByName(buttonName)[0].addEventListener('click', () => { pressNumber(number) })
+}
 
-// SCREEN BUTTONS
-const keypad = document.querySelectorAll('div[name="keypad"] button')
-keypad.forEach(element => {
-  const buttonContent = parseInt(element.innerHTML)
+const addFunctionButtonPress = (buttonName, assignedFunction) => {
+  document.getElementsByName(buttonName)[0].addEventListener('click', assignedFunction)
+}
 
-  if (isNaN(buttonContent)) {
-    const elementName = element.getAttribute('name')
-    if (elementName === 'clean') {
-      element.addEventListener('click', () => {
-        reset()
-      })
-    } else if (elementName === 'negate') {
-      element.addEventListener('click', () => {
-        negateDisplay()
-      })
-    } else if (elementName === 'point') {
-      element.addEventListener('click', () => {
-        floatDisplay()
-      })
-    } else if (elementName === 'equal') {
-      element.addEventListener('click', () => {
-        completeOp()
-      })
-    } else {
-      element.addEventListener('click', () => {
-        currentOp = elementName
-        prevNum = parseFloat(display.innerHTML.replace(',', '.'))
-        clearDisplay = true
-      })
+const addOperationButtonPress = (buttonName) => {
+  document.getElementsByName(buttonName)[0].addEventListener('click', () => {
+    if(currentOp !== null) {
+      completeOp()
     }
-  } else {
-    element.addEventListener('click', () => {
-      pressNumber(buttonContent)
-    })
-  }
-})
+    currentOp = buttonName
+    prevNum = parseFloat(displayValue.replace(',', '.'))
+    clearDisplay = true
+  })
+}
+
+addNumericalButtonPress('one', '1')
+addNumericalButtonPress('two', '2')
+addNumericalButtonPress('three', '3')
+addNumericalButtonPress('four', '4')
+addNumericalButtonPress('five', '5')
+addNumericalButtonPress('six', '6')
+addNumericalButtonPress('seven', '7')
+addNumericalButtonPress('eight', '8')
+addNumericalButtonPress('nine', '9')
+addNumericalButtonPress('zero', '0')
+
+addFunctionButtonPress('clean', reset)
+addFunctionButtonPress('negate', negateDisplay)
+addFunctionButtonPress('point', floatDisplay)
+addFunctionButtonPress('equal', completeOp)
+
+addOperationButtonPress('sum')
+addOperationButtonPress('multiply')
+addOperationButtonPress('subtract')
+addOperationButtonPress('divide')
+
+
 
 // NON-OP KEYBOARD
 document.addEventListener('keyup', (event) => {
