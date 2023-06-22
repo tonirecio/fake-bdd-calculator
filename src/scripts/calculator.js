@@ -39,8 +39,9 @@ reset.addEventListener('click', () => {
   setDisplay(currentValue)
 })
 
-const negateValue = () => {
-  if (currentValue === '0' || /^0,0*$/.test(currentValue)) { // Esta expresión regular busca una cadena que comience y termine con cero y tenga cero o más comas en el medio.
+const negate = document.querySelector('button[name="negate"]')
+negate.addEventListener('click', () => {
+  if (currentValue === '0' || /^0,0*$/.test(currentValue)) {
     return
   }
   const endsWithComma = currentValue.endsWith(',')
@@ -49,12 +50,8 @@ const negateValue = () => {
     currentValue += ','
   }
   setDisplay(currentValue)
-}
-
-const negate = document.querySelector('button[name="negate"]')
-negate.addEventListener('click', () => {
-  negateValue()
 })
+
 
 const buttons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
 buttons.forEach((buttonName) => {
@@ -98,7 +95,7 @@ buttons.forEach((buttonName) => {
         reset()
         break
       case 'negate':
-        negateValue()
+        negate()
         break
       default:
         window.alert('Error: botón no reconocido')
@@ -115,7 +112,7 @@ document.addEventListener('keydown', (event) => {
   if (keyCodes.hasOwnProperty(keyCode)) {
     setDisplay(keyCodes[keyCode])
   } else if (event.keyCode === 17) {
-    negateValue()
+    negate()
     setDisplay(currentValue)
   } else if (event.keyCode === 27) {
     currentValue = '0'
@@ -149,7 +146,6 @@ const operate = () => {
     setDisplay(currentValue)
   }
 }
-
 
 const sumButton = document.querySelector('button[name="sum"]')
 sumButton.addEventListener('click', () => {
