@@ -167,7 +167,7 @@ const setDisplay = (value) => {
       
       secondNumber = value
       valueDisplay = secondNumber
-      valueDisplay =  firstNumber.toString() + operator + valueDisplay.toString().replace(".", ",")
+      valueDisplay = valueDisplay.toString().replace(".", ",")
       
       display.innerHTML = valueDisplay.replace(".", ",")
    

@@ -95,7 +95,7 @@ Examples:
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
 
-@wip
+@done
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -128,6 +128,7 @@ Examples:
 |           -10 |      / |          2 |            -5 |
 |           -10 |      / |         -2 |             5 |
 
+@done
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
