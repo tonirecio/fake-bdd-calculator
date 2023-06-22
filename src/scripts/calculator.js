@@ -1,6 +1,6 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+
 const DIGITO_COMA = ','
-var seleccionarOperador = ''
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -15,9 +15,7 @@ const reset = () => {
 }
 
 const display = document.querySelector('div[name="display"] span')
-/*document.getElementsByName('keypad')[0].addEventListener('click', () => {
-  sayHello()
-})*/
+
 document.getElementsByName('point')[0].addEventListener('click', () => {
   addToDisplay(DIGITO_COMA)
 })
@@ -92,6 +90,7 @@ document.addEventListener('keydown', () => {
   else if (event.key === "*") seleccionarOperador('*')
   else if (event.key === "/") seleccionarOperador('/')
   else if (event.key === DIGITO_COMA) addToDisplay(DIGITO_COMA)
+
 })
 
 const addToDisplay = (value) => {
@@ -99,9 +98,8 @@ const addToDisplay = (value) => {
     let currentValue = display.innerHTML;
 
     const isSign = value === '-';
-    const isComma = value === DIGITO_COMA;
     
-    if (!isSign && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
+    if (!isSign && !isMaxLength()) {
 
         if (currentValue === '0') {
             if (value === DIGITO_COMA) {
@@ -121,49 +119,36 @@ const addToDisplay = (value) => {
 
         }
 
-      /*if (seleccionarOperador === '') {
-        operando = currentValue;
-        setDisplay(value);
-      } else {
-        setDisplay(currentValue + value);
-      }*/
-
     }
     setDisplay(currentValue);
 }
 
-const comaNoCuenta = (value) => {
-    const hasExclaimation = string.includes(',')
-    if (displayedNum.includes(',')) {
-      MAX_DIGITS_IN_DISPLAY = MAX_DIGITS_IN_DISPLAY - 1
-    }
-}
+const isMaxLength = () => {
 
-const operar = () => {
-  const currentValue = display.innerHTML;
-  const operador = seleccionarOperador;
-  var operando = '';
-  
-  if (operador === '/' && currentValue !== '0') {
-    const resultado = parseFloat(currentValue) / parseFloat(operando);
-    setDisplay(resultado);
-  } else if (operador === '*') {
-    const resultado = parseFloat(currentValue) * parseFloat(operando);
-    setDisplay(resultado);
-  } else if (operador === '-') {
-    const resultado = parseFloat(currentValue) - parseFloat(operando);
-    setDisplay(resultado);
-  } else if (operador === '+') {
-    const resultado = parseFloat(currentValue) + parseFloat(operando);
-    setDisplay(resultado);
-  }
+    let currentValue = display.innerHTML;
+
+    const hasComma = currentValue.includes(',')
+    const hasMinus = currentValue.includes('-')
+    var valueLength = currentValue.length;
+
+    if (hasMinus) {
+      valueLength -= 1
+
+    }
+    if (hasComma) {
+      valueLength -= 1
+
+    }
+
+    if (MAX_DIGITS_IN_DISPLAY <= valueLength) return true
+    else return false
 }
 
 const invertNumberDisplay = () => {
+
   let currentValue = display.innerHTML;
 
   if (currentValue !== '0' && currentValue !== '0,'  ) {
-    //console.log(currentValue.startsWith('-'));
     if (currentValue.startsWith('-')) {
       currentValue = currentValue.slice(1);
 
@@ -172,5 +157,6 @@ const invertNumberDisplay = () => {
 
     }
     setDisplay(currentValue);
+
   }
 };
