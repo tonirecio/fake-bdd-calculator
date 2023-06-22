@@ -62,5 +62,5 @@
 
 ## @previous_result
 - [X] 🟩 **Scenario Test:** Sense errors
-- [X] 🟩 **Lint Test:** Sense errors
-- [X] 🟩 **Sintaxis:** Sintaxis correcta i sense modificacions destacables.
+- [X] 🟩 **Lint Test:** Error mínim de "Missing EOL"
+- [X] 🟩 **Sintaxis:** Sense errors.
