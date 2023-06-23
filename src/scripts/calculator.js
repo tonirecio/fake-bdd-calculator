@@ -5,7 +5,7 @@ const MIN_NUMBER = -9999999999
 let isPoint = false
 let operator = ''
 let lastNumberWrited = 0
-let ans = 0
+let storedNumber = 0
 let addDecimal = false
 let doOperation = false
 let isEqualsPressed = false
@@ -26,7 +26,7 @@ const reset = () => {
   isPoint = false
   operator = ''
   lastNumberWrited = 0
-  ans = 0
+  storedNumber = 0
   addDecimal = false
   doOperation = false
   isEqualsPressed = false
@@ -112,7 +112,7 @@ const negateNumberFromDisplay = () => {
 const prepareForOperation = () => {
   doOperation = true
   isPoint = false
-  ans = '' + lastNumberWrited
+  storedNumber = '' + lastNumberWrited
 }
 
 const operate = (num1, operation, num2) => {
@@ -120,32 +120,36 @@ const operate = (num1, operation, num2) => {
 
   isEqualsPressed = true
 
-  switch (operation) {
-    case '+':
-      lastNumberWrited = num1 + num2
-      break
-    case '-':
-      lastNumberWrited = num1 - num2
-      break
-    case '*':
-      lastNumberWrited = num1 * num2
-      break
-    case '/':
-      lastNumberWrited = num1 / num2
-      break
-  }
+  if (num1 !== 0 && num2 !== 0) {
+    switch (operation) {
+      case '+':
+        lastNumberWrited = num1 + num2
+        break
+      case '-':
+        lastNumberWrited = num1 - num2
+        break
+      case '*':
+        lastNumberWrited = num1 * num2
+        break
+      case '/':
+        lastNumberWrited = num1 / num2
+        break
+    }
 
-  if (maxLenght(lastNumberWrited)) {
-    if (checkLimits(lastNumberWrited)) {
-      return 'ERROR'
+    if (maxLenght(lastNumberWrited)) {
+      if (checkLimits(lastNumberWrited)) {
+        return 'ERROR'
+      } else {
+        const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
+        toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
+
+        lastNumberWrited = Number(toDisplay)
+      }
     } else {
-      const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
-      toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
-
-      lastNumberWrited = Number(toDisplay)
+      toDisplay = '' + lastNumberWrited
     }
   } else {
-    toDisplay = '' + lastNumberWrited
+    toDisplay = 'ERROR'
   }
 
   console.log(toDisplay)
@@ -174,61 +178,61 @@ const display = document.querySelector('div[name="display"] span')
 
 const addButtons = () => {
   document.getElementsByName('one')[0].addEventListener('click', () => {
-    let text = addNumber(1)
+    const text = addNumber(1)
 
     setDisplay(text)
   })
 
   document.getElementsByName('two')[0].addEventListener('click', () => {
-    let text = addNumber(2)
+    const text = addNumber(2)
 
     setDisplay(text)
   })
 
   document.getElementsByName('three')[0].addEventListener('click', () => {
-    let text = addNumber(3)
+    const text = addNumber(3)
 
     setDisplay(text)
   })
 
   document.getElementsByName('four')[0].addEventListener('click', () => {
-    let text = addNumber(4)
+    const text = addNumber(4)
 
     setDisplay(text)
   })
 
   document.getElementsByName('five')[0].addEventListener('click', () => {
-    let text = addNumber(5)
+    const text = addNumber(5)
 
     setDisplay(text)
   })
 
   document.getElementsByName('six')[0].addEventListener('click', () => {
-    let text = addNumber(6)
+    const text = addNumber(6)
 
     setDisplay(text)
   })
 
   document.getElementsByName('seven')[0].addEventListener('click', () => {
-    let text = addNumber(7)
+    const text = addNumber(7)
 
     setDisplay(text)
   })
 
   document.getElementsByName('eight')[0].addEventListener('click', () => {
-    let text = addNumber(8)
+    const text = addNumber(8)
 
     setDisplay(text)
   })
 
   document.getElementsByName('nine')[0].addEventListener('click', () => {
-    let text = addNumber(9)
+    const text = addNumber(9)
 
     setDisplay(text)
   })
 
   document.getElementsByName('zero')[0].addEventListener('click', () => {
-    let text = addNumber(0)
+    const text = addNumber(0)
 
     setDisplay(text)
   })
@@ -238,20 +242,20 @@ const addButtons = () => {
   })
 
   document.getElementsByName('point')[0].addEventListener('click', () => {
-    let text = addPoint()
+    const text = addPoint()
 
     setDisplay(text)
   })
 
   document.getElementsByName('negate')[0].addEventListener('click', () => {
-    let text = negateNumberFromDisplay()
+    const text = negateNumberFromDisplay()
 
     setDisplay(text)
   })
 
   document.getElementsByName('sum')[0].addEventListener('click', () => {
     if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+      lastNumberWrited = operate(Number(storedNumber), operator, Number(lastNumberWrited))
 
       doMultipleOperations = false
     }
@@ -262,7 +266,7 @@ const addButtons = () => {
 
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
     if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+      lastNumberWrited = operate(Number(storedNumber), operator, Number(lastNumberWrited))
 
       doMultipleOperations = false
     }
@@ -273,7 +277,7 @@ const addButtons = () => {
 
   document.getElementsByName('multiply')[0].addEventListener('click', () => {
     if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+      lastNumberWrited = operate(Number(storedNumber), operator, Number(lastNumberWrited))
 
       doMultipleOperations = false
     }
@@ -284,7 +288,7 @@ const addButtons = () => {
 
   document.getElementsByName('divide')[0].addEventListener('click', () => {
     if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+      lastNumberWrited = operate(Number(storedNumber), operator, Number(lastNumberWrited))
 
       doMultipleOperations = false
     }
@@ -294,7 +298,7 @@ const addButtons = () => {
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
-    let text = operate(Number(ans), operator, Number(lastNumberWrited)).replace('.', ',')
+    const text = operate(Number(storedNumber), operator, Number(lastNumberWrited)).replace('.', ',')
 
     setDisplay(text)
   })
@@ -302,15 +306,15 @@ const addButtons = () => {
 
 document.addEventListener('keydown', (event) => {
   if (event.key >= 0 && event.key <= 9) {
-    let text = addNumber(event.key)
+    const text = addNumber(event.key)
 
     setDisplay(text)
   } else if (event.key === ',') {
-    let text = addPoint()
+    const text = addPoint()
 
     setDisplay(text)
   } else if (event.key === 'Control') {
-    let text = negateNumberFromDisplay()
+    const text = negateNumberFromDisplay()
 
     setDisplay(text)
   } else if (event.key === 'Escape') {
