@@ -1,189 +1,220 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-const regexPoint = '([,])+'
+const display = document.querySelector('div[name="display"] span')
 
-const setDisplay = (value) => {
-  display.innerHTML = value
-}
+let currentValue = '0'
+let previousValue
+let isResult
+let result
 
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+const setDisplay = (currentValue) => {
+  displayValue = currentValue.replace('.', ',')
+  display.innerHTML = displayValue
 }
 
 const reset = () => {
-  setDisplay(0)
+  previousValue = currentValue
+  currentValue = '0'
+  setDisplay(currentValue)
 }
 
-const display = document.querySelector('div[name="display"] span')
-
-// Display Functions
 const appendNumber = (value) => {
-  const displayValue = display.innerHTML.replace(/,|-/g, '') // Remove comma and negative sign
-  const digitCount = displayValue.length
+  let onlyDigits = currentValue.replace('.', '')
+  onlyDigits = onlyDigits.replace('-', '')
+
+  console.log(onlyDigits)
+  const digitCount = onlyDigits.length
+  console.log(digitCount)
 
   if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
     return
   }
 
-  if (display.innerHTML == '0') {
-    display.innerHTML = value
+  if (currentValue == '0') {
+    currentValue = value.toString()
   } else {
-    display.innerHTML += value
+    currentValue += value.toString()
   }
+
+  return currentValue
 }
 
-const appendPoint = (value) => {
-  if (!display.innerHTML.match(regexPoint) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
-    display.innerHTML = display.innerHTML + value
+const appendPoint = () => {
+  if (!currentValue.includes('.') && (currentValue.length < MAX_DIGITS_IN_DISPLAY)) {
+    currentValue += '.'
+    console.log(currentValue)
+    return currentValue
   }
 }
 
 const setNegation = () => {
-  let displayValue = display.innerHTML
-  const valueLength = displayValue.length
   let hasPoint = false
+  const value = parseFloat(currentValue)
 
-  if (displayValue.charAt(valueLength - 1) == ',') {
+  if (currentValue.endsWith('.')) {
     hasPoint = true
   }
 
-  if ((displayValue != 0) && (displayValue != '0,')) {
-    displayValue = displayValue.replace(',', '.')
-    displayValue = parseFloat(displayValue) * (-1)
-    displayValue = displayValue.toString().replace('.', ',')
-
-    if (hasPoint == true) {
-      displayValue += ','
+  if ((currentValue != 0)) {
+    currentValue = (value * -1).toString()
+    if (hasPoint) {
+      currentValue += '.'
     }
-    display.innerHTML = displayValue
   }
+
+  return currentValue
 }
 
-// Buttons in Display
+// NUMBER BUTTONS
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   appendNumber(0)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('one')[0].addEventListener('click', () => {
   appendNumber(1)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('two')[0].addEventListener('click', () => {
   appendNumber(2)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('three')[0].addEventListener('click', () => {
   appendNumber(3)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('four')[0].addEventListener('click', () => {
   appendNumber(4)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('five')[0].addEventListener('click', () => {
   appendNumber(5)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('six')[0].addEventListener('click', () => {
   appendNumber(6)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('seven')[0].addEventListener('click', () => {
   appendNumber(7)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('eight')[0].addEventListener('click', () => {
   appendNumber(8)
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('nine')[0].addEventListener('click', () => {
   appendNumber(9)
+  setDisplay(currentValue)
 })
 
+// OTHER BUTTONS
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  appendPoint(',')
+  appendPoint()
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   setNegation()
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
 
-// Buttons in Keys
+// BUTTONS IN KEYS
 document.addEventListener('keydown', (event) => {
   const key = event.key
 
+  console.log(key)
   if (/[0-9]/.test(key)) {
     appendNumber(Number(key))
+    setDisplay(currentValue)
   }
   if (key === ',') {
-    appendPoint(',')
+    appendPoint()
+    setDisplay(currentValue)
   }
   if (key === 'Escape') {
     reset()
   }
   if (key === 'Control') {
     setNegation()
+    setDisplay(currentValue)
   }
 })
 
-// Operations
-let firstOperand
-let operation
-
+let firstOperand, secondOperand, operator
+// OPERATIONS
 // Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  operation = '+'
-  handleOperator(firstOperand)
+  operator = '+'
+  handleOperand()
   reset()
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  operation = '-'
-  handleOperator(firstOperand)
+  operator = '-'
+  handleOperand()
   reset()
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  operation = '*'
-  handleOperator(firstOperand)
+  operator = '*'
+  handleOperand()
   reset()
 })
 // Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  operation = '/'
-  handleOperator(firstOperand)
+  operator = '/'
+  handleOperand()
   reset()
 })
-// Equal
+
+// Modify the event listener for the equal button
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  const secondOperand = parseFloat(display.innerHTML.replace(',', '.'))
-  calculate(firstOperand, secondOperand, operation)
+  const secondOperand = currentValue
+  result = calculate(firstOperand, secondOperand, operator)
+
+  isResult = true
+  reset()
+  setDisplay(result)
 })
 
-const handleOperator = () => {
-  if (firstOperand === undefined) {
-    firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+const handleOperand = () => {
+  if (firstOperand == undefined) {
+    firstOperand = currentValue
+  }
+  if (isResult == true) {
+    firstOperand = result
+    isResult = false
   }
 }
 
-const calculate = (firstOperand, secondOperand, operation) => {
-  let result
+const calculate = (firstOperand, secondOperand, operator) => {
   let resultLength
+  firstOperand = parseFloat(firstOperand)
+  secondOperand = parseFloat(secondOperand)
 
-  if (operation == '+') {
+  if (operator == '+') {
     result = firstOperand + secondOperand
-  } else if (operation == '-') {
+  } else if (operator == '-') {
     result = firstOperand - secondOperand
-  } else if (operation == '*') {
+  } else if (operator == '*') {
     result = firstOperand * secondOperand
   } else {
     result = firstOperand / secondOperand
   }
 
-  resultLength = result.toString().replace(',', '').length
+  resultLength = result.toString().replace('.', '').length
 
   if ((resultLength > MAX_DIGITS_IN_DISPLAY)) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
@@ -191,9 +222,26 @@ const calculate = (firstOperand, secondOperand, operation) => {
 
   result = parseFloat(result.toString())
 
-  if (!result.toString().replace('.', ',').match(regexPoint) && resultLength > MAX_DIGITS_IN_DISPLAY) {
+  if (!result.toString().includes('.') && resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = 'ERROR'
   }
 
-  display.innerHTML = result.toString().replace('.', ',')
+  result = result.toString()
+
+  return result
 }
+
+// // Modify the event listener for the click event after a result
+// if (isResult) {
+//   document.addEventListener('click', () => {
+//     reset();
+//     isResult = false;
+//   })
+// }
+
+// // Equal
+// document.getElementsByName('equal')[0].addEventListener('click', () => {
+//   const secondOperand = parseFloat(currentValue.replace(',', '.'));
+//   calculate();
+//   isResult = true;
+// })
