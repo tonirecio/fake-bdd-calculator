@@ -10,6 +10,7 @@ let addDecimal = false
 let doOperation = false
 let isEqualsPressed = false
 let doMultipleOperations = false
+let negateNumberWhenEquals = false
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -90,8 +91,7 @@ const addPoint = () => {
   }
 }
 
-const negateNumberFromDisplay = () => {
-  const screen = getDisplay()
+const negateNumber = (screen) => {
   let toDisplay = screen
 
   if (!screen.includes('-')) {
@@ -121,39 +121,39 @@ const operate = (num1, operation, num2) => {
 
   isEqualsPressed = true
 
-  if (num1 !== 0 && num2 !== 0) {
-    switch (operation) {
-      case '+':
-        lastNumberWrited = num1 + num2
-        break
-      case '-':
-        lastNumberWrited = num1 - num2
-        break
-      case '*':
-        lastNumberWrited = num1 * num2
-        break
-      case '/':
-        lastNumberWrited = num1 / num2
-        break
-    }
+  if (!negateNumberWhenEquals) {
+    if (num1 !== 0 && num2 !== 0) {
+      switch (operation) {
+        case '+':
+          lastNumberWrited = num1 + num2
+          break
+        case '-':
+          lastNumberWrited = num1 - num2
+          break
+        case '*':
+          lastNumberWrited = num1 * num2
+          break
+        case '/':
+          lastNumberWrited = num1 / num2
+          break
+      }
 
-    if (maxLenght(lastNumberWrited)) {
-      if (checkLimits(lastNumberWrited)) {
-        return 'ERROR'
+      if (maxLenght(lastNumberWrited)) {
+        if (checkLimits(lastNumberWrited)) {
+          return 'ERROR'
+        } else {
+          const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
+          toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
+
+          lastNumberWrited = Number(toDisplay)
+        }
       } else {
-        const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
-        toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
-
-        lastNumberWrited = Number(toDisplay)
+        toDisplay = '' + lastNumberWrited
       }
     } else {
-      toDisplay = '' + lastNumberWrited
+      toDisplay = 'ERROR'
     }
-  } else {
-    toDisplay = 'ERROR'
   }
-
-  console.log(toDisplay)
 
   return toDisplay
 }
@@ -249,7 +249,7 @@ const addButtons = () => {
   })
 
   document.getElementsByName('negate')[0].addEventListener('click', () => {
-    const text = negateNumberFromDisplay()
+    const text = negateNumber(getDisplay())
 
     setDisplay(text)
   })
@@ -261,18 +261,26 @@ const addButtons = () => {
       doMultipleOperations = false
     }
 
-    prepareForOperation()
+    if (!doOperation) {
+      prepareForOperation()
+    }
+
     operator = '+'
   })
 
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
-    if (doMultipleOperations && !isEqualsPressed) {
+    if (lastNumberWrited === 0 && !doOperation) {
+      negateNumberWhenEquals = true
+    } else if (doMultipleOperations && !isEqualsPressed) {
       lastNumberWrited = operate(Number(storedNumber), operator, Number(lastNumberWrited))
 
       doMultipleOperations = false
     }
 
-    prepareForOperation()
+    if (!doOperation) {
+      prepareForOperation()
+    }
+
     operator = '-'
   })
 
@@ -283,7 +291,10 @@ const addButtons = () => {
       doMultipleOperations = false
     }
 
-    prepareForOperation()
+    if (!doOperation) {
+      prepareForOperation()
+    }
+
     operator = '*'
   })
 
@@ -294,15 +305,19 @@ const addButtons = () => {
       doMultipleOperations = false
     }
 
-    prepareForOperation()
+    if (!doOperation) {
+      prepareForOperation()
+    }
+
     operator = '/'
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
     let text
 
-    console.log(lastNumberWrited, storedNumber)
-    if (lastNumberWrited === '') {
+    if (negateNumberWhenEquals) {
+      text = negateNumber(lastNumberWrited.toString())
+    } else if (lastNumberWrited === '') {
       text = opertionWithoutTwoNumbers(Number(storedNumber), operator).replace('.', ',')
     } else {
       text = operate(Number(storedNumber), operator, Number(lastNumberWrited)).replace('.', ',')
@@ -327,7 +342,7 @@ document.addEventListener('keydown', (event) => {
 
     setDisplay(text)
   } else if (event.key === 'Control') {
-    const text = negateNumberFromDisplay()
+    const text = negateNumber(getDisplay())
 
     setDisplay(text)
   } else if (event.key === 'Escape') {
