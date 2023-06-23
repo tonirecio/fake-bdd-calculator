@@ -5,7 +5,7 @@ const MIN_NUMBER = -9999999999
 let isPoint = false
 let operator = ''
 let lastNumberWrited = 0
-let storedNumber = 0
+let storedNumber = ''
 let addDecimal = false
 let doOperation = false
 let isEqualsPressed = false
@@ -26,7 +26,7 @@ const reset = () => {
   isPoint = false
   operator = ''
   lastNumberWrited = 0
-  storedNumber = 0
+  storedNumber = ''
   addDecimal = false
   doOperation = false
   isEqualsPressed = false
@@ -113,6 +113,7 @@ const prepareForOperation = () => {
   doOperation = true
   isPoint = false
   storedNumber = '' + lastNumberWrited
+  lastNumberWrited = 0
 }
 
 const operate = (num1, operation, num2) => {
@@ -298,10 +299,22 @@ const addButtons = () => {
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
-    const text = operate(Number(storedNumber), operator, Number(lastNumberWrited)).replace('.', ',')
+    let text
 
+    console.log(lastNumberWrited, storedNumber)
+    if (lastNumberWrited === '') {
+      text = opertionWithoutTwoNumbers(Number(storedNumber), operator).replace('.', ',')
+    } else {
+      text = operate(Number(storedNumber), operator, Number(lastNumberWrited)).replace('.', ',')
+    }
     setDisplay(text)
   })
+}
+
+const opertionWithoutTwoNumbers = (num, operator) => {
+  if (operator === '+') {
+    return 'ERROR'
+  }
 }
 
 document.addEventListener('keydown', (event) => {

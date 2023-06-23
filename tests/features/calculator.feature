@@ -231,7 +231,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
-@wip
+@done
 Scenario Outline: Division with 0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "/" button
@@ -245,6 +245,7 @@ Examples:
 |            -1 |
 |             0 |
 
+@wip
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
