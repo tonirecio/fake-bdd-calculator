@@ -25,3 +25,6 @@
 *Scenario Outline: Clicking two different operation buttons*: Correcte.
 
 *Scenario Outline: Doing a new operation*: Correcte.
+
+*Scenario Outline: Using the previous result in a new operation*: Crec que la variable 'ans' podria tenir un nom més explicatiu. 
+
