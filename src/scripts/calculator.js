@@ -317,6 +317,8 @@ const addButtons = () => {
 
     if (negateNumberWhenEquals) {
       text = negateNumber(lastNumberWrited.toString())
+    } else if (operator === '') {
+      text = lastNumberWrited.toString().replace('.', ',')
     } else if (lastNumberWrited === '') {
       text = opertionWithoutTwoNumbers(Number(storedNumber), operator).replace('.', ',')
     } else {

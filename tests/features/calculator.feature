@@ -259,7 +259,7 @@ And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
 
-@wip
+@done
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -272,6 +272,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
+@wip
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
