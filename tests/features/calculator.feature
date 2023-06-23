@@ -189,7 +189,7 @@ Examples:
 |            12 |      + |       / |          6 |             2 |
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
-
+@current
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -218,7 +218,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-@current
+
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
