@@ -31,3 +31,5 @@
 *Scenario Outline: Using the previous result in a new operation easier* : Ok
 
 *Scenario Outline: Division with 0* : En el botó d'igual s'executa la funció operate, pero el valor que retorna la funció operate, no és assignat a ningun lloc
+
+*Scenario: Doing an operation without a second number* : Ok
