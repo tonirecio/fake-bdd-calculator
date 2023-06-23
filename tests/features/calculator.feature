@@ -31,7 +31,6 @@ Examples:
 |            -1 |     +- |             1 |
 
 
-
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<key>" key
@@ -83,7 +82,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
-
+@current
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -100,7 +99,7 @@ Examples:
 
 
 
-
+@current
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -134,7 +133,7 @@ Examples:
 |           -10 |      / |         -2 |             5 |
 
 
-
+@current
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -148,7 +147,7 @@ Examples:
 |         13,14 |      * |      2,781 |
 |            84 |      / |       -4,3 |
 
-
+@current
 Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -162,20 +161,20 @@ Examples:
 |            -1 |      - | 9999999999 |
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
-
+@current
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
 
 
-
+@current
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
-
+@current
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -189,7 +188,7 @@ Examples:
 |            12 |      + |       / |          6 |             2 |
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
-
+@current
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -218,7 +217,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@current
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -233,7 +232,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@current
 Scenario Outline: Division with 0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "/" button
@@ -246,13 +245,13 @@ Examples:
 |             1 |
 |            -1 |
 |             0 |
-
+@current
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
-
+@current
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"

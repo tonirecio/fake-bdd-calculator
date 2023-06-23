@@ -6,6 +6,7 @@ let currentNumber
 let previousNumber
 let operationType
 let isNextNumberDecimal = false
+let chainingOperations = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
@@ -13,7 +14,6 @@ const pressKeys = () => {
 
     if (keyPressed >= '0' && keyPressed <= '9') {
       pressedNumber(keyPressed)
-      displaycurrentNumber()
     } else if (keyPressed === 'Escape') {
       cleanEverything()
     } else if (keyPressed === 'Control') {
@@ -32,7 +32,7 @@ const pressKeys = () => {
       pressedOperator('/')
     } else if (keyPressed === '=') {
       performOperation()
-      cleanDisplay()
+      chainingOperations = false
     }
   })
 }
@@ -40,43 +40,33 @@ const pressKeys = () => {
 const pressButtons = () => {
   document.getElementsByName('zero')[0].addEventListener('click', () => {
     pressedNumber(0)
-    displaycurrentNumber()
   })
   document.getElementsByName('one')[0].addEventListener('click', () => {
     pressedNumber(1)
-    displaycurrentNumber()
   })
   document.getElementsByName('two')[0].addEventListener('click', () => {
     pressedNumber(2)
-    displaycurrentNumber()
   })
   document.getElementsByName('three')[0].addEventListener('click', () => {
     pressedNumber(3)
-    displaycurrentNumber()
   })
   document.getElementsByName('four')[0].addEventListener('click', () => {
     pressedNumber(4)
-    displaycurrentNumber()
   })
   document.getElementsByName('five')[0].addEventListener('click', () => {
     pressedNumber(5)
-    displaycurrentNumber()
   })
   document.getElementsByName('six')[0].addEventListener('click', () => {
     pressedNumber(6)
-    displaycurrentNumber()
   })
   document.getElementsByName('seven')[0].addEventListener('click', () => {
     pressedNumber(7)
-    displaycurrentNumber()
   })
   document.getElementsByName('eight')[0].addEventListener('click', () => {
     pressedNumber(8)
-    displaycurrentNumber()
   })
   document.getElementsByName('nine')[0].addEventListener('click', () => {
     pressedNumber(9)
-    displaycurrentNumber()
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
     addPointTocurrentNumber()
@@ -102,6 +92,7 @@ const pressButtons = () => {
     pressedOperator('/')
   })
   document.getElementsByName('equal')[0].addEventListener('click', () => {
+    chainingOperations = false
     performOperation()
   })
 }
@@ -124,13 +115,20 @@ const performOperation = () => {
     currentNumber = previousNumber / currentNumber
   }
 
-  checkResultNumberForError()
+  displayResultNumber()
 }
 
 const pressedOperator = (type) => {
-  saveToPreviousNumber(currentNumber)
-  operationType = type
-  cleanDisplay()
+
+
+  if (chainingOperations) {
+    performOperation()
+    saveToPreviousNumber(currentNumber)
+  } else {  
+    saveToPreviousNumber(currentNumber)
+    chainingOperations = true
+  }
+   operationType = type
 }
 
 const pressedNumber = (newNumber) => {
@@ -146,6 +144,7 @@ const addNumberTocurrentNumber = (newNumber) => {
       currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
   }
+  displaycurrentNumber()
 }
 
 const negateNumber = (number) => {
@@ -158,6 +157,7 @@ const addPointTocurrentNumber = () => {
       isNextNumberDecimal = true
     }
   }
+  setDisplay(currentNumber)
 }
 
 const cleanDisplay = () => {
@@ -201,7 +201,7 @@ const roundDecimals = (number) => {
   return number
 }
 
-const checkResultNumberForError = () => {
+const displayResultNumber = () => {
   if (!Number.isInteger(currentNumber)) {
     currentNumber = roundDecimals(currentNumber)
   }
