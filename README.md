@@ -37,3 +37,5 @@
 *Scenario: Doing an operation without a first number* : Ok
 
 *Scenario Outline: Showing the first number after pressing operation* : Ok
+
+*Scenario Outline: Using the Equals button without operation* : Ok
