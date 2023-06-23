@@ -24,7 +24,7 @@ const reset = () => {
   setDisplay(displayValue)
 }
 
-const negateDisplay = () => {
+const negateDisplayValue = () => {
   if (displayValue !== '0' && displayValue !== '0.') {
     if (displayValue.startsWith('-')) {
       displayValue = displayValue.replace('-', '')
@@ -35,30 +35,30 @@ const negateDisplay = () => {
   setDisplay(displayValue)
 }
 
-const pressNumber = (buttonContent) => {
+const pressNumber = (buttonNumber) => {
   if (clearDisplay) {
-    displayValue = buttonContent
+    displayValue = buttonNumber
     clearDisplay = false
   } else {
     if (displayValue.length < MAX_DIGITS_IN_DISPLAY || (displayValue.includes('.') && displayValue.length <= MAX_DIGITS_IN_DISPLAY)) {
       if (displayValue !== '0') {
-        displayValue += buttonContent
+        displayValue += buttonNumber
       } else {
-        displayValue = buttonContent
+        displayValue = buttonNumber
       }
     }
   }
   setDisplay(displayValue)
 }
 
-const floatDisplay = () => {
+const floatDisplayValue = () => {
   if (!displayValue.includes('.') && displayValue.length < MAX_DIGITS_IN_DISPLAY) {
     displayValue += '.'
   }
   setDisplay(displayValue)
 }
 
-const completeOp = () => {
+const completeOperation = () => {
   const currentNum = parseFloat(displayValue)
   let resultNum = null
   let resultOp = null
@@ -87,10 +87,9 @@ const completeOp = () => {
     resultOp = 'ERROR'
   }
 
-  displayValue = resultOp
+  displayValue = resultOp 
   currentOp = null
-  clearDisplay = true
-  setDisplay(displayValue)
+  setDisplay(displayValue) //ponerlo fuera de las funciones
 }
 
 const addNumericalButtonPress = (buttonName, number) => {
@@ -104,7 +103,7 @@ const addFunctionButtonPress = (buttonName, assignedFunction) => {
 const addOperationButtonPress = (buttonName) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
     if(currentOp !== null) {
-      completeOp()
+      completeOperation()
     }
     currentOp = buttonName
     prevNum = parseFloat(displayValue.replace(',', '.'))
@@ -124,16 +123,14 @@ addNumericalButtonPress('nine', '9')
 addNumericalButtonPress('zero', '0')
 
 addFunctionButtonPress('clean', reset)
-addFunctionButtonPress('negate', negateDisplay)
-addFunctionButtonPress('point', floatDisplay)
-addFunctionButtonPress('equal', completeOp)
+addFunctionButtonPress('negate', negateDisplayValue)
+addFunctionButtonPress('point', floatDisplayValue)
+addFunctionButtonPress('equal', completeOperation)
 
 addOperationButtonPress('sum')
 addOperationButtonPress('multiply')
 addOperationButtonPress('subtract')
 addOperationButtonPress('divide')
-
-
 
 // NON-OP KEYBOARD
 document.addEventListener('keyup', (event) => {
@@ -143,9 +140,9 @@ document.addEventListener('keyup', (event) => {
     if (keyName === 'Escape') {
       reset()
     } else if (keyName === 'Control') {
-      negateDisplay()
+      negateDisplayValue()
     } else if (keyName === pointLocale) {
-      floatDisplay(keyName)
+      floatDisplayValue(keyName)
     }
   } else {
     pressNumber(keyName)
