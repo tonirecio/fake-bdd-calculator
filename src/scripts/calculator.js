@@ -178,8 +178,19 @@ const emptyStoredMemory = () => {
 
 const operatorSelect = (value) => {
 
-    savedOperator = value 
-    if (!isANumberOnMemory) emptyStoredMemory()
+    if (!isANumberOnMemory) {
+
+      savedOperator = value 
+      emptyStoredMemory()
+
+    }
+    else {
+
+      operate()
+      savedOperator = value 
+      emptyStoredMemory()
+
+    }
     isANumberOnMemory = true
 
 }
