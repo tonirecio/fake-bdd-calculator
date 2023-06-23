@@ -198,7 +198,7 @@ Examples:
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
 
-@wip
+@done
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -215,6 +215,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
+@wip
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -356,7 +357,7 @@ And the "5" button should be disabled
 And the "6" button should be disabled
 And the "7" button should be disabled
 And the "8" button should be disabled
-And the "9" button should be disabled
+And the "9" button should be git bled
 And the "," button should be disabled
 
 Examples:

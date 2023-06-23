@@ -1,282 +1,322 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 const MAX_NUMBER = 9999999999
 const MIN_NUMBER = -9999999999
-let operation = ''
-let firstNumber = ''
-let operationClicked = false
-let pressedequals = false
+
+let isPoint = false
+let operator = ''
+let lastNumberWrited = 0
+let ans = 0
+let addDecimal = false
+let doOperation = false
+let isEqualsPressed = false
+let doMultipleOperations = false
 
 const setDisplay = (value) => {
-  console.log(value)
   display.innerHTML = value
 }
 
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+const getDisplay = () => {
+  const num = display.innerHTML.replace(',', '.')
+
+  return num
 }
 
 const reset = () => {
-  firstNumber = null
   setDisplay(0)
+  isPoint = false
+  operator = ''
+  lastNumberWrited = 0
+  ans = 0
+  addDecimal = false
+  doOperation = false
+  isEqualsPressed = false
 }
 
-const display = document.querySelector('div[name="display"] span')
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  sayHello()
-})
-reset()
-
-/* My Functions */
 const addNumber = (num) => {
-  let actualNumber = display.innerHTML
+  let toDisplay
 
-  if (pressedequals) {
-    console.log()
-    setDisplay('0')
-    actualNumber = display.innerHTML
-    pressedequals = false
+  if (doOperation) {
+    lastNumberWrited = 0
+
+    doOperation = false
+    doMultipleOperations = true
   }
 
-  if (Number(actualNumber) === 0 || operationClicked === true) {
-    setDisplay(num)
-    operationClicked = false
-  } else {
-    if (!tenNumbers()) {
-      const newNumber = actualNumber + num
+  if ((lastNumberWrited === 0 || isEqualsPressed) && !addDecimal) {
+    toDisplay = num.toString()
+    lastNumberWrited = num
 
-      setDisplay(newNumber)
+    isEqualsPressed = false
+  } else if (maxLenght(lastNumberWrited)) {
+    toDisplay = '' + lastNumberWrited
+  } else {
+    toDisplay = '' + lastNumberWrited + num
+
+    if (addDecimal) {
+      lastNumberWrited = lastNumberWrited + '.' + num
+
+      toDisplay = '' + lastNumberWrited
+
+      addDecimal = false
+    } else {
+      lastNumberWrited = '' + lastNumberWrited + num
     }
+  }
+  toDisplay = toDisplay.replace('.', ',')
+
+  return toDisplay
+}
+
+const maxLenght = (num) => {
+  let string = num.toString()
+  string = string.replace('-', '')
+  string = string.replace('.', '')
+
+  if (string.length >= MAX_DIGITS_IN_DISPLAY) {
+    return true
+  } else {
+    return false
   }
 }
 
 const addPoint = () => {
-  const actualNumber = display.innerHTML
+  if (!isPoint && !maxLenght(lastNumberWrited)) {
+    isPoint = true
+    addDecimal = true
 
-  if ((Number(actualNumber) % 1 === 0 || Number(actualNumber) === 0) && !tenNumbers()) {
-    const newDisplay = actualNumber + ','
-
-    setDisplay(newDisplay)
+    return lastNumberWrited + ','
+  } else {
+    return lastNumberWrited.toString().replace('.', ',')
   }
 }
 
-const negateNumber = () => {
-  const value = display.innerHTML
+const negateNumberFromDisplay = () => {
+  const screen = getDisplay()
+  let toDisplay = screen
 
-  if (value !== '0' && value !== '0,') {
-    const numbers = value.split(',')
+  if (!screen.includes('-')) {
+    if (screen !== '0' && screen !== '0.') {
+      toDisplay = '-' + screen
 
-    const positive = value.split('-')
-
-    if (Number(numbers[0]) >= 0 && !positive[1]) {
-      const negated = '-' + value
-
-      setDisplay(negated)
-    } else {
-      const positive = value.split('-')
-
-      setDisplay(positive[1])
-    }
-  }
-}
-
-/* Check if there are 10 numbers */
-const tenNumbers = () => {
-  const num = display.innerHTML.split('-')
-  const decimals = display.innerHTML.split(',')
-  let result = ''
-
-  if (num[1]) {
-    if (decimals[1]) {
-      result = '' + num[1] + decimals[1]
-    } else {
-      result = '' + num[1]
+      lastNumberWrited = lastNumberWrited * -1
     }
   } else {
-    if (decimals[1]) {
-      result = '' + decimals[0] + decimals[1]
-    } else {
-      result = '' + decimals[0]
-    }
+    toDisplay = screen.replace('-', '')
+
+    lastNumberWrited = lastNumberWrited * -1
   }
 
-  if (result.length >= MAX_DIGITS_IN_DISPLAY) {
-    return true
-  } else {
-    return false
-  }
+  return toDisplay.replace('.', ',')
 }
 
-const numWithTenChar = (num) => {
-  const checkLength = Number(num)
-
-  if (checkLength.toString().length >= MAX_DIGITS_IN_DISPLAY) {
-    return true
-  } else {
-    return false
-  }
+const prepareForOperation = () => {
+  doOperation = true
+  isPoint = false
+  ans = '' + lastNumberWrited
 }
 
-/* Operations */
-const sum = () => {
-  firstNumber = display.innerHTML
-  operationClicked = true
-  operation = '+'
-}
+const operate = (num1, operation, num2) => {
+  let toDisplay
 
-const subtract = () => {
-  firstNumber = display.innerHTML
-  operationClicked = true
-  operation = '-'
-}
-
-const multiply = () => {
-  firstNumber = display.innerHTML
-  operationClicked = true
-  operation = '*'
-}
-
-const divide = () => {
-  firstNumber = display.innerHTML
-  operationClicked = true
-  operation = '/'
-}
-
-const operate = () => {
-  let result = 0
-
-  pressedequals = true
+  isEqualsPressed = true
 
   switch (operation) {
     case '+':
-      result = toNumber(firstNumber) + toNumber(display.innerHTML)
-
-      checkResult(result)
+      lastNumberWrited = num1 + num2
       break
     case '-':
-      result = toNumber(firstNumber) - toNumber(display.innerHTML)
-
-      checkResult(result)
+      lastNumberWrited = num1 - num2
       break
     case '*':
-      result = toNumber(firstNumber) * toNumber(display.innerHTML)
-
-      checkResult(result)
+      lastNumberWrited = num1 * num2
       break
     case '/':
-      result = toNumber(firstNumber) / toNumber(display.innerHTML)
-
-      checkResult(result)
+      lastNumberWrited = num1 / num2
       break
   }
-}
 
-const checkResult = (result) => {
-  let text = ''
-  let show = ''
-
-  if (result > MAX_NUMBER) {
-    setDisplay('ERROR')
-  } else if (result < MIN_NUMBER) {
-    setDisplay('ERROR')
-  } else {
-    text = '' + aproxNumber(result)
-    show = text.replace('.', ',')
-
-    setDisplay(show)
-  }
-}
-
-/* String to number */
-const toNumber = (num) => {
-  const numWithDecimals = num.split(',')
-
-  if (numWithDecimals[1]) {
-    return Number(numWithDecimals[0] + '.' + numWithDecimals[1])
-  } else {
-    return Number(numWithDecimals[0])
-  }
-}
-
-/* Aprox infinite number */
-const aproxNumber = (num) => {
-  const text = '' + num
-  const result = Number(num)
-  const decimals = text.split('.')
-
-  if (numWithTenChar(num)) {
-    if (decimals[1]) {
-      const numberDecimals = MAX_DIGITS_IN_DISPLAY - decimals[0].length
-
-      const numberToFix = result.toFixed(numberDecimals).split('.')
-
-      const decimalToFix = numberToFix[1].split(0)
-
-      return Number(numberToFix[0] + '.' + decimalToFix[0])
+  if (maxLenght(lastNumberWrited)) {
+    if (checkLimits(lastNumberWrited)) {
+      return 'ERROR'
     } else {
-      return result
+      const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
+      toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
+
+      lastNumberWrited = Number(toDisplay)
     }
   } else {
-    return result
+    toDisplay = '' + lastNumberWrited
+  }
+
+  console.log(toDisplay)
+
+  return toDisplay
+}
+
+const getEnterNum = (num) => {
+  let string = num.toString()
+  string = string.split('.')
+
+  return string[0].length
+}
+
+const checkLimits = (num) => {
+  if (num > MAX_NUMBER) {
+    return true
+  } else if (num < MIN_NUMBER) {
+    return true
+  } else {
+    return false
   }
 }
 
-/* Listeners for buttons */
-const buttons = document.getElementsByTagName('button')
-const addNumberListeners = (button) => {
-  for (const element of button) {
-    if (Number(element.innerHTML) >= 0 && Number(element.innerHTML) <= 9) {
-      const num = Number(element.innerHTML)
+const display = document.querySelector('div[name="display"] span')
 
-      element.addEventListener('click', () => {
-        addNumber(num)
-      })
-    } else if (element.innerHTML === 'C') {
-      element.addEventListener('click', () => {
-        reset()
-      })
-    } else if (element.innerHTML === ',') {
-      element.addEventListener('click', () => {
-        addPoint()
-      })
-    } else if (element.name === 'negate') {
-      element.addEventListener('click', () => {
-        negateNumber()
-      })
-    } else if (element.name === 'sum') {
-      element.addEventListener('click', () => {
-        sum()
-      })
-    } else if (element.name === 'subtract') {
-      element.addEventListener('click', () => {
-        subtract()
-      })
-    } else if (element.name === 'multiply') {
-      element.addEventListener('click', () => {
-        multiply()
-      })
-    } else if (element.name === 'divide') {
-      element.addEventListener('click', () => {
-        divide()
-      })
-    } else if (element.name === 'equal') {
-      element.addEventListener('click', () => {
-        operate()
-      })
+const addButtons = () => {
+  document.getElementsByName('one')[0].addEventListener('click', () => {
+    let text = addNumber(1)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('two')[0].addEventListener('click', () => {
+    let text = addNumber(2)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('three')[0].addEventListener('click', () => {
+    let text = addNumber(3)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('four')[0].addEventListener('click', () => {
+    let text = addNumber(4)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('five')[0].addEventListener('click', () => {
+    let text = addNumber(5)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('six')[0].addEventListener('click', () => {
+    let text = addNumber(6)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('seven')[0].addEventListener('click', () => {
+    let text = addNumber(7)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('eight')[0].addEventListener('click', () => {
+    let text = addNumber(8)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('nine')[0].addEventListener('click', () => {
+    let text = addNumber(9)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('zero')[0].addEventListener('click', () => {
+    let text = addNumber(0)
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('clean')[0].addEventListener('click', () => {
+    reset()
+  })
+
+  document.getElementsByName('point')[0].addEventListener('click', () => {
+    let text = addPoint()
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('negate')[0].addEventListener('click', () => {
+    let text = negateNumberFromDisplay()
+
+    setDisplay(text)
+  })
+
+  document.getElementsByName('sum')[0].addEventListener('click', () => {
+    if (doMultipleOperations && !isEqualsPressed) {
+      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+
+      doMultipleOperations = false
     }
-  }
+
+    prepareForOperation()
+    operator = '+'
+  })
+
+  document.getElementsByName('subtract')[0].addEventListener('click', () => {
+    if (doMultipleOperations && !isEqualsPressed) {
+      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+
+      doMultipleOperations = false
+    }
+
+    prepareForOperation()
+    operator = '-'
+  })
+
+  document.getElementsByName('multiply')[0].addEventListener('click', () => {
+    if (doMultipleOperations && !isEqualsPressed) {
+      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+
+      doMultipleOperations = false
+    }
+
+    prepareForOperation()
+    operator = '*'
+  })
+
+  document.getElementsByName('divide')[0].addEventListener('click', () => {
+    if (doMultipleOperations && !isEqualsPressed) {
+      lastNumberWrited = operate(Number(ans), operator, Number(lastNumberWrited))
+
+      doMultipleOperations = false
+    }
+
+    prepareForOperation()
+    operator = '/'
+  })
+
+  document.getElementsByName('equal')[0].addEventListener('click', () => {
+    let text = operate(Number(ans), operator, Number(lastNumberWrited)).replace('.', ',')
+
+    setDisplay(text)
+  })
 }
 
-addNumberListeners(buttons)
-
-/* Keyboard input */
 document.addEventListener('keydown', (event) => {
   if (event.key >= 0 && event.key <= 9) {
-    addNumber(event.key)
+    let text = addNumber(event.key)
+
+    setDisplay(text)
   } else if (event.key === ',') {
-    addPoint()
+    let text = addPoint()
+
+    setDisplay(text)
   } else if (event.key === 'Control') {
-    negateNumber()
+    let text = negateNumberFromDisplay()
+
+    setDisplay(text)
   } else if (event.key === 'Escape') {
     reset()
   }
 })
+
+reset()
+addButtons()
