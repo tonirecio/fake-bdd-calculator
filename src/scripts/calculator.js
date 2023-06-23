@@ -1,5 +1,3 @@
-const MAX_DIGITS_IN_DISPLAY = 10
-
 const lenNumber = (number) => {
     let stringNumber = String(number)
     stringNumber = stringNumber.replace('-', '')
@@ -14,86 +12,83 @@ const round = (number) => {
     return (number)
 }
 
-const getDisplay = () => {
-    const num = display.innerHTML
-    return (Number(num.replace(',', '.')))
-}
-
 const setDisplay = (value) => {
     let displayValue
     if (value === 'ERROR') {
         displayValue = value
     } else {
-        value = round(value)
         displayValue = String(value).replace('.', ',')
-        if (hasPoint && !displayValue.includes(',')) {
+        if (actualNumberHasPoint && !displayValue.includes(',')) {
             displayValue = displayValue.concat(',')
         }
     }
-
     display.innerHTML = displayValue
 }
 
 const reset = () => {
-    operator = false
-    accumulatedNumber = false
-    actualNumber = true
-    hasPoint = false
+    operator = null
+    accumulatedNumber = null
+    actualNumber = null
+    actualNumberHasPoint = false
     setDisplay(0)
 }
 
 const addNum = (value) => {
-    const number = getDisplay()
+    const number = actualNumber
     value = Number(value)
-    if ((number === 0 && !hasPoint) || actualNumber) {
-        setDisplay(value)
+    let result
+    if ((number === 0 && !actualNumberHasPoint) || actualNumber === null) {
+        result = value
     } else {
         if (lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-            let result
-            if (hasPoint) {
+            if (actualNumberHasPoint) {
                 const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1
-                result = number + (value * (Math.pow(0.1, numDecimals)))
+                result = number + (value * Math.pow(0.1, numDecimals))
             } else {
                 result = number * 10 + value
             }
-            setDisplay(Number(result))
+        } else {
+            result = actualNumber
         }
     }
-    actualNumber = false
+    actualNumber = round(result)
+    setDisplay(actualNumber)
 }
 
-const negateNum = () => {
-    const number = getDisplay()
-    if (number !== 0) {
-        setDisplay(number * -1)
-    }
+const negateNum = (number) => {
+    number *= -1
+    return (number)
 }
 
-const addPoint = () => {
-    const number = getDisplay()
-    if (!hasPoint && lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-        hasPoint = true
-        setDisplay(number)
+const pressingNegate = () => {
+    actualNumber = negateNum(actualNumber)
+    setDisplay(actualNumber)
+}
+
+const pressingPoint = () => {
+    if (!actualNumberHasPoint && lenNumber(actualNumber) < MAX_DIGITS_IN_DISPLAY) {
+        actualNumberHasPoint = true
     }
+    setDisplay(actualNumber)
 }
 
 const addOperation = (operation) => {
-    if (operator !== false && !actualNumber) {
+    if (operator !== null && actualNumber !== null) {
         accumulatedNumber = operate()
-    } else {
-        accumulatedNumber = getDisplay()
+    } else if (operator === null && accumulatedNumber === null) {
+        accumulatedNumber = actualNumber
     }
     operator = operation
-    actualNumber = true
-    hasPoint = false
+    actualNumber = null
+    actualNumberHasPoint = false
 }
 
 const operate = () => {
-    if (actualNumber) {
+    if (actualNumber === null) {
         setDisplay('ERROR')
         return
     }
-    const number = getDisplay()
+    const number = actualNumber
     let result
     switch (operator) {
         case '+':
@@ -113,14 +108,15 @@ const operate = () => {
             }
             break
     }
-    hasPoint = false
+    actualNumberHasPoint = false
     if (result === 'ERROR' || lenNumber(Math.round(result)) > MAX_DIGITS_IN_DISPLAY) {
         setDisplay('ERROR')
     } else {
-        setDisplay(result)
+        accumulatedNumber = round(result)
+        setDisplay(accumulatedNumber)
     }
-    actualNumber = true
-    operator = false
+    actualNumber = null
+    operator = null
     return (result)
 }
 
@@ -136,8 +132,8 @@ const getEventsListenersButtons = () => {
     document.getElementsByName('eight')[0].addEventListener('click', () => addNum(8))
     document.getElementsByName('nine')[0].addEventListener('click', () => addNum(9))
     document.getElementsByName('clean')[0].addEventListener('click', () => reset())
-    document.getElementsByName('negate')[0].addEventListener('click', () => negateNum())
-    document.getElementsByName('point')[0].addEventListener('click', () => addPoint())
+    document.getElementsByName('negate')[0].addEventListener('click', () => pressingNegate())
+    document.getElementsByName('point')[0].addEventListener('click', () => pressingPoint())
     document.getElementsByName('divide')[0].addEventListener('click', () => addOperation('/'))
     document.getElementsByName('multiply')[0].addEventListener('click', () => addOperation('*'))
     document.getElementsByName('subtract')[0].addEventListener('click', () => addOperation('-'))
@@ -151,11 +147,11 @@ const getEventsListenersKeyboard = () => {
             addNum(key.key)
         } else {
             if (key.key === 'Control') {
-                negateNum()
+                pressingNegate()
             } else if (key.key === 'Escape') {
                 reset()
             } else if (key.key === ',') {
-                addPoint()
+                pressingPoint()
             } else if (key.key === '-') {
                 addOperation('-')
             } else if (key.key === '+') {
@@ -169,11 +165,13 @@ const getEventsListenersKeyboard = () => {
     })
 }
 
+const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
-let operator = false
-let accumulatedNumber = false
-let actualNumber = true
-let hasPoint = false
+let operator = null
+let accumulatedNumber = null
+let actualNumber = null
+let actualNumberHasPoint = false
+
 
 reset()
 getEventsListenersButtons()
