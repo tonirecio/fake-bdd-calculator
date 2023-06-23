@@ -1,6 +1,6 @@
 let value = '0'
 const display = document.querySelector('div[name="display"] span')
-
+const MAX_DIGITS_IN_DISPLAY = 10;
 const setDisplay = () => {
   display.innerHTML = value
 }
@@ -16,7 +16,7 @@ const negate = () => {
   } if (value.startsWith('-')) {
     value = value.slice(1)
   } else {
-    value = `-${value}`
+    value = `-${value}`//pone un - delante del numero
   }
 
   setDisplay()
@@ -29,7 +29,7 @@ const handleButtonPress = (buttonValue) => {
       clean()
       break
     case ',':
-      if (!value.includes(',') && value.replace(',', '').length < 10) {
+      if (!value.includes(',') && value.replace(',', '').length < MAX_DIGITS_IN_DISPLAY) {
         value += buttonValue
         setDisplay()
       }
@@ -41,10 +41,10 @@ const handleButtonPress = (buttonValue) => {
       break
     default:
       if (/^[0-9]$/.test(buttonValue)) { // Si el valor es un numero del 0 al 9
-        const numericValue = value.replace(',', '')
+        const numericNoPoint = value.replace(',', '')
         if (
-          numericValue.length < 10 ||
-          (numericValue.length === 10 && value.includes(','))
+          numericNoPoint.length < MAX_DIGITS_IN_DISPLAY ||
+          (numericNoPoint.length === MAX_DIGITS_IN_DISPLAY && value.includes(','))
         ) {
           if (value === '0') {
             value = buttonValue
@@ -71,17 +71,16 @@ const handleKeyPress = (event) => {
       }
       break
     case ',':
-      if (!value.includes(',') && value.replace(',', '').length < 10) {
+      if (!value.includes(',') && value.replace(',', '').length < MAX_DIGITS_IN_DISPLAY) {
         value += key
         setDisplay()
       }
       break
     default:
       if (/^[0-9]$/.test(key)) { // Si el valor es un numero del 0 al 9
-        const numericValue = value.replace(',', '')
         if (
-          numericValue.length < 10 ||
-          (numericValue.length === 10 && value.includes(','))
+          numericNoPoint.length < MAX_DIGITS_IN_DISPLAY ||
+          (numericNoPoint.length === MAX_DIGITS_IN_DISPLAY && value.includes(','))
         ) {
           if (value === '0') {
             value = key
