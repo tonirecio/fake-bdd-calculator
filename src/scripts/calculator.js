@@ -1,8 +1,6 @@
 
 
 const MAX_DIGITS_IN_DISPLAY = 10
-const MAX_DIGITS_IN_DISPLAY_WHIT_COMMA = 11
-const MAX_DIGITS_IN_DISPLAY_WHIT_COMMA_AND_HYPHEN  = 13
 let inputValue = null
 let valueDisplay = ""
 let firstNumber = null
