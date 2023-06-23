@@ -21,7 +21,9 @@ const SUM_BUTTON = document.getElementsByName('sum')[0]
 const EQUAL_BUTTON = document.getElementsByName('equal')[0]
 
 var inMemoryNumber = 0 //El numero que se queda en memoria para poder hacer calculos
-var savedOperator = '' 
+var savedOperator = ''
+var isANumberOnMemory = false
+var isTheOperationFinished = false
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -43,11 +45,13 @@ const sayHello = () => {
 const invertNumberDisplay = () => {
   
   if (isOnDisplayZero() == false && isOnDisplayZeroWithDot() == false) {
+
     var displayNumber = display.innerHTML
     if (isANegativeNumberDisplay()) displayNumber = displayNumber.slice(1) 
     else displayNumber = '-' + displayNumber 
 
     setDisplay(displayNumber) 
+
   }
 
 }
@@ -59,6 +63,13 @@ const reset = () => {
 }
 
 const addToTheDisplay = (value) => {
+
+  if (isTheOperationFinished) {
+
+    setDisplay(0)
+    isTheOperationFinished = false
+
+  }
 
   if (!isTheMaxLenght()) {
 
@@ -106,20 +117,6 @@ const numberAfterComma = (value) => {
 
   var numero = value.toString().split('.')[1]
   return numero.length;
-
-}
-
-const truncNumber = (value, decimal) => {
-
-
-  var multiple = 1
-
-  for (var i = 0; i < decimal; i++) {
-
-    
-    multiple *= 10
-
-  }
 
 }
 
@@ -181,21 +178,38 @@ const emptyStoredMemory = () => {
 
 const operatorSelect = (value) => {
 
-  if (operationUnselected()) {
-
     savedOperator = value 
-    emptyStoredMemory()
-
-  }
+    if (!isANumberOnMemory) emptyStoredMemory()
+    isANumberOnMemory = true
 
 }
 const operate = () => {
 
-  if (savedOperator == '+') doAddition()
-  else if (savedOperator == '-') doSubstraction()
-  else if (savedOperator == '*') doMultiplication()
-  else if (savedOperator == '/') doDivision()
-  savedOperator = '' 
+  if (savedOperator == '+') {
+    doAddition()
+    resetMemoryNumberAndOperator()
+  }
+  else if (savedOperator == '-') {
+    doSubstraction()
+    resetMemoryNumberAndOperator()
+  }
+  else if (savedOperator == '*') {
+    doMultiplication()
+    resetMemoryNumberAndOperator()
+  }
+  else if (savedOperator == '/') {
+    doDivision()
+    resetMemoryNumberAndOperator()
+  }
+
+}
+
+const resetMemoryNumberAndOperator = () => {
+
+  savedOperator = ''
+  isANumberOnMemory = false
+  inMemoryNumber = 0
+  isTheOperationFinished = true
 
 }
 
