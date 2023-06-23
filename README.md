@@ -35,3 +35,5 @@
 *Scenario: Doing an operation without a second number* : Ok
 
 *Scenario: Doing an operation without a first number* : Ok
+
+*Scenario Outline: Showing the first number after pressing operation* : Ok
