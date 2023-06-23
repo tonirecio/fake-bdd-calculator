@@ -10,21 +10,21 @@ const appendNumber = (number) => {
   } else if (currentValue !== '0' && (currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY) {
     currentValue += number.toString()
   }
-  display.innerHTML = currentValue
+  setDisplay(currentValue)
 }
 
 const appendDot = () => {
   if (!currentValue.includes(',') && (currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY) {
     currentValue += ','
   }
-  display.innerHTML = currentValue
+  setDisplay(currentValue)
 }
 
 const setDisplay = (value) => {
   if (value === ',' && currentValue.includes(',')) {
     return
   }
-  if (currentValue === '0' && value !== ',') {
+  if (currentValue === '0' && value !== '0' && value !== ',') {
     currentValue = value
   } else if ((currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY && value !== currentValue) {
     currentValue += value
@@ -32,6 +32,7 @@ const setDisplay = (value) => {
 
   display.innerHTML = currentValue
 }
+
 
 const reset = document.querySelector('button[name="clean"]')
 reset.addEventListener('click', () => {
@@ -41,7 +42,7 @@ reset.addEventListener('click', () => {
 
 const negate = document.querySelector('button[name="negate"]')
 negate.addEventListener('click', () => {
-  if (currentValue === '0' || /^0,0*$/.test(currentValue)) {
+  if (currentValue === '0' || /^0,0*$/.test(currentValue)) { // Esta expresión regular busca una cadena que comience y termine con cero y tenga cero o más comas en el medio.
     return
   }
   const endsWithComma = currentValue.endsWith(',')
@@ -51,7 +52,6 @@ negate.addEventListener('click', () => {
   }
   setDisplay(currentValue)
 })
-
 
 const buttons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
 buttons.forEach((buttonName) => {
@@ -98,26 +98,68 @@ buttons.forEach((buttonName) => {
         negate()
         break
       default:
-        window.alert('Error: botón no reconocido')
+        return
     }
   })
 })
 
-const keyCodes = {
-  48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9', 96: '0', 97: '1', 98: '2', 99: '3', 100: '4', 101: '5', 102: '6', 103: '7', 104: '8', 105: '9', 188: ','
-}
-
 document.addEventListener('keydown', (event) => {
-  const keyCode = event.keyCode.toString()
-  if (keyCodes.hasOwnProperty(keyCode)) {
-    setDisplay(keyCodes[keyCode])
-  } else if (event.keyCode === 17) {
-    negate()
-    setDisplay(currentValue)
-  } else if (event.keyCode === 27) {
-    currentValue = '0'
-    setDisplay(currentValue)
+  const keyCode = event.keyCode
+  let keyValue
+  switch (keyCode) {
+    case 48:
+    case 96:
+      keyValue = '0'
+      break
+    case 49:
+    case 97:
+      keyValue = '1'
+      break
+    case 50:
+    case 98:
+      keyValue = '2'
+      break
+    case 51:
+    case 99:
+      keyValue = '3'
+      break
+    case 52:
+    case 100:
+      keyValue = '4'
+      break
+    case 53:
+    case 101:
+      keyValue = '5'
+      break
+    case 54:
+    case 102:
+      keyValue = '6'
+      break
+    case 55:
+    case 103:
+      keyValue = '7'
+      break
+    case 56:
+    case 104:
+      keyValue = '8'
+      break
+    case 57:
+    case 105:
+      keyValue = '9'
+      break
+    case 188:
+      keyValue = ','
+      break
+    case 17:
+      negate.click()
+      return
+    case 27:
+      keyValue = currentValue = '0'
+      break
+    default:
+      return
   }
+  setDisplay(keyValue)
 })
 
 const sum = (a, b) => a + b
