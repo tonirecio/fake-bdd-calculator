@@ -7,13 +7,12 @@ let previousNumber
 let operationType
 let isNextNumberDecimal = false
 
-
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
     const keyPressed = event.key
 
     if (keyPressed >= '0' && keyPressed <= '9') {
-      addNumberTocurrentNumber(keyPressed)
+      pressedNumber(keyPressed)
       displaycurrentNumber()
     } else if (keyPressed === 'Escape') {
       cleanEverything()
@@ -24,21 +23,13 @@ const pressKeys = () => {
       addPointTocurrentNumber()
       displaycurrentNumber()
     } else if (keyPressed === '+') {
-      operationType = '+'
-      saveToPreviousNumber()
-      cleanDisplay()
+      pressedOperator('+')
     } else if (keyPressed === '-') {
-      operationType = '-'
-      saveToPreviousNumber()
-      cleanDisplay()
+      pressedOperator('-')
     } else if (keyPressed === '*') {
-      operationType = '*'
-      saveToPreviousNumber()
-      cleanDisplay()
+      pressedOperator('*')
     } else if (keyPressed === '/') {
-      operationType = '/'
-      saveToPreviousNumber()
-      cleanDisplay()
+      pressedOperator('/')
     } else if (keyPressed === '=') {
       performOperation()
       cleanDisplay()
@@ -48,43 +39,43 @@ const pressKeys = () => {
 
 const pressButtons = () => {
   document.getElementsByName('zero')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(0)
+    pressedNumber(0)
     displaycurrentNumber()
   })
   document.getElementsByName('one')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(1)
+    pressedNumber(1)
     displaycurrentNumber()
   })
   document.getElementsByName('two')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(2)
+    pressedNumber(2)
     displaycurrentNumber()
   })
   document.getElementsByName('three')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(3)
+    pressedNumber(3)
     displaycurrentNumber()
   })
   document.getElementsByName('four')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(4)
+    pressedNumber(4)
     displaycurrentNumber()
   })
   document.getElementsByName('five')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(5)
+    pressedNumber(5)
     displaycurrentNumber()
   })
   document.getElementsByName('six')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(6)
+    pressedNumber(6)
     displaycurrentNumber()
   })
   document.getElementsByName('seven')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(7)
+    pressedNumber(7)
     displaycurrentNumber()
   })
   document.getElementsByName('eight')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(8)
+    pressedNumber(8)
     displaycurrentNumber()
   })
   document.getElementsByName('nine')[0].addEventListener('click', () => {
-    addNumberTocurrentNumber(9)
+    pressedNumber(9)
     displaycurrentNumber()
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
@@ -99,32 +90,27 @@ const pressButtons = () => {
     cleanEverything()
   })
   document.getElementsByName('sum')[0].addEventListener('click', () => {
-    operationType = '+'
-    saveToPreviousNumber()
-    cleanDisplay()
+    pressedOperator('+')
   })
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
-    operationType = '-'
-    saveToPreviousNumber()
-    cleanDisplay()
+    pressedOperator('-')
   })
   document.getElementsByName('multiply')[0].addEventListener('click', () => {
-    operationType = '*'
-    saveToPreviousNumber()
-    cleanDisplay()
+    pressedOperator('*')
   })
   document.getElementsByName('divide')[0].addEventListener('click', () => {
-    operationType = '/'
-    saveToPreviousNumber()
-    cleanDisplay()
+    pressedOperator('/')
   })
   document.getElementsByName('equal')[0].addEventListener('click', () => {
     performOperation()
   })
 }
 
-const saveToPreviousNumber = () => {
-  previousNumber = currentNumber
+const saveToPreviousNumber = (number) => {
+  if (number !== 0) {
+    previousNumber = number
+    currentNumber = 0
+  }
 }
 
 const performOperation = () => {
@@ -137,17 +123,27 @@ const performOperation = () => {
   } else if (operationType === '/') {
     currentNumber = previousNumber / currentNumber
   }
-  
-  checkResultNumber();
+
+  checkResultNumberForError()
+}
+
+const pressedOperator = (type) => {
+  saveToPreviousNumber(currentNumber)
+  operationType = type
+  cleanDisplay()
+}
+
+const pressedNumber = (newNumber) => {
+  addNumberTocurrentNumber(newNumber)
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
-      currentNumber = Number(currentNumber.toString() + '.' + newNumber.toString())
+      currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
       isNextNumberDecimal = false
     } else {
-      currentNumber = Number(currentNumber.toString() + newNumber.toString())
+      currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
   }
 }
@@ -196,12 +192,18 @@ const getNumberLength = (number) => {
   return numericLength
 }
 
-const checkResultNumber = () => {
-/* Rounding decimals of result, to avoid numbers like 1,0000000001 */
+const roundDecimals = (number) => {
+  /* Rounding decimals of result, to avoid numbers like 1,0000000001 */
+  number = number.toFixed(MAX_DIGITS_IN_DISPLAY)
+  number = number.slice(0, MAX_DIGITS_IN_DISPLAY + 1)
+  number = parseFloat(number)
+
+  return number
+}
+
+const checkResultNumberForError = () => {
   if (!Number.isInteger(currentNumber)) {
-    currentNumber = currentNumber.toFixed(MAX_DIGITS_IN_DISPLAY)
-    currentNumber = currentNumber.slice(0, MAX_DIGITS_IN_DISPLAY + 1)
-    currentNumber = parseFloat(currentNumber)
+    currentNumber = roundDecimals(currentNumber)
   }
 
   if (getNumberLength(currentNumber) <= MAX_DIGITS_IN_DISPLAY) {
@@ -209,6 +211,7 @@ const checkResultNumber = () => {
   } else {
     displayError()
   }
+  saveToPreviousNumber(currentNumber)
 }
 
 const displaycurrentNumber = () => {

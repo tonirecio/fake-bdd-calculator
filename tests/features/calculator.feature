@@ -169,7 +169,7 @@ When the user presses the "C" button
 Then the display should show the following value: "0"
 
 
-@current
+
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
@@ -218,7 +218,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@current
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
