@@ -112,7 +112,6 @@ const handleOperation = () => {
   } 
   isSecondNumber = false
   tryingNegateNumber = false
-  inputValue = result
   valueDisplay = result
   valueDisplay = valueDisplay.toString()
       
@@ -122,6 +121,8 @@ const handleOperation = () => {
   firstNumber = null
   operator = null
   secondNumber = null 
+  inputValue = 0
+  valueDisplay = '0'
   return
 }
 
