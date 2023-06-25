@@ -165,7 +165,6 @@ nonOperatorButtons.forEach(nonOperatorButton => {
 })
 
 // [Scenario] Pressing non-operators keys
-//const nonDigitKeys = ['/', '*', '-', '+']
 
 document.addEventListener('keydown', (event) => {
   let keyPressed = event.key
@@ -217,7 +216,7 @@ document.addEventListener('keydown', (event) => {
 // [Scenario] Performing two number operations
 const saveAndResetCurrentOperand = (currentOperand) => {
   pastOperand = currentOperand
-  reset ()
+  reset()
   return pastOperand
 }
 
@@ -243,7 +242,6 @@ const operatorButtonPressed = (buttonName) => {
 }
 
 const performOperation = (pastOperand, currentOperand, operandSymbolInUse) => {
-  console.log("past ", pastOperand, " current ", currentOperand)  
   switch (operandSymbolInUse) {
     case '/':
       operationResult = pastOperand / currentOperand
@@ -274,5 +272,6 @@ const countIntegersFromNumber = (number, integerCount) => {
 }
 
 const roundNumber = (number, integerCount) => {
-  return Math.round(number * Math.pow(10, 10 - integerCount)) / Math.pow(10, 10 - integerCount);
+  number = Math.round(number * Math.pow(10, 10 - integerCount)) / Math.pow(10, 10 - integerCount)
+  return number
 }
