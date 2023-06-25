@@ -101,6 +101,7 @@ handleOperator = (operation) => {
 }
 
 const handleOperation = () => {
+
   switch (operator){
     case '+':
       result = sumNumbers(firstNumber, secondNumber)
@@ -120,9 +121,14 @@ const handleOperation = () => {
   } 
   isSecondNumber = false
   tryingNegateNumber = false
+
+  if(secondNumber === null){
+    showMessageError()
+  }
+
   valueDisplay = result
-  valueDisplay = valueDisplay.toString()
-      
+  valueDisplay = valueDisplay.toString()  
+
   controlDecimalsResult()
   setDisplay(result)
 
@@ -144,12 +150,12 @@ const controlDecimalsResult = () => {
     result = result.toPrecision(lengthOfResult) * 1
     return
   } else if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
-    messageError()
+    showMessageError()
     return
   }
 }
 
-const messageError = () => {
+const showMessageError = () => {
   result = 'ERROR'
   inputValue = 0
 }

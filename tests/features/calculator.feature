@@ -246,12 +246,14 @@ Examples:
 |            -1 |
 |             0 |
 
+@done
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
 
+@wip
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"
