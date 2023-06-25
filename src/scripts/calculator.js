@@ -87,6 +87,7 @@ const resetDisplay = () => {
 }
 
 handleOperator = (operation) => {
+  changeStateOfNegateButton()
   if(operator === null){
     firstNumber = inputValue
   } else if(secondNumber != null){
@@ -98,6 +99,7 @@ handleOperator = (operation) => {
   setDisplay(valueDisplay)
   isSecondNumber = true
   inputValue = 0
+  valueDisplay = '0'
 }
 
 const handleOperation = () => {
@@ -165,6 +167,11 @@ const showMessageError = () => {
   operator = null
   secondNumber = null 
   result = 'ERROR'
+}
+
+const changeStateOfNegateButton = () => {
+
+    document.getElementsByName('negate')[0].disabled = true;
 }
 
 sumNumbers = (firstNumber, secondNumber) => {

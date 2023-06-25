@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calculator</title>
+    <link rel="stylesheet" href="calculator.css" />
+    <script type="text/javascript" src="scripts/calculator.js" defer></script>
+  </head>
 
-<head>
-	<meta charset="utf-8" />
-	<title>Calculator</title>
-	<link rel="stylesheet" href="calculator.css" />
-	<script type="text/javascript" src="scripts/calculator.js" defer></script>
-</head>
-
-<body>
-	<main name="calculator">
-		<div class="display-decorator">
-			<div name="display">
-				<span data-testid="display">0</span>
-			</div>
-		</div>
-		<div name="keypad">
-			<button name="clean" aria-label="clean" data-testid="C">C</button>
-			<button name="negate" aria-label="negate" data-testid="+-">
-				<img src="images/negate.svg" class="svg-icon" />
-			</button>
-			<button name="divide" aria-label="divide" data-testid="/">
-				<img src="images/divide.svg" class="svg-icon" />
-			</button>
-			<button name="seven" data-testid="7">7</button>
-			<button name="eight" data-testid="8">8</button>
-			<button name="nine" data-testid="9">9</button>
-			<button name="multiply" aria-label="multiply" data-testid="*">
-				<img src="images/multiply.svg" class="svg-icon" />
-			</button>
-			<button name="four" data-testid="4">4</button>
-			<button name="five" data-testid="5">5</button>
-			<button name="six" data-testid="6">6</button>
-			<button name="subtract" aria-label="subtract" data-testid="-">
-				<img src="images/subtract.svg" class="svg-icon" />
-			</button>
-			<button name="one" data-testid="1">1</button>
-			<button name="two" data-testid="2">2</button>
-			<button name="three" data-testid="3">3</button>
-			<button name="sum" aria-label="sum" data-testid="+">
-				<img src="images/sum.svg" class="svg-icon" />
-			</button>
-			<button name="zero" data-testid="0">0</button>
-			<button name="point" data-testid=",">,</button>
-			<button name="equal" aria-label="equal" data-testid="=">
-				<img src="images/equal.svg" class="svg-icon" />
-			</button>
-		</div>
-	</main>
-</body>
-
+  <body>
+    <main name="calculator">
+      <div class="display-decorator">
+        <div name="display">
+          <span data-testid="display">0</span>
+        </div>
+      </div>
+      <div name="keypad">
+        <button name="clean" aria-label="clean" data-testid="C">C</button>
+        <button name="negate" aria-label="negate" data-testid="+-">
+          <img src="images/negate.svg" class="svg-icon" />
+        </button>
+        <button name="divide" aria-label="divide" data-testid="/">
+          <img src="images/divide.svg" class="svg-icon" />
+        </button>
+        <button name="seven" data-testid="7">7</button>
+        <button name="eight" data-testid="8">8</button>
+        <button name="nine" data-testid="9">9</button>
+        <button name="multiply" aria-label="multiply" data-testid="*">
+          <img src="images/multiply.svg" class="svg-icon" />
+        </button>
+        <button name="four" data-testid="4">4</button>
+        <button name="five" data-testid="5">5</button>
+        <button name="six" data-testid="6">6</button>
+        <button name="subtract" aria-label="subtract" data-testid="-">
+          <img src="images/subtract.svg" class="svg-icon" />
+        </button>
+        <button name="one" data-testid="1">1</button>
+        <button name="two" data-testid="2">2</button>
+        <button name="three" data-testid="3">3</button>
+        <button name="sum" aria-label="sum" data-testid="+">
+          <img src="images/sum.svg" class="svg-icon" />
+        </button>
+        <button name="zero" data-testid="0">0</button>
+        <button name="point" data-testid=",">,</button>
+        <button name="equal" aria-label="equal" data-testid="=">
+          <img src="images/equal.svg" class="svg-icon" />
+        </button>
+      </div>
+    </main>
+  </body>
 </html>
