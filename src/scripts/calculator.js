@@ -119,13 +119,15 @@ const handleOperation = () => {
       result = divideNumbers(firstNumber, secondNumber)
       break;
   } 
-  isSecondNumber = false
-  tryingNegateNumber = false
 
-  if(secondNumber === null){
+  if(secondNumber === null && operator != null){
     showMessageError()
+  } else if(operator === null){
+    result = inputValue
   }
 
+  isSecondNumber = false
+  tryingNegateNumber = false
   valueDisplay = result
   valueDisplay = valueDisplay.toString()  
 
@@ -156,8 +158,13 @@ const controlDecimalsResult = () => {
 }
 
 const showMessageError = () => {
-  result = 'ERROR'
   inputValue = 0
+  isSecondNumber = false
+  tryingNegateNumber = false
+  firstNumber = null
+  operator = null
+  secondNumber = null 
+  result = 'ERROR'
 }
 
 sumNumbers = (firstNumber, secondNumber) => {
