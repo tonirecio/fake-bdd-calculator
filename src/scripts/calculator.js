@@ -164,7 +164,11 @@ multiplyNumbers = (firstNumber, secondNumber) => {
     return firstNumber * secondNumber
 }
 divideNumbers = (firstNumber, secondNumber) => {
+  if(secondNumber != 0){
     return firstNumber / secondNumber
+  } else {
+    return "ERROR"
+  }
 }
 
 writeNumber = () => {
