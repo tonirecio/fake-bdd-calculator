@@ -6,6 +6,7 @@ let valueDisplay = ""
 let firstNumber = null
 let operator = null
 let secondNumber = null
+let result = null
 let isSecondNumber = false
 let tryingNegateNumber = false
 
@@ -14,7 +15,7 @@ const concatInputsNumbers = (value) => {
     inputValue = value
     setDisplay(inputValue)
     return
-  } else {
+  } else {  
       valueDisplay = inputValue
       valueDisplay = valueDisplay.toString() + value
       inputValue = parseFloat(valueDisplay)
@@ -55,12 +56,16 @@ const setInputValue = (input) => {
     setDisplay(inputValue)
     return
   } else {
-    if(valueDisplay.slice(-1) === ","){
-      putCommaAndConcatNumbers(input)
-      return
-    } else {
+    if(result != null && secondNumber === null){
+      inputValue = ''
       concatInputsNumbers(input)
-      return
+      result = null
+    } else if(valueDisplay.slice(-1) === ","){
+        putCommaAndConcatNumbers(input)
+        return
+    } else {
+        concatInputsNumbers(input)
+        return
     } 
   }
 }
@@ -84,6 +89,9 @@ const resetDisplay = () => {
 handleOperator = (operation) => {
   if(operator === null){
     firstNumber = inputValue
+  } else if(secondNumber != null){
+    handleOperation()
+    firstNumber = result
   }
   operator = operation
   valueForDisplay = operator
@@ -121,8 +129,8 @@ const handleOperation = () => {
   firstNumber = null
   operator = null
   secondNumber = null 
-  inputValue = 0
-  valueDisplay = '0'
+  inputValue = result
+  valueDisplay = ''
   return
 }
 
