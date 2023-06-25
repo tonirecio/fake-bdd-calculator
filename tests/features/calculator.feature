@@ -157,6 +157,7 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
+@done
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
