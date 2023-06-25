@@ -17,7 +17,7 @@ const concatInputsNumbers = (value) => {
   } else {
       valueDisplay = inputValue
       valueDisplay = valueDisplay.toString() + value
-      inputValue = parseFloat(valueDisplay, 10)
+      inputValue = parseFloat(valueDisplay)
       setDisplay(valueDisplay)
       return
   } 
@@ -31,7 +31,7 @@ const putCommaAndConcatNumbers = (value) => {
   } else {
     valueDisplay = valueDisplay + "."
   }
-  inputValue = parseFloat(valueDisplay, 10)
+  inputValue = parseFloat(valueDisplay)
   setDisplay(valueDisplay)
 }
 
@@ -70,7 +70,7 @@ const setDisplay = (value) => {
   if(isSecondNumber === false){
     display.innerHTML = valueDisplay
   } else {
-      secondNumber = parseFloat(value, 10)
+      secondNumber = parseFloat(value)
       display.innerHTML = valueDisplay.replace(".", ",")
   }
 }
@@ -108,13 +108,22 @@ const handleOperation = () => {
       result = divideNumbers(firstNumber, secondNumber)
       break;
   } 
-    
   isSecondNumber = false
   tryingNegateNumber = false
   inputValue = result
   valueDisplay = result
   valueDisplay = valueDisplay.toString()
       
+  controlDecimalsResult()
+  setDisplay(result)
+
+  firstNumber = null
+  operator = null
+  secondNumber = null 
+  return
+}
+
+const controlDecimalsResult = () => {
   if(valueDisplay.includes(".")){
     valueDisplay.replace(".", "")
     lengthOfResult = valueDisplay.length 
@@ -122,11 +131,16 @@ const handleOperation = () => {
         lengthOfResult = 10
     }      
     result = result.toPrecision(lengthOfResult) * 1
+    return
+  } else if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
+    messageError()
+    return
   }
-  setDisplay(result)
-  firstNumber = null
-  operator = null
-  secondNumber = null   
+}
+
+const messageError = () => {
+  result = 'ERROR'
+  inputValue = 0
 }
 
 sumNumbers = (firstNumber, secondNumber) => {
