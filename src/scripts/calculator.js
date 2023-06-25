@@ -9,6 +9,7 @@ let secondNumber = null
 let result = null
 let isSecondNumber = false
 let tryingNegateNumber = false
+let pointDisabled = false
 
 const concatInputsNumbers = (value) => {
   if(tryingNegateNumber === true){
@@ -51,6 +52,9 @@ const setInputValue = (input) => {
     disableAllNumericButtons()
   } else {
     enableAllButtons()
+    if(pointDisabled === true){
+      changeButtonState(true, 'point')
+    }
   }
 
   if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
@@ -105,11 +109,13 @@ const handleOperator = (operation) => {
   valueForDisplay = firstNumber
   setDisplay(valueDisplay)
   isSecondNumber = true
+  pointDisabled = false
   inputValue = 0
   valueDisplay = '0'
 }
 
 const handleOperation = () => {
+  enableAllButtons()
   switch (operator){
     case '+':
       result = sumNumbers(firstNumber, secondNumber)
@@ -245,10 +251,13 @@ const writeNumber = () => {
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     resetDisplay()
+    enableAllButtons()
+    pointDisabled = false
     changeButtonState(true, 'negate')
     changeButtonState(true, 'zero')
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
+    pointDisabled = true
     setInputValue('.')
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
@@ -275,6 +284,9 @@ const writeNumber = () => {
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
       resetDisplay()
+      enableAllButtons()
+      changeButtonState(true, 'negate')
+      changeButtonState(true, 'zero')
     } else if (event.key === "Control") {
       negateInputValue(inputValue)
       tryingNegateNumber = false

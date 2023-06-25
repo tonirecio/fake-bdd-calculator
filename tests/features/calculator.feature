@@ -378,6 +378,7 @@ Examples:
 |   123456789,5 |
 |  -123456789,5 |
 
+@done
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
