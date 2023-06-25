@@ -47,6 +47,8 @@ const negateInputValue = (valueToNegate) => {
 }
 
 const setInputValue = (input) => {
+  enableAllButtons()
+
   if((valueDisplay.replace(",", "")).length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
     return
   } else if(input === "." && valueDisplay.includes(",")){
@@ -86,8 +88,8 @@ const resetDisplay = () => {
   display.innerHTML = valueDisplay
 }
 
-handleOperator = (operation) => {
-  changeStateOfNegateButton()
+const handleOperator = (operation) => {
+  changeButtonState(true, 'negate')
   if(operator === null){
     firstNumber = inputValue
   } else if(secondNumber != null){
@@ -103,7 +105,6 @@ handleOperator = (operation) => {
 }
 
 const handleOperation = () => {
-
   switch (operator){
     case '+':
       result = sumNumbers(firstNumber, secondNumber)
@@ -169,21 +170,28 @@ const showMessageError = () => {
   result = 'ERROR'
 }
 
-const changeStateOfNegateButton = () => {
-
-    document.getElementsByName('negate')[0].disabled = true;
+const changeButtonState = (state, name) => {
+  document.getElementsByName(name)[0].disabled = state;
+  return
 }
 
-sumNumbers = (firstNumber, secondNumber) => {
-    return firstNumber + secondNumber
+const enableAllButtons = () => {
+  const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
+  arrButtons.forEach(button => {
+    document.getElementsByName(button)[0].disabled = false;
+  });
 }
-subtractNumbers = (firstNumber, secondNumber) => {
-    return firstNumber - secondNumber
+
+const sumNumbers = (firstNumber, secondNumber) => {
+  return firstNumber + secondNumber
 }
-multiplyNumbers = (firstNumber, secondNumber) => {
-    return firstNumber * secondNumber
+const subtractNumbers = (firstNumber, secondNumber) => {
+  return firstNumber - secondNumber
 }
-divideNumbers = (firstNumber, secondNumber) => {
+const multiplyNumbers = (firstNumber, secondNumber) => {
+  return firstNumber * secondNumber
+}
+const divideNumbers = (firstNumber, secondNumber) => {
   if(secondNumber != 0){
     return firstNumber / secondNumber
   } else {
@@ -191,8 +199,7 @@ divideNumbers = (firstNumber, secondNumber) => {
   }
 }
 
-writeNumber = () => {
-
+const writeNumber = () => {
   //Click button numbers
   document.getElementsByName('seven')[0].addEventListener('click', () => {
     setInputValue(7)
@@ -226,6 +233,8 @@ writeNumber = () => {
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     resetDisplay()
+    changeButtonState(true, 'negate')
+    changeButtonState(true, 'zero')
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
     setInputValue('.')
@@ -254,8 +263,7 @@ writeNumber = () => {
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
       resetDisplay()
-    }
-    else if (event.key === "Control") {
+    } else if (event.key === "Control") {
       negateInputValue(inputValue)
       tryingNegateNumber = false
     }
@@ -264,13 +272,11 @@ writeNumber = () => {
       if(event.key == num){
         if(num != ','){
           setInputValue(num)
-        }
-        else{
+        } else {
            setInputValue('.')
         }
       }
     });
-
   });
 }
 

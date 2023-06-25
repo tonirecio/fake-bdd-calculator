@@ -17,3 +17,4 @@ Haces correcto el ir teniendo en cuenta las comas y los puntos, y usando el repl
 
 # Scenario Outline: Performing two number operations
 Una opcion también muy correcta el jugar con el tamaño máximo de digitos, dependiendo de si hay coma o no, en general bien empleado el tamaño de los digitos.
+
