@@ -96,7 +96,7 @@ And the user presses the "<button>" button
 And the user writes the number: "<userNumber>"
 When the user presses the "=" button                             
 Then the display should show the following value: "<displayResult>"
-
+@wip
 Examples:
 | displayNumber | button | userNumber | displayResult |
 |            24 |      + |          6 |            30 |

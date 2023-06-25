@@ -8,12 +8,15 @@ const display = document.querySelector('div[name="display"] span')
 
 let currentOperand = 0
 let pastOperand = 0
+let numberValue = 0
 let decimalPlacement = 1
 let isPointUsedWithoutDecimal = false
 let operandSymbolInUse = ''
+let operationResult = 0
+let integerCount = 0
 
 const updateDisplay = (value) => {
-  const valueWithComas = ''
+  let valueWithComas = ''
   value = value.toString()
   valueWithComas = value.replace('.', ',')
   display.innerHTML = valueWithComas
@@ -126,9 +129,9 @@ const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
   return currentOperand
 }
 
-let numberValue = 0
 const nonOperatorNonNumberButtons = ['clean', 'negate', 'point']
 const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+const operatorButtons = ['divide', 'multiply', 'subtract', 'sum']
 const nonOperatorButtons = document.querySelectorAll('div[name="keypad"] button')
 
 nonOperatorButtons.forEach(nonOperatorButton => {
@@ -148,6 +151,12 @@ nonOperatorButtons.forEach(nonOperatorButton => {
         currentOperand = appendDecimalNumbers(currentOperand, numberValue)
         countDigits++
         updateDisplay(currentOperand)
+      } else if (operatorButtons.includes(buttonName)) {
+        pastOperand = saveAndResetCurrentOperand(currentOperand)
+        operandSymbolInUse = operatorButtonPressed(buttonName)
+      } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
+        operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
+        updateDisplay(operationResult)
       }
     } else {
       window.alert('Maximum digit capacity reached')
@@ -204,3 +213,66 @@ document.addEventListener('keydown', (event) => {
 // [Scenario] Writing number more than 10 digits
 
 // yarn lint (detector de errores*)
+
+// [Scenario] Performing two number operations
+const saveAndResetCurrentOperand = (currentOperand) => {
+  pastOperand = currentOperand
+  reset ()
+  return pastOperand
+}
+
+const operatorButtonPressed = (buttonName) => {
+  switch (buttonName) {
+    case 'divide':
+      operandSymbolInUse = '/'
+      break
+    case 'multiply':
+      operandSymbolInUse = '*'
+      break
+    case 'sum':
+      operandSymbolInUse = '+'
+      break
+    case 'subtract':
+      operandSymbolInUse = '-'
+      break
+    default:
+      window.alert('ERROR')
+      break
+  }
+  return operandSymbolInUse
+}
+
+const performOperation = (pastOperand, currentOperand, operandSymbolInUse) => {
+  console.log("past ", pastOperand, " current ", currentOperand)  
+  switch (operandSymbolInUse) {
+    case '/':
+      operationResult = pastOperand / currentOperand
+      break
+    case '*':
+      operationResult = pastOperand * currentOperand
+      break
+    case '+':
+      operationResult = pastOperand + currentOperand
+      break
+    case '-':
+      operationResult = pastOperand - currentOperand
+      break
+    default:
+      window.alert('ERROR')
+      break
+  }
+  integerCount = countIntegersFromNumber(operationResult, integerCount)
+  operationResult = roundNumber(operationResult, integerCount)
+  return operationResult
+}
+
+const countIntegersFromNumber = (number, integerCount) => {
+  number = number.toString()
+  number = number.substring(0, number.indexOf('.'))
+  integerCount = number.length
+  return integerCount
+}
+
+const roundNumber = (number, integerCount) => {
+  return Math.round(number * Math.pow(10, 10 - integerCount)) / Math.pow(10, 10 - integerCount);
+}
