@@ -10,7 +10,7 @@ Scenario Outline: Pressing non-operators screen buttons
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
 Then the display should show the following value: "<displayResult>"
-
+ 
 Examples:
 | displayNumber | button | displayResult |
 |             1 |      0 |            10 |
@@ -75,7 +75,7 @@ Examples:
 |             7 |     +- |            -7 |
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
-
+@done
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button

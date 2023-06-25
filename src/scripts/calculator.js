@@ -1,151 +1,206 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
 let countDigits = 0
-//Scenario Writing numbers
-let comaUsage = false
-
+// [Scenario] Writing numbers
+let decimalSymbolUsage = false
+/* --------------------------- */
 const display = document.querySelector('div[name="display"] span')
 
 let currentOperand = 0
-let pastOperand
-let currentNumber = 0
-let pastNumber = 0
-
-
+let pastOperand = 0
+let decimalPlacement = 1
+let isPointUsedWithoutDecimal = false
+let operandSymbolInUse = ''
 
 const updateDisplay = (value) => {
-  value = value.toString();
-  valueComas = value.replace(/\./, ",")
-  display.innerHTML = valueComas
+  const valueWithComas = ''
+  value = value.toString()
+  valueWithComas = value.replace('.', ',')
+  display.innerHTML = valueWithComas
 }
 
 const reset = () => {
   updateDisplay(0)
   countDigits = 0
   currentOperand = 0
-  dotUsage = false
+  decimalSymbolUsage = false
+  decimalPlacement = 1
+  isPointUsedWithoutDecimal = false
 }
 
 const negate = (operand) => {
-  operand = operand.toString()
-  operandFloat = parseFloat(operand)
-  operandFloat = operandFloat * -1
-  if (operand.charAt(operand.length - 1) == '.'){
-    operandFloat += '.'
-  }
-  updateDisplay(operandFloat)
-  currentOperand = operandFloat
+  operand = operand * -1
+  return operand
 }
 
-document.getElementsByName('negate')[0].addEventListener('click', () => {
-  console.log(currentOperand)
-  negate(currentOperand)
-})
-
-
-
 reset()
-
-
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
 
+// [Scenario] Pressing non-operators screen buttons
+const getNumber = (buttonName) => {
+  let numberValue
+  switch (buttonName) {
+    case 'zero':
+      numberValue = 0
+      break
+    case 'one':
+      numberValue = 1
+      break
+    case 'two':
+      numberValue = 2
+      break
+    case 'three':
+      numberValue = 3
+      break
+    case 'four':
+      numberValue = 4
+      break
+    case 'five':
+      numberValue = 5
+      break
+    case 'six':
+      numberValue = 6
+      break
+    case 'seven':
+      numberValue = 7
+      break
+    case 'eight':
+      numberValue = 8
+      break
+    case 'nine':
+      numberValue = 9
+      break
+    default:
+      window.alert('Not a usable number')
+      break
+  }
+  return numberValue
+}
 
-// Scenario Pressing non-operators screen buttons
-const nonOperatorButtons = document.querySelectorAll('button:not([aria-label])')
+const appendIntegerNumbers = (currentOperand, number) => {
+  currentOperand = currentOperand * 10 + number
+  return currentOperand
+}
+
+const appendDecimalNumbers = (currentOperand, number) => {
+  console.log(decimalPlacement)
+  if (currentOperand < 0) {
+    currentOperand -= number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+  } else {
+    currentOperand += number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+  }
+  currentOperand = parseFloat(currentOperand.toFixed(decimalPlacement))
+  decimalPlacement++
+  return currentOperand
+}
+
+const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
+  switch (buttonName) {
+    case 'clean':
+      reset()
+      break
+    case 'negate':
+      currentOperand = negate(currentOperand)
+      if (isPointUsedWithoutDecimal) {
+        updateDisplay(currentOperand + ',')
+      } else {
+        updateDisplay(currentOperand)
+      }
+      break
+    case 'point':
+      if (decimalSymbolUsage) {
+        window.alert('Cant use more than one point')
+      } else {
+        decimalSymbolUsage = true
+        isPointUsedWithoutDecimal = true
+        updateDisplay(currentOperand + ',')
+      }
+      break
+    default:
+      window.alert('Uknown Button')
+      break
+  }
+  return currentOperand
+}
+
+let numberValue = 0
+const nonOperatorNonNumberButtons = ['clean', 'negate', 'point']
+const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+const nonOperatorButtons = document.querySelectorAll('div[name="keypad"] button')
 
 nonOperatorButtons.forEach(nonOperatorButton => {
   nonOperatorButton.addEventListener('click', () => {
-    console.log("LOL", parseFloat(currentOperand))
-    if (countDigits < MAX_DIGITS_IN_DISPLAY){
-      if (nonOperatorButton.textContent == ',' && !dotUsage) {        
-        currentOperand += '.'
-        dotUsage = true
-      } else if ( nonOperatorButton.textContent == ',' && dotUsage) {
-        window.alert("Is not possible to add more dots")      
-      } else if (currentOperand != 0 || currentOperand.toString().includes('.')) {
-        currentOperand += nonOperatorButton.textContent        
+    let buttonName = nonOperatorButton.getAttribute('name')
+    if (countDigits < MAX_DIGITS_IN_DISPLAY || buttonName === 'clean' || buttonName === 'negate') {
+      if (numberButtons.includes(buttonName) && !decimalSymbolUsage) {
+        numberValue = getNumber(buttonName)
+        currentOperand = appendIntegerNumbers(currentOperand, numberValue)
         countDigits++
-      } else {
-        currentOperand = nonOperatorButton.textContent
+        updateDisplay(currentOperand)
+      } else if (nonOperatorNonNumberButtons.includes(buttonName)) {
+        currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
+      } else if (numberButtons.includes(buttonName) && decimalSymbolUsage) {
+        isPointUsedWithoutDecimal = false
+        numberValue = getNumber(buttonName)
+        currentOperand = appendDecimalNumbers(currentOperand, numberValue)
         countDigits++
+        updateDisplay(currentOperand)
       }
-      
-      updateDisplay(currentOperand)
-    } else{
+    } else {
       window.alert('Maximum digit capacity reached')
     }
-      
   })
 })
 
-//Scenario Pressing non-operators keys
-
-const nonDigitKeys = ['Escape', 'Control', '/', '*', '-', '+']
+// [Scenario] Pressing non-operators keys
+//const nonDigitKeys = ['/', '*', '-', '+']
 
 document.addEventListener('keydown', (event) => {
-  let keyPressed = event.key; 
-      
-if (countDigits < MAX_DIGITS_IN_DISPLAY){      
-  if (((keyPressed >= '0' && keyPressed <= '9') || keyPressed == ',')) {
-    if (keyPressed == ',' && !dotUsage){
-      currentOperand += '.'
-      dotUsage = true
-      
-    } else if(keyPressed == ',' && dotUsage){      
-      window.alert("Is not possible to add more dots")        
-    } else if (currentOperand != 0 || currentOperand.toString().includes('.')){
-      currentOperand += keyPressed      
+  let keyPressed = event.key
+  if (countDigits < MAX_DIGITS_IN_DISPLAY || keyPressed === 'Control' || keyPressed === 'Escape') {
+    if (keyPressed >= 0 && keyPressed <= 9 && !decimalSymbolUsage) {
+      keyPressed = parseFloat(keyPressed)
+      currentOperand = appendIntegerNumbers(currentOperand, keyPressed)
       countDigits++
-    } else {
-      currentOperand = keyPressed
+      updateDisplay(currentOperand)
+    } else if (keyPressed >= 0 && keyPressed <= 9 && decimalSymbolUsage) {
+      isPointUsedWithoutDecimal = false
+      keyPressed = parseFloat(keyPressed)
+      currentOperand = appendDecimalNumbers(currentOperand, keyPressed)
       countDigits++
-    }
-    updateDisplay(currentOperand)
-        
-  } else if (nonDigitKeys.includes(keyPressed)){
-    switch (keyPressed) {
-      case 'Escape':
-        reset()
-      case 'Control':
-        negate(currentOperand)
-    }
-  }
-} else{
-        window.alert('Maximum digit capacity reached')
+      updateDisplay(currentOperand)
+    } else if (keyPressed === ',') {
+      if (decimalSymbolUsage) {
+        window.alert('Cant use more than one point')
+      } else {
+        decimalSymbolUsage = true
+        isPointUsedWithoutDecimal = true
+        updateDisplay(currentOperand + ',')
       }
-  })
+    } else if (keyPressed === 'Escape') {
+      reset()
+    } else if (keyPressed === 'Control') {
+      currentOperand = negate(currentOperand)
+      if (isPointUsedWithoutDecimal) {
+        updateDisplay(currentOperand + ',')
+      } else {
+        updateDisplay(currentOperand)
+      }
+    } else {
+      window.alert('Uknown Key')
+    }
+  } else {
+    window.alert('Maximum digit capacity reached')
+  }
+})
 
+// [Scenario] Writing numbers
 
-//Scenario Writing numbers
+// Modificaciones al existente codigo
 
+// [Scenario] Writing number more than 10 digits
 
-
-
-
-
-
-
-/*
-
-const compute = () => {
-
-}
-
-const clear = () {
-
-}
-
-appendNumber = (number) => {
-
-}
-
-chooseOperation = (operation) {
-}
-
-
-*/
-
-//yarn lint (detector de errores*)
+// yarn lint (detector de errores*)
