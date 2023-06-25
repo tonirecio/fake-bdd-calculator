@@ -51,7 +51,7 @@ const setInputValue = (input) => {
   if(valueDisplay.replace(",", "").length + 1 >= 10 && input != '.'){
     disableAllNumericButtons()
   } else {
-    enableAllButtons()
+    changeStateAllButtons(false)
     if(pointDisabled === true){
       changeButtonState(true, 'point')
     }
@@ -97,7 +97,7 @@ const resetDisplay = () => {
 }
 
 const handleOperator = (operation) => {
-  enableAllButtons()
+  changeStateAllButtons(false)
   changeButtonState(true, 'negate')
   if(operator === null){
     firstNumber = inputValue
@@ -115,7 +115,7 @@ const handleOperator = (operation) => {
 }
 
 const handleOperation = () => {
-  enableAllButtons()
+  changeStateAllButtons(false)
   switch (operator){
     case '+':
       result = sumNumbers(firstNumber, secondNumber)
@@ -179,6 +179,8 @@ const showMessageError = () => {
   operator = null
   secondNumber = null 
   result = 'ERROR'
+  changeStateAllButtons(true)
+  changeButtonState(false ,'clean')
 }
 
 const changeButtonState = (state, name) => {
@@ -186,10 +188,10 @@ const changeButtonState = (state, name) => {
   return
 }
 
-const enableAllButtons = () => {
+const changeStateAllButtons = (state) => {
   const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
   arrButtons.forEach(button => {
-    document.getElementsByName(button)[0].disabled = false;
+    document.getElementsByName(button)[0].disabled = state;
   });
 }
 
@@ -213,6 +215,8 @@ const divideNumbers = (firstNumber, secondNumber) => {
   if(secondNumber != 0){
     return firstNumber / secondNumber
   } else {
+    changeStateAllButtons(true)
+    changeButtonState(false ,'clean')
     return "ERROR"
   }
 }
@@ -251,7 +255,7 @@ const writeNumber = () => {
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     resetDisplay()
-    enableAllButtons()
+    changeStateAllButtons(false)
     pointDisabled = false
     changeButtonState(true, 'negate')
     changeButtonState(true, 'zero')
@@ -284,7 +288,7 @@ const writeNumber = () => {
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
       resetDisplay()
-      enableAllButtons()
+      changeStateAllButtons(false)
       changeButtonState(true, 'negate')
       changeButtonState(true, 'zero')
     } else if (event.key === "Control") {
