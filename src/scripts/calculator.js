@@ -82,7 +82,9 @@ const resetDisplay = () => {
 }
 
 handleOperator = (operation) => {
-  firstNumber = inputValue
+  if(operator === null){
+    firstNumber = inputValue
+  }
   operator = operation
   valueForDisplay = operator
   setDisplay(valueForDisplay)
