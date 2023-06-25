@@ -94,8 +94,8 @@ handleOperator = (operation) => {
     firstNumber = result
   }
   operator = operation
-  valueForDisplay = operator
-  setDisplay(valueForDisplay)
+  valueForDisplay = firstNumber
+  setDisplay(valueDisplay)
   isSecondNumber = true
   inputValue = 0
 }
