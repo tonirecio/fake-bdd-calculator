@@ -47,9 +47,13 @@ const negateInputValue = (valueToNegate) => {
 }
 
 const setInputValue = (input) => {
-  enableAllButtons()
+  if(valueDisplay.replace(",", "").length + 1 >= 10 && input != '.'){
+    disableAllNumericButtons()
+  } else {
+    enableAllButtons()
+  }
 
-  if((valueDisplay.replace(",", "")).length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
+  if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
     return
   } else if(input === "." && valueDisplay.includes(",")){
     return
@@ -89,6 +93,7 @@ const resetDisplay = () => {
 }
 
 const handleOperator = (operation) => {
+  enableAllButtons()
   changeButtonState(true, 'negate')
   if(operator === null){
     firstNumber = inputValue
@@ -179,6 +184,13 @@ const enableAllButtons = () => {
   const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
   arrButtons.forEach(button => {
     document.getElementsByName(button)[0].disabled = false;
+  });
+}
+
+const disableAllNumericButtons = () => {
+  const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
+  arrButtons.forEach(button => {
+    document.getElementsByName(button)[0].disabled = true;
   });
 }
 
