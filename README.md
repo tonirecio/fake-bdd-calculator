@@ -95,7 +95,12 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Bona implementacio pero ho faria dins del if de sum/subtract/multiply/divide
 
-## @@enable_buttons_after_operator
+## @enable_buttons_after_operator
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Millorada la implementació del escenari anterior, noms una mica llargs per al meu gust (handleButtonEnablingWhenClickingOperator)
+
+## @enable_buttons_after_clean
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Codi ben implementat, intentaria reutilitzar una mica de codi
