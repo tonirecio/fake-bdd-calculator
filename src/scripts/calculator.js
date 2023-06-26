@@ -13,60 +13,6 @@ let pendingZeros
 let clearDisplay
 let pendingOperation
 
-const init = () => {
-  // KEYBOARD EVENT LISTENER
-  document.addEventListener('keyup', (event) => {
-    const keyName = event.key
-    switch (keyName) {
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-        pressNumber(keyName)
-        break
-      case 'Escape':
-        reset()
-        break
-      case 'Control':
-        negateCurrentNum()
-        break
-      case POINT_LOCALE:
-        floatCurrentNum()
-        break
-      default:
-        console.warn('[WARNING] ' + keyName + ' keyboard event has not been implemented yet.')
-    }
-    setDisplay(currentNumberToDisplayableString())
-  })
-  // ON-SCREEN BUTTON EVENTS
-  addNumericalButtonClickEvent('one', 1)
-  addNumericalButtonClickEvent('two', 2)
-  addNumericalButtonClickEvent('three', 3)
-  addNumericalButtonClickEvent('four', 4)
-  addNumericalButtonClickEvent('five', 5)
-  addNumericalButtonClickEvent('six', 6)
-  addNumericalButtonClickEvent('seven', 7)
-  addNumericalButtonClickEvent('eight', 8)
-  addNumericalButtonClickEvent('nine', 9)
-  addNumericalButtonClickEvent('zero', 0)
-
-  addFunctionButtonClickEvent('clean', reset)
-  addFunctionButtonClickEvent('negate', negateCurrentNum)
-  addFunctionButtonClickEvent('point', floatCurrentNum)
-  addFunctionButtonClickEvent('equal', completeOperation)
-
-  addOperationButtonClickEvent('sum')
-  addOperationButtonClickEvent('multiply')
-  addOperationButtonClickEvent('subtract')
-  addOperationButtonClickEvent('divide')
-}
-
 const setDisplay = (value) => {
   const display = document.querySelector('div[name="display"] span')
   display.innerHTML = value
@@ -160,6 +106,11 @@ const completeOperation = () => {
       case 'divide':
         resultNum = previousNumber / currentNumber
         break
+      case null:
+        resultNum = currentNumber
+        pendingPoint = false 
+        pendingZeros = 0
+        break
       default:
         console.warn('[WARNING] ' + currentOperation + ' has not been implemented yet.')
     }
@@ -203,6 +154,60 @@ const addOperationButtonClickEvent = (buttonName) => {
     previousNumber = currentNumber
     clearDisplay = true
   })
+}
+
+const init = () => {
+  // KEYBOARD EVENT LISTENER
+  document.addEventListener('keyup', (event) => {
+    const keyName = event.key
+    switch (keyName) {
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        pressNumber(keyName)
+        break
+      case 'Escape':
+        reset()
+        break
+      case 'Control':
+        negateCurrentNum()
+        break
+      case POINT_LOCALE:
+        floatCurrentNum()
+        break
+      default:
+        console.warn('[WARNING] ' + keyName + ' keyboard event has not been implemented yet.')
+    }
+    setDisplay(currentNumberToDisplayableString())
+  })
+  // ON-SCREEN BUTTON EVENTS
+  addNumericalButtonClickEvent('one', 1)
+  addNumericalButtonClickEvent('two', 2)
+  addNumericalButtonClickEvent('three', 3)
+  addNumericalButtonClickEvent('four', 4)
+  addNumericalButtonClickEvent('five', 5)
+  addNumericalButtonClickEvent('six', 6)
+  addNumericalButtonClickEvent('seven', 7)
+  addNumericalButtonClickEvent('eight', 8)
+  addNumericalButtonClickEvent('nine', 9)
+  addNumericalButtonClickEvent('zero', 0)
+
+  addFunctionButtonClickEvent('clean', reset)
+  addFunctionButtonClickEvent('negate', negateCurrentNum)
+  addFunctionButtonClickEvent('point', floatCurrentNum)
+  addFunctionButtonClickEvent('equal', completeOperation)
+
+  addOperationButtonClickEvent('sum')
+  addOperationButtonClickEvent('multiply')
+  addOperationButtonClickEvent('subtract')
+  addOperationButtonClickEvent('divide')
 }
 
 // INITIALIZATION
