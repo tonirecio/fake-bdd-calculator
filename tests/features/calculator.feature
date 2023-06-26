@@ -245,6 +245,7 @@ Examples:
 |            -1 |
 |             0 |
 
+@sc_OpMissingSecondValue
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button

@@ -143,35 +143,42 @@ const floatCurrentNum = () => {
 
 const completeOperation = () => {
   let resultNum = null
-  let resultOp = null
-  switch (currentOperation) {
-    case 'sum':
-      resultNum = previousNumber + currentNumber
-      break
-    case 'subtract':
-      resultNum = previousNumber - currentNumber
-      break
-    case 'multiply':
-      resultNum = previousNumber * currentNumber
-      break
-    case 'divide':
-      resultNum = previousNumber / currentNumber
-      break
-    default:
-      console.warn('[WARNING] ' + currentOperation + ' has not been implemented yet.')
-  }
-  if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
-    // character length of the integer number (including - sign if applicable)
-    let integerLength = (Math.round(resultNum)).toString().length
-    // (1 * x) forces x to not have trailing 0s
-    resultNum = (1 * resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength))
-  } else {
+  debugger
+  if (currentOperation !== null && clearDisplay) {
+    //asked to complete operation when no second value
     resultNum = NaN
+  } else {
+    switch (currentOperation) {
+      case 'sum':
+        resultNum = previousNumber + currentNumber
+        break
+      case 'subtract':
+        resultNum = previousNumber - currentNumber
+        break
+      case 'multiply':
+        resultNum = previousNumber * currentNumber
+        break
+      case 'divide':
+        resultNum = previousNumber / currentNumber
+        break
+      default:
+        console.warn('[WARNING] ' + currentOperation + ' has not been implemented yet.')
+    }
+    if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
+      // character length of the integer number (including - sign if applicable)
+      const integerLength = (Math.round(resultNum)).toString().length
+      // parseFloat forces x to not have trailing 0s
+      resultNum = parseFloat(resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength))
+    } else {
+      resultNum = NaN
+    }
   }
+
   currentNumber = resultNum
   currentOperation = null
   pendingOperation = false
   clearDisplay = true
+
 }
 
 const addNumericalButtonClickEvent = (buttonName, number) => {
@@ -183,7 +190,6 @@ const addNumericalButtonClickEvent = (buttonName, number) => {
 
 const addFunctionButtonClickEvent = (buttonName, assignedFunction) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
-    debugger
     assignedFunction()
     setDisplay(currentNumberToDisplayableString())
   })
