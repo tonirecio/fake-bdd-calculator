@@ -134,3 +134,9 @@ Ha passat el test!
 Comentaris: 
 * Ha passat el lint
 * Codi ben implementat
+
+## @sc_ReenableButtonsNoErrorPressEqual
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Codi ben implementat
