@@ -7,7 +7,7 @@ let previousNumber = 0
 let operationType
 let isNextNumberDecimal = false
 let chainingOperations = false
-let waitingForBrandNewNumber = false
+let waitin = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
@@ -94,6 +94,9 @@ const pressButtons = () => {
   })
 }
 
+const disableButton = (button) => {
+  document.getElementsByName(button)[0].disabled = true
+}
 
 const disableNumberButtons = () => {
   document.getElementsByName('zero')[0].disabled = true
@@ -108,18 +111,8 @@ const disableNumberButtons = () => {
   document.getElementsByName('nine')[0].disabled = true
 }
 
-const disableButton = (button) => {
-
-  document.getElementsByName(button)[0].disabled = true
-
-
-}
-
 const enableButton = (button) => {
-
   document.getElementsByName(button)[0].disabled = false
-
-
 }
 
 const enableNumberButtons = () => {
@@ -133,11 +126,7 @@ const enableNumberButtons = () => {
   document.getElementsByName('seven')[0].disabled = false
   document.getElementsByName('eight')[0].disabled = false
   document.getElementsByName('nine')[0].disabled = false
-
 }
-
-
-
 
 const saveToPreviousNumber = (number) => {
   if (number !== 0) {
@@ -156,10 +145,8 @@ const performOperation = () => {
   } else if (operationType === '/') {
     currentNumber = previousNumber / currentNumber
   }
-  // enableButton('negate')
   displayResultNumber()
 }
-
 
 const pressedNegate = () => {
   currentNumber = negateNumber(currentNumber)
@@ -167,16 +154,14 @@ const pressedNegate = () => {
 }
 
 const pressedEqual = () => {
-  if (waitingForBrandNewNumber) {
+  if (waitin) {
     displayError()
   } else {
     isNextNumberDecimal = false
     performOperation()
     chainingOperations = false
-    waitingForBrandNewNumber = false
+    waitin = false
   }
-
-
 }
 
 const pressedOperator = (type) => {
@@ -190,13 +175,11 @@ const pressedOperator = (type) => {
     chainingOperations = true
     disableButton('negate')
   }
-  waitingForBrandNewNumber = true
+  waitin = true
   operationType = type
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
-
-
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
       currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
@@ -210,13 +193,12 @@ const addNumberTocurrentNumber = (newNumber) => {
   }
 
   displaycurrentNumber()
-  waitingForBrandNewNumber = false
+  waitin = false
 
   if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
     disableNumberButtons()
     disableButton('point')
   }
-
 }
 
 const negateNumber = (number) => {
@@ -245,13 +227,7 @@ const cleanSavedNumbers = () => {
 const cleanEverything = () => {
   cleanDisplay()
   cleanSavedNumbers()
-  enableNumberButtons()
-  enableButton('negate')
-  enableButton('sum')
-  enableButton('subtract')
-  enableButton('divide')
-  enableButton('multiply')
-  enableButton('point')
+  enableAllButtons()
   disableButton('zero')
   disableButton('negate')
 }
@@ -259,6 +235,17 @@ const cleanEverything = () => {
 const displayError = () => {
   disableAllButtons()
   setDisplay('ERROR')
+}
+
+const enableAllButtons = () => {
+  enableNumberButtons()
+  enableButton('negate')
+  enableButton('sum')
+  enableButton('subtract')
+  enableButton('divide')
+  enableButton('multiply')
+  enableButton('point')
+  enableButton('equal')
 }
 
 const disableAllButtons = () => {
@@ -311,7 +298,7 @@ const displayResultNumber = () => {
     }
     saveToPreviousNumber(currentNumber)
   }
-  waitingForBrandNewNumber = false
+  waitin = false
 }
 
 const displaycurrentNumber = () => {
