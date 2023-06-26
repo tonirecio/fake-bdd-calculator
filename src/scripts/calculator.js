@@ -15,9 +15,13 @@ const roundNumber = (number) => {
 const reset = () => {
   operator = null
   accumulatedNumber = null
-  actualNumber = null
+  actualNumber = 0
+  actualNumberisNull = true
   actualNumberHasPoint = false
   setDisplay(0)
+  enableAllButtons()
+  disableOneButton(document.getElementsByName('zero')[0])
+  disableOneButton(document.getElementsByName('negate')[0])
 }
 
 const setDisplay = (value) => {
@@ -82,12 +86,14 @@ const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
 }
 
 const pressingNumber = (newNumber) => {
-  if ((actualNumber === 0 && !actualNumberHasPoint) || actualNumber === null) {
+  if ((actualNumber === 0 && !actualNumberHasPoint) || actualNumberisNull) {
     actualNumber = newNumber
   } else {
     actualNumber = appendNumber(actualNumber, newNumber, actualNumberHasPoint)
   }
+  actualNumberisNull = false
   setDisplay(actualNumber)
+  enableAllButtons()
 }
 
 const pressingNegate = () => {
@@ -100,27 +106,28 @@ const pressingPoint = () => {
     actualNumberHasPoint = true
   }
   setDisplay(actualNumber)
+  actualNumberisNull = false
 }
 
 const pressingOperator = (newOperator) => {
-  if (operator !== null && actualNumber !== null) {
+  if (operator !== null && !actualNumberisNull) {
     accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
-    operator = null
-    actualNumber = null
     actualNumberHasPoint = false
     setDisplay(accumulatedNumber)
   } else if (operator === null && accumulatedNumber === null) {
     accumulatedNumber = actualNumber
+    enableAllButtons()
     disableOneButton(document.getElementsByName('negate')[0])
   }
   operator = newOperator
-  actualNumber = null
+  actualNumberisNull = true
+  actualNumber = 0
   actualNumberHasPoint = false
 }
 
 const pressingEqual = () => {
   let displayValue
-  if (actualNumber === null) {
+  if (actualNumberisNull && operator !== null) {
     displayValue = 'ERROR'
   } else {
     if (operator === null) {
@@ -129,7 +136,8 @@ const pressingEqual = () => {
       accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
       operator = null
     }
-    actualNumber = null
+    actualNumber = 0
+    actualNumberisNull = true
     actualNumberHasPoint = false
     displayValue = accumulatedNumber
   }
@@ -137,7 +145,18 @@ const pressingEqual = () => {
 }
 
 const disableOneButton = (button) => {
-    button.disabled = true
+  button.disabled = true
+}
+
+const enableOneButton = (button) => {
+  button.disabled = false
+}
+
+const enableAllButtons = () => {
+  const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
+  for (const button of buttons) {
+    enableOneButton(button)
+  }
 }
 
 const getEventsListenersButtons = () => {
@@ -200,8 +219,9 @@ const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 let operator = null
 let accumulatedNumber = null
-let actualNumber = null
+let actualNumber = 0
 let actualNumberHasPoint = false
+let actualNumberisNull = true
 
 reset()
 getEventsListenersButtons()
