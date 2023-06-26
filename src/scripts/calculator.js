@@ -108,7 +108,7 @@ const completeOperation = () => {
         break
       case null:
         resultNum = currentNumber
-        pendingPoint = false 
+        pendingPoint = false
         pendingZeros = 0
         break
       default:
@@ -151,7 +151,7 @@ const addOperationButtonClickEvent = (buttonName) => {
       setDisplay(currentNumberToDisplayableString())
     }
     disableNumericalButtonSet(false)
-    disableButton('negate',true)
+    disableButton('negate', true)
     currentOperation = buttonName
     previousNumber = currentNumber
     clearDisplay = true
@@ -160,16 +160,16 @@ const addOperationButtonClickEvent = (buttonName) => {
 
 const disableNumericalButtonSet = (boolStatus) => {
   disableButton('zero', boolStatus)
-disableButton('one', boolStatus)
-disableButton('two', boolStatus)
-disableButton('three', boolStatus)
-disableButton('four', boolStatus)
-disableButton('five', boolStatus)
-disableButton('six', boolStatus)
-disableButton('seven', boolStatus)
-disableButton('eight', boolStatus)
-disableButton('nine', boolStatus)
-disableButton('point', boolStatus)
+  disableButton('one', boolStatus)
+  disableButton('two', boolStatus)
+  disableButton('three', boolStatus)
+  disableButton('four', boolStatus)
+  disableButton('five', boolStatus)
+  disableButton('six', boolStatus)
+  disableButton('seven', boolStatus)
+  disableButton('eight', boolStatus)
+  disableButton('nine', boolStatus)
+  disableButton('point', boolStatus)
 }
 
 const disableButton = (buttonName, boolStatus) => {
