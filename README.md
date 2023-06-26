@@ -89,3 +89,11 @@ Comentaris:
 * No ha passat el lint
 * Codi ben implementat
 * Respecte el codi anterior, ha refactoritzat cap a millor, amb codi més clar i més organitzat, i modificant el display a partir d'una variable i no al revés. 👏
+
+## @sc_DivisionWith0
+Ha passat el test!  
+Comentaris:
+* No ha passat el lint
+* Codi ben refactoritzat, es nota que s'han canviat els noms de les funcions i variables concretant-les més. 
+* Ben realitzat el canvi de variable amb la que es treballa, de tipus String a Number
+* Sí que es podria canviar encara el tema de treure els trailing 0 del número
