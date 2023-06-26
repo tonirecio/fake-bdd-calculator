@@ -33,7 +33,6 @@ const setDisplay = (value) => {
   display.innerHTML = currentValue
 }
 
-
 const reset = document.querySelector('button[name="clean"]')
 reset.addEventListener('click', () => {
   currentValue = '0'
@@ -168,6 +167,7 @@ const multiply = (a, b) => a * b
 const divide = (a, b) => a / b
 
 const operate = () => {
+  console.log(firstValue, secondValue, currentOperation)
   if (firstValue !== null && secondValue !== null && currentOperation !== null) {
     let result = currentOperation(firstValue, secondValue)
     firstValue = result
@@ -189,37 +189,35 @@ const operate = () => {
   }
 }
 
-const sumButton = document.querySelector('button[name="sum"]')
-sumButton.addEventListener('click', () => {
-  firstValue = parseFloat(currentValue.replace(',', '.'))
-  currentOperation = sum
-  currentValue = '0'
-})
+const handleOperation = (operation) => {
+  if (firstValue === null) {
+    firstValue = parseFloat(currentValue.replace(',', '.'))
+    currentValue = '0'
+  }
+  currentOperation = operation
+}
 
-const subtractButton = document.querySelector('button[name="subtract"]')
-subtractButton.addEventListener('click', () => {
-  firstValue = parseFloat(currentValue.replace(',', '.'))
-  currentOperation = subtract
-  currentValue = '0'
-})
-
-const multiplyButton = document.querySelector('button[name="multiply"]')
-multiplyButton.addEventListener('click', () => {
-  firstValue = parseFloat(currentValue.replace(',', '.'))
-  currentOperation = multiply
-  currentValue = '0'
-})
-
-const divideButton = document.querySelector('button[name="divide"]')
-divideButton.addEventListener('click', () => {
-  firstValue = parseFloat(currentValue.replace(',', '.'))
-  currentOperation = divide
-  currentValue = '0'
-})
-
-const equalButton = document.querySelector('button[name="equal"]')
-equalButton.addEventListener('click', () => {
+const handleEqual = () => {
   secondValue = parseFloat(currentValue.replace(',', '.'))
   operate()
-})
+  firstValue = null
+  currentOperation = null
+}
+
+const sumButton = document.querySelector('button[name="sum"]')
+sumButton.addEventListener('click', () => handleOperation(sum))
+
+const subtractButton = document.querySelector('button[name="subtract"]')
+subtractButton.addEventListener('click', () => handleOperation(subtract))
+
+const multiplyButton = document.querySelector('button[name="multiply"]')
+multiplyButton.addEventListener('click', () => handleOperation(multiply))
+
+const divideButton = document.querySelector('button[name="divide"]')
+divideButton.addEventListener('click', () => handleOperation(divide))
+
+const equalButton = document.querySelector('button[name="equal"]')
+equalButton.addEventListener('click', handleEqual)
+
+
 const display = document.querySelector('div[name="display"] span')
