@@ -261,6 +261,20 @@ When the user presses the "=" button
 Then the display should show the following value: "-23"
 
 @done
+Scenario Outline: Doing an operation without a first number whit Examples
+Given the user presses the "<button>" button
+And the user writes the number: "<displayNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| displayNumber | button | resultDisplay |
+|            13 |      + |            13 |
+|         -17,2 |      - |         -17,2 |
+|        3,1415 |      * |        3,1415 |
+|         -2718 |      / |         -2718 | 
+
+@done
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button

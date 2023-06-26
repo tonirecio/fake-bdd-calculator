@@ -135,7 +135,11 @@ const handleOperation = () => {
     showMessageError()
   } else if(operator === null){
     result = inputValue
-  }
+  } else if(firstNumber === 0){
+    console.log(secondNumber)
+    setDisplay(secondNumber)
+    return
+  } 
 
   isSecondNumber = false
   tryingNegateNumber = false
@@ -199,7 +203,7 @@ const disableNumericAndPointButtons = () => {
   });
 }
 
-const sumNumbers = (firstNumber, secondNumber) => {
+const sumNumbers = (firstNumber, secondNumber) => {º
   return firstNumber + secondNumber
 }
 const subtractNumbers = (firstNumber, secondNumber) => {
