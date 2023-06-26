@@ -38,9 +38,6 @@ const putCommaAndConcatNumbers = (value) => {
 }
 
 const negateInputValue = (valueToNegate) => {
-  if(valueDisplay.slice(-1) === ','){
-    pendingComma = true
-  }
   tryingNegateNumber = true
   inputValue = valueToNegate * -1
   setInputValue(inputValue)
@@ -49,7 +46,7 @@ const negateInputValue = (valueToNegate) => {
 
 const setInputValue = (input) => {
   if(valueDisplay.replace(",", "").length + 1 >= 10 && input != '.'){
-    disableAllNumericButtons()
+    disableNumericAndPointButtons()
   } else {
     changeStateAllButtons(false)
     if(pointDisabled === true){
@@ -106,7 +103,7 @@ const handleOperator = (operation) => {
     firstNumber = result
   }
   operator = operation
-  valueForDisplay = firstNumber
+  valueDisplay = firstNumber
   setDisplay(valueDisplay)
   isSecondNumber = true
   pointDisabled = false
@@ -195,7 +192,7 @@ const changeStateAllButtons = (state) => {
   });
 }
 
-const disableAllNumericButtons = () => {
+const disableNumericAndPointButtons = () => {
   const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
   arrButtons.forEach(button => {
     document.getElementsByName(button)[0].disabled = true;
@@ -221,7 +218,7 @@ const divideNumbers = (firstNumber, secondNumber) => {
   }
 }
 
-const writeNumber = () => {
+const createALlButtonsFunctions = () => {
   //Click button numbers
   document.getElementsByName('seven')[0].addEventListener('click', () => {
     setInputValue(7)
@@ -308,5 +305,5 @@ const writeNumber = () => {
   });
 }
 
-writeNumber();
+createALlButtonsFunctions();
 resetDisplay()
