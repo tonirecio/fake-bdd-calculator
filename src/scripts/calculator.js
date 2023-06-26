@@ -2,7 +2,6 @@ const MAX_DIGITS_IN_DISPLAY = 10
 const COMMA_SYMBOL = ','
 const display = document.querySelector('div[name="display"] span')
 let currentOperation = null
-
 let previousOperand = 0
 let number = null
 let numberHasComma = false
