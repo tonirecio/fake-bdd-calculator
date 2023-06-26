@@ -40,7 +40,7 @@ const getDisplayNumber = () => {
 }
 
 const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '. Number saved = ' + inMemoryNumber)
+  window.alert('Comprobacion boolean: ' + isRecentlyAddedAOperation)
 }
 
 const invertNumberDisplay = () => {
@@ -65,6 +65,7 @@ const reset = () => {
 
 const addToTheDisplay = (value) => {
 
+  if (isRecentlyAddedAOperation) setDisplay(0)
   if (isTheOperationFinished) {
 
     setDisplay(0)
@@ -75,7 +76,6 @@ const addToTheDisplay = (value) => {
   if (!isTheMaxLenght()) {
 
     var actualDisplay = display.innerHTML
-
     if (isOnDisplayZero()){
 
       if (value == COMMA_CHARACTER) setDisplay('0' + COMMA_CHARACTER)
@@ -175,12 +175,11 @@ const showResults = (value) => {
 const emptyStoredMemory = () => {
 
   inMemoryNumber = getDisplayNumber()
-  setDisplay(0)
 
 }
 
 const operatorSelect = (value) => {
-
+  if (isRecentlyAddedAOperation == false){
     if (!isANumberOnMemory) {
 
       savedOperator = value 
@@ -196,7 +195,8 @@ const operatorSelect = (value) => {
     }
     isANumberOnMemory = true
     isRecentlyAddedAOperation = true
-
+  }
+  else savedOperator = value
 }
 const operate = () => {
 
@@ -273,6 +273,7 @@ document.addEventListener('keydown', () => {
   else if (event.key === "-") operatorSelect('-')
   else if (event.key === "*") operatorSelect('*')
   else if (event.key === "/") operatorSelect('/')
+  else if (event.key === "h") sayHello()
   else if (event.key === COMMA_CHARACTER) addToTheDisplay(COMMA_CHARACTER)
 })
 
