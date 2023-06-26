@@ -284,6 +284,7 @@ Examples:
 |            10 |            10 |
 |          -10, |           -10 |
 
+@sc_ReenableButtonsNoError
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button

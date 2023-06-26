@@ -150,10 +150,30 @@ const addOperationButtonClickEvent = (buttonName) => {
       completeOperation()
       setDisplay(currentNumberToDisplayableString())
     }
+    disableNumericalButtonSet(false)
+    disableButton('negate',true)
     currentOperation = buttonName
     previousNumber = currentNumber
     clearDisplay = true
   })
+}
+
+const disableNumericalButtonSet = (boolStatus) => {
+  disableButton('zero', boolStatus)
+disableButton('one', boolStatus)
+disableButton('two', boolStatus)
+disableButton('three', boolStatus)
+disableButton('four', boolStatus)
+disableButton('five', boolStatus)
+disableButton('six', boolStatus)
+disableButton('seven', boolStatus)
+disableButton('eight', boolStatus)
+disableButton('nine', boolStatus)
+disableButton('point', boolStatus)
+}
+
+const disableButton = (buttonName, boolStatus) => {
+  document.getElementsByName(buttonName)[0].disabled = boolStatus
 }
 
 const init = () => {
