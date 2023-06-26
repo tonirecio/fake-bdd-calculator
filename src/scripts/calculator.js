@@ -69,6 +69,11 @@ const addNumber = (num) => {
   }
   toDisplay = toDisplay.replace('.', ',')
 
+  if (maxLenght(lastNumberWrited)) {
+    disableNumberButtons()
+    enableDissableButton('point', true)
+  }
+
   return toDisplay
 }
 
@@ -194,7 +199,7 @@ const checkLimits = (num) => {
   }
 }
 
-const opertionWithoutTwoNumbers = (num, operator) => {
+const opertionWithoutTwoNumbers = (operator) => {
   if (operator === '+') {
     return 'ERROR'
   }
@@ -212,6 +217,19 @@ const enableAllButtons = () => {
     const element = array[index]
     element.disabled = false
   }
+}
+
+const disableNumberButtons = () => {
+  enableDissableButton('one', true)
+  enableDissableButton('two', true)
+  enableDissableButton('three', true)
+  enableDissableButton('four', true)
+  enableDissableButton('five', true)
+  enableDissableButton('six', true)
+  enableDissableButton('seven', true)
+  enableDissableButton('eight', true)
+  enableDissableButton('nine', true)
+  enableDissableButton('zero', true)
 }
 
 const addButtons = () => {
@@ -371,9 +389,11 @@ const addButtons = () => {
         lastNumberWrited = 0
       }
 
+      enableAllButtons()
+
       text = lastNumberWrited.toString().replace('.', ',')
     } else if (lastNumberWrited === '') {
-      text = opertionWithoutTwoNumbers(Number(storedNumber), operator).replace('.', ',')
+      text = opertionWithoutTwoNumbers(operator).replace('.', ',')
     } else {
       text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
     }
