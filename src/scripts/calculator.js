@@ -177,6 +177,7 @@ const pressedEqual = () => {
 }
 
 const pressedOperator = (type) => {
+  enableNumberButtons()
   if (chainingOperations) {
     performOperation()
     saveToPreviousNumber(currentNumber)
@@ -232,7 +233,13 @@ const cleanEverything = () => {
   cleanDisplay()
   cleanSavedNumbers()
   enableNumberButtons()
-//  enableButton('negate')
+  enableButton('negate')
+  enableButton('sum')
+  enableButton('subtract')
+  enableButton('divide')
+  enableButton('multiply')
+  disableButton('zero')
+  disableButton('negate')
 }
 
 const displayError = () => {
