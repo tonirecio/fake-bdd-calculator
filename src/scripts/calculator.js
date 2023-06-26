@@ -7,6 +7,7 @@ let previousNumber
 let operationType
 let isNextNumberDecimal = false
 let chainingOperations = false
+let waitingForNewNumber = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
@@ -31,8 +32,7 @@ const pressKeys = () => {
     } else if (keyPressed === '/') {
       pressedOperator('/')
     } else if (keyPressed === '=') {
-      performOperation()
-      chainingOperations = false
+      pressedEqual()
     }
   })
 }
@@ -92,8 +92,7 @@ const pressButtons = () => {
     pressedOperator('/')
   })
   document.getElementsByName('equal')[0].addEventListener('click', () => {
-    chainingOperations = false
-    performOperation()
+    pressedEqual()
   })
 }
 
@@ -118,9 +117,17 @@ const performOperation = () => {
   displayResultNumber()
 }
 
+const pressedEqual = () => {
+  if (waitingForNewNumber) {
+    displayError()
+  } else {
+    performOperation()
+    chainingOperations = false
+    waitingForNewNumber = false
+  }
+}
+
 const pressedOperator = (type) => {
-
-
   if (chainingOperations) {
     performOperation()
     saveToPreviousNumber(currentNumber)
@@ -128,9 +135,9 @@ const pressedOperator = (type) => {
     saveToPreviousNumber(currentNumber)
     chainingOperations = true
   }
+  waitingForNewNumber = true
   operationType = type
 }
-
 const pressedNumber = (newNumber) => {
   addNumberTocurrentNumber(newNumber)
 }
@@ -145,6 +152,7 @@ const addNumberTocurrentNumber = (newNumber) => {
     }
   }
   displaycurrentNumber()
+  waitingForNewNumber = false
 }
 
 const negateNumber = (number) => {
@@ -202,14 +210,9 @@ const roundDecimals = (number) => {
 }
 
 const displayResultNumber = () => {
-
   if (isNaN(currentNumber) || !isFinite(currentNumber)) {
-
     displayError()
-  }
-
-  else {
-
+  } else {
     if (!Number.isInteger(currentNumber)) {
       currentNumber = roundDecimals(currentNumber)
     }
@@ -221,16 +224,15 @@ const displayResultNumber = () => {
     }
     saveToPreviousNumber(currentNumber)
   }
+  waitingForNewNumber = false
 }
 
 const displaycurrentNumber = () => {
-
   if (isNextNumberDecimal) {
     setDisplay(currentNumber.toString() + ',')
   } else {
     setDisplay(currentNumber.toString().replace('.', ','))
   }
-
 }
 
 const setDisplay = (value) => {

@@ -245,7 +245,7 @@ Examples:
 |             1 |
 |            -1 |
 |             0 |
-
+@current
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
