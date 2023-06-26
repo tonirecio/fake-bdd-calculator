@@ -95,7 +95,7 @@ Examples:
 |    123456789, |      5 |   123456789,5 |
 |   123456789,5 |     +- |  -123456789,5 |
 
-@sc6
+@sc6 @done
 
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
@@ -129,6 +129,8 @@ Examples:
 |           -10 |      / |          2 |            -5 |
 |           -10 |      / |         -2 |             5 |
 
+@sc7 @done
+
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -142,6 +144,7 @@ Examples:
 |         13,14 |      * |      2,781 |
 |            84 |      / |       -4,3 |
 
+@sc8 @done
 Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -156,6 +159,7 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
+
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
@@ -166,6 +170,7 @@ Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
+@sc9 @done
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
