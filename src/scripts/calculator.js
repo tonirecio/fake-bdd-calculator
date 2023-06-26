@@ -111,6 +111,7 @@ const pressingOperator = (newOperator) => {
     setDisplay(accumulatedNumber)
   } else if (operator === null && accumulatedNumber === null) {
     accumulatedNumber = actualNumber
+    disableOneButton(document.getElementsByName('negate')[0])
   }
   operator = newOperator
   actualNumber = null
@@ -133,6 +134,10 @@ const pressingEqual = () => {
     displayValue = accumulatedNumber
   }
   setDisplay(displayValue)
+}
+
+const disableOneButton = (button) => {
+    button.disabled = true
 }
 
 const getEventsListenersButtons = () => {
