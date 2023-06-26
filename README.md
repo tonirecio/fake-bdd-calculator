@@ -109,3 +109,10 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat, ha canviat la forma de treure els trailing 0 👍
+
+
+## @sc_KeepFirstNumber
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Codi ben implementat
