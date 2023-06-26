@@ -80,7 +80,7 @@ const reset = () => {
   previousOperand = 0
   setDisplay(0)
 }
-/*
+
 const appendNumbers = (value) => {
   if(countDigit <= MAX_DIGITS_IN_DISPLAY){
     if(currentValue != 0 ){
@@ -96,30 +96,7 @@ const appendNumbers = (value) => {
     window.alert("3")
   }
 }
-*/
-const appendNumbers = (value) => {
-  if (countDigit <= MAX_DIGITS_IN_DISPLAY) {
-    if (currentValue !== 0) {
-      // Verificar si ya hay una coma en el valor actual
-      if (!isDecimal) {
-        currentValue = currentValue * 10 + value;
-      } else {
-        // Calcular la cantidad de dígitos después de la coma
-        const decimalDigits = currentValue.toString().split('.')[1];
-        const decimalMultiplier = Math.pow(10, decimalDigits.length);
-        const newValue = currentValue + value / decimalMultiplier;
-        currentValue = parseFloat(newValue.toFixed(decimalDigits.length));
-      }
-    } else {
-      currentValue = value;
-    }
-    countDigit++;
-    setDisplay(currentValue);
-  } else {
-    window.alert("3");
-  }
-};
- 
+
 const negateButton = (displayValue) => {
   displayValue = displayValue * -1
   currentValue = displayValue
