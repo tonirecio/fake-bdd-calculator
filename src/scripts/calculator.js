@@ -114,12 +114,16 @@ const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
       }
       break
     case 'point':
-      if (decimalSymbolUsage) {
-        window.alert('Cant use more than one point')
+      if (countDigits < MAX_DIGITS_IN_DISPLAY) {
+        if (decimalSymbolUsage) {
+          window.alert('Cant use more than one point')
+        } else {
+          decimalSymbolUsage = true
+          isPointUsedWithoutDecimal = true
+          updateDisplay(currentOperand + ',')
+        }
       } else {
-        decimalSymbolUsage = true
-        isPointUsedWithoutDecimal = true
-        updateDisplay(currentOperand + ',')
+        window.alert('Maximum digit capacity reached')
       }
       break
     default:
@@ -137,29 +141,36 @@ const nonOperatorButtons = document.querySelectorAll('div[name="keypad"] button'
 nonOperatorButtons.forEach(nonOperatorButton => {
   nonOperatorButton.addEventListener('click', () => {
     let buttonName = nonOperatorButton.getAttribute('name')
-    if (countDigits < MAX_DIGITS_IN_DISPLAY || buttonName === 'clean' || buttonName === 'negate') {
+    if (countDigits < MAX_DIGITS_IN_DISPLAY) {
       if (numberButtons.includes(buttonName) && !decimalSymbolUsage) {
         numberValue = getNumber(buttonName)
         currentOperand = appendIntegerNumbers(currentOperand, numberValue)
         countDigits++
         updateDisplay(currentOperand)
-      } else if (nonOperatorNonNumberButtons.includes(buttonName)) {
-        currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
       } else if (numberButtons.includes(buttonName) && decimalSymbolUsage) {
         isPointUsedWithoutDecimal = false
         numberValue = getNumber(buttonName)
         currentOperand = appendDecimalNumbers(currentOperand, numberValue)
         countDigits++
         updateDisplay(currentOperand)
-      } else if (operatorButtons.includes(buttonName)) {
-        pastOperand = saveAndResetCurrentOperand(currentOperand)
-        operandSymbolInUse = operatorButtonPressed(buttonName)
-      } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
-        operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-        updateDisplay(operationResult)
       }
     } else {
       window.alert('Maximum digit capacity reached')
+    }
+
+    if (nonOperatorNonNumberButtons.includes(buttonName)) {
+      currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
+    } else if (operatorButtons.includes(buttonName)) {
+      pastOperand = saveAndResetCurrentOperand(currentOperand)
+      operandSymbolInUse = operatorButtonPressed(buttonName)
+    } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
+      operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
+      console.log(operationResult)
+      if (isOperationResultOverLength(operationResult)) {
+        updateDisplay('ERROR')
+      } else {
+        updateDisplay(operationResult)
+      }
     }
   })
 })
@@ -215,8 +226,12 @@ document.addEventListener('keydown', (event) => {
 
 // [Scenario] Performing two number operations
 const saveAndResetCurrentOperand = (currentOperand) => {
-  pastOperand = currentOperand
-  reset()
+  if (currentOperand !== 0) {
+    pastOperand = currentOperand
+    reset()
+  } else {
+    reset()
+  }
   return pastOperand
 }
 
@@ -274,4 +289,19 @@ const countIntegersFromNumber = (number, integerCount) => {
 const roundNumber = (number, integerCount) => {
   number = Math.round(number * Math.pow(10, 10 - integerCount)) / Math.pow(10, 10 - integerCount)
   return number
+}
+
+// [Scenario] Performing two number operations with a result number with more than 10 nondecimal digits
+
+const isOperationResultOverLength = (operationResult) => {
+  resultString = operationResult.toString()
+  console.log(resultString.length)
+  if (resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY + 1) {
+    console.log('cs')
+    return true
+  } else if (!resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY) {
+    return true
+  } else {
+    return false
+  }
 }
