@@ -143,9 +143,8 @@ const floatCurrentNum = () => {
 
 const completeOperation = () => {
   let resultNum = null
-  debugger
   if (currentOperation !== null && clearDisplay) {
-    //asked to complete operation when no second value
+    // asked to complete operation when no second value
     resultNum = NaN
   } else {
     switch (currentOperation) {
@@ -178,7 +177,6 @@ const completeOperation = () => {
   currentOperation = null
   pendingOperation = false
   clearDisplay = true
-
 }
 
 const addNumericalButtonClickEvent = (buttonName, number) => {
