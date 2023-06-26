@@ -16,3 +16,6 @@
 
 # Scenario Outline: Performing two number operations
     Todo parece funcionar perfectamente, despues dle refactor del codigo es mas claro todo, hay muchos parsers, yo podnria dos variables, una que sea una string y otra que sea un number y de esta forma te ahorras muchos parsers, hay un par de expresiones regulares y el 'diccionario' que has hecho para las teclas sigue pareciendome mas complejo de lo que en realidad es :p
+
+# Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
+    Parece que todo funcione, los test no dan errores y has manejado el error de una forma muy sencilla. Hay alguna que ptra expresion regular que no entiendo pero por lo demas todo correcto
