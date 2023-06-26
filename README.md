@@ -89,3 +89,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Futureproofed correctament, sense canvis
+
+## @equals_wo_operation
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Bona implementacio pero ho faria dins del if de sum/subtract/multiply/divide
