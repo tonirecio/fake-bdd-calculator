@@ -32,6 +32,10 @@ const reset = () => {
   addDecimal = false
   doOperation = false
   isEqualsPressed = false
+
+  enableAllButtons()
+  dissableButton('negate')
+  dissableButton('zero')
 }
 
 const addNumber = (num) => {
