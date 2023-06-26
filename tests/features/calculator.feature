@@ -257,7 +257,7 @@ Given the user presses the "-" button
 And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
-
+@current
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
