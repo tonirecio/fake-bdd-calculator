@@ -19,3 +19,6 @@
 
 # Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
     Parece que todo funcione, los test no dan errores y has manejado el error de una forma muy sencilla. Hay alguna que ptra expresion regular que no entiendo pero por lo demas todo correcto
+
+# Scenario Outline: Clicking two different operation buttons
+    Hay algun que otro console log que se te ha escapado. Los nombres de las nuevas funciones son muy claras. El refactoring me parece bueno, aun hay varias expresiones regulares que creo que se pueden cambiar. Tienes muy pocas variables globales, me parece muy correcto todo. Faltaria cambiar las expresiones regulares y el diccionario de las keys.
