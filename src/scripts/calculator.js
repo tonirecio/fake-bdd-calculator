@@ -7,19 +7,18 @@ let previousNumber
 let operationType
 let isNextNumberDecimal = false
 let chainingOperations = false
-let waitingForNewNumber = false
+let waitingForBrandNewNumber = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
     const keyPressed = event.key
 
     if (keyPressed >= '0' && keyPressed <= '9') {
-      pressedNumber(keyPressed)
+      addNumberTocurrentNumber(keyPressed)
     } else if (keyPressed === 'Escape') {
       cleanEverything()
     } else if (keyPressed === 'Control') {
-      currentNumber = negateNumber(currentNumber)
-      displaycurrentNumber()
+      pressedNegate()
     } else if (keyPressed === ',') {
       addPointTocurrentNumber()
       displaycurrentNumber()
@@ -39,42 +38,41 @@ const pressKeys = () => {
 
 const pressButtons = () => {
   document.getElementsByName('zero')[0].addEventListener('click', () => {
-    pressedNumber(0)
+    addNumberTocurrentNumber(0)
   })
   document.getElementsByName('one')[0].addEventListener('click', () => {
-    pressedNumber(1)
+    addNumberTocurrentNumber(1)
   })
   document.getElementsByName('two')[0].addEventListener('click', () => {
-    pressedNumber(2)
+    addNumberTocurrentNumber(2)
   })
   document.getElementsByName('three')[0].addEventListener('click', () => {
-    pressedNumber(3)
+    addNumberTocurrentNumber(3)
   })
   document.getElementsByName('four')[0].addEventListener('click', () => {
-    pressedNumber(4)
+    addNumberTocurrentNumber(4)
   })
   document.getElementsByName('five')[0].addEventListener('click', () => {
-    pressedNumber(5)
+    addNumberTocurrentNumber(5)
   })
   document.getElementsByName('six')[0].addEventListener('click', () => {
-    pressedNumber(6)
+    addNumberTocurrentNumber(6)
   })
   document.getElementsByName('seven')[0].addEventListener('click', () => {
-    pressedNumber(7)
+    addNumberTocurrentNumber(7)
   })
   document.getElementsByName('eight')[0].addEventListener('click', () => {
-    pressedNumber(8)
+    addNumberTocurrentNumber(8)
   })
   document.getElementsByName('nine')[0].addEventListener('click', () => {
-    pressedNumber(9)
+    addNumberTocurrentNumber(9)
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
     addPointTocurrentNumber()
     displaycurrentNumber()
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
-    currentNumber = negateNumber(currentNumber)
-    displaycurrentNumber()
+    pressedNegate()
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     cleanEverything()
@@ -96,6 +94,50 @@ const pressButtons = () => {
   })
 }
 
+
+const disableNumberButtons = () => {
+  document.getElementsByName('zero')[0].disabled = true
+  document.getElementsByName('one')[0].disabled = true
+  document.getElementsByName('two')[0].disabled = true
+  document.getElementsByName('three')[0].disabled = true
+  document.getElementsByName('four')[0].disabled = true
+  document.getElementsByName('five')[0].disabled = true
+  document.getElementsByName('six')[0].disabled = true
+  document.getElementsByName('seven')[0].disabled = true
+  document.getElementsByName('eight')[0].disabled = true
+  document.getElementsByName('nine')[0].disabled = true
+}
+
+const disableButton = (button) => {
+
+  document.getElementsByName(button)[0].disabled = true
+
+
+}
+
+const enableButton = (button) => {
+
+  document.getElementsByName(button)[0].disabled = false
+
+
+}
+
+const enableNumberButtons = () => {
+  document.getElementsByName('zero')[0].disabled = false
+  document.getElementsByName('one')[0].disabled = false
+  document.getElementsByName('two')[0].disabled = false
+  document.getElementsByName('three')[0].disabled = false
+  document.getElementsByName('four')[0].disabled = false
+  document.getElementsByName('five')[0].disabled = false
+  document.getElementsByName('six')[0].disabled = false
+  document.getElementsByName('seven')[0].disabled = false
+  document.getElementsByName('eight')[0].disabled = false
+  document.getElementsByName('nine')[0].disabled = false
+}
+
+
+
+
 const saveToPreviousNumber = (number) => {
   if (number !== 0) {
     previousNumber = number
@@ -113,17 +155,24 @@ const performOperation = () => {
   } else if (operationType === '/') {
     currentNumber = previousNumber / currentNumber
   }
-
+ // enableButton('negate')
   displayResultNumber()
 }
 
+
+const pressedNegate = () => {
+  currentNumber = negateNumber(currentNumber)
+  displaycurrentNumber()
+}
+
 const pressedEqual = () => {
-  if (waitingForNewNumber) {
+  if (waitingForBrandNewNumber) {
     displayError()
   } else {
+    isNextNumberDecimal = false
     performOperation()
     chainingOperations = false
-    waitingForNewNumber = false
+    waitingForBrandNewNumber = false
   }
 }
 
@@ -134,12 +183,10 @@ const pressedOperator = (type) => {
   } else {
     saveToPreviousNumber(currentNumber)
     chainingOperations = true
+    //disableButton('negate')
   }
-  waitingForNewNumber = true
+  waitingForBrandNewNumber = true
   operationType = type
-}
-const pressedNumber = (newNumber) => {
-  addNumberTocurrentNumber(newNumber)
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
@@ -151,8 +198,11 @@ const addNumberTocurrentNumber = (newNumber) => {
       currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
   }
+  else if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
+    disableNumberButtons()
+  }
   displaycurrentNumber()
-  waitingForNewNumber = false
+  waitingForBrandNewNumber = false
 }
 
 const negateNumber = (number) => {
@@ -181,6 +231,8 @@ const cleanSavedNumbers = () => {
 const cleanEverything = () => {
   cleanDisplay()
   cleanSavedNumbers()
+  enableNumberButtons()
+//  enableButton('negate')
 }
 
 const displayError = () => {
@@ -224,7 +276,8 @@ const displayResultNumber = () => {
     }
     saveToPreviousNumber(currentNumber)
   }
-  waitingForNewNumber = false
+  waitingForBrandNewNumber = false
+ // enableButton('negate')
 }
 
 const displaycurrentNumber = () => {
