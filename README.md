@@ -29,3 +29,5 @@
 *Scenario Outline: Using the previous result in a new operation*: Crec que la variable 'ans' podria tenir un nom més explicatiu. 
 
 *Scenario Outline: Using the previous result in a new operation easier*: Crec que algunes de les variables globals es podria unificar i no caldria tenir-ne tantes. S'haurien d'arreglar els errors del yarn lint.
+
+*Scenario Outline: Division with 0*: La calculadora no permet operar amb el 0, per exemple, '0 + 0 = ERROR'. El control de si l'operant és 0 només s'hauria de fer per a la divisió.
