@@ -10,6 +10,7 @@ let result = null
 let isSecondNumber = false
 let tryingNegateNumber = false
 let pointDisabled = false
+let countZeros = 0
 
 const concatInputsNumbers = (value) => {
   if(tryingNegateNumber === true){
@@ -25,6 +26,22 @@ const concatInputsNumbers = (value) => {
   } 
 }
   
+const putZerosAndConcatNumbers = (value) => {
+  if(tryingNegateNumber === false){
+    valueDisplay = valueDisplay.toString()
+    valueDisplay = valueDisplay + value
+    inputValue = parseFloat(valueDisplay.replace(",", "."))
+  } else {
+    valueDisplay = value
+    valueDisplay = valueDisplay.toString()
+    inputValue = parseFloat(valueDisplay.replace(",", "."))
+  }
+  
+  setDisplay(valueDisplay)
+  countZeros = 0
+  return
+}
+
 const putCommaAndConcatNumbers = (value) => {
   valueDisplay = inputValue
   valueDisplay = valueDisplay.toString()
@@ -70,8 +87,16 @@ const setInputValue = (input) => {
     } else if(valueDisplay.slice(-1) === ","){
         putCommaAndConcatNumbers(input)
         return
-    } else {
+    } else if(input === 0 && tryingNegateNumber != true){
+        valueDisplay = valueDisplay + input
+        inputValue = parseFloat(valueDisplay.replace(",", "."))
+        setDisplay(valueDisplay)
+        return
+    }else if(countZeros > 0 ){
+        putZerosAndConcatNumbers(input)
+    }else {
         concatInputsNumbers(input)
+
         return
     } 
   }
@@ -82,7 +107,7 @@ const setDisplay = (value) => {
   if(isSecondNumber === false){
     display.innerHTML = valueDisplay
   } else {
-      secondNumber = parseFloat(value)
+      secondNumber = inputValue
       display.innerHTML = valueDisplay.replace(".", ",")
   }
 }
@@ -130,13 +155,14 @@ const handleOperation = () => {
       result = divideNumbers(firstNumber, secondNumber)
       break;
   } 
-
   if(secondNumber === null && operator != null){
     showMessageError()
   } else if(operator === null){
     result = inputValue
-  } else if(firstNumber === 0){
-    console.log(secondNumber)
+  } else if(firstNumber === 0 && result != 'ERROR'){
+    if(operator === '-' && secondNumber > 0){
+      negateInputValue(secondNumber)
+    }
     setDisplay(secondNumber)
     return
   } 
@@ -203,7 +229,7 @@ const disableNumericAndPointButtons = () => {
   });
 }
 
-const sumNumbers = (firstNumber, secondNumber) => {º
+const sumNumbers = (firstNumber, secondNumber) => {
   return firstNumber + secondNumber
 }
 const subtractNumbers = (firstNumber, secondNumber) => {
@@ -216,6 +242,7 @@ const divideNumbers = (firstNumber, secondNumber) => {
   if(secondNumber != 0){
     return firstNumber / secondNumber
   } else {
+    
     changeStateAllButtons(true)
     changeButtonState(false ,'clean')
     return "ERROR"
@@ -253,6 +280,7 @@ const createALlButtonsFunctions = () => {
   })
   document.getElementsByName('zero')[0].addEventListener('click', () => {
     setInputValue(0)
+    countZeros += 1
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     resetDisplay()
@@ -299,6 +327,10 @@ const createALlButtonsFunctions = () => {
     arrKeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ','];
     arrKeys.forEach(num => {
       if(event.key == num){
+        if(num === 0){
+          countZeros += 1
+        }
+
         if(num != ','){
           setInputValue(num)
         } else {

@@ -30,6 +30,23 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
+@wip
+Scenario Outline: Numbers with zeros
+Given the user writes the following value: "<displayNumber>"
+And the user writes the number: "<firstZero>"
+And the user writes the number: "<secondZero>"
+And the user writes the number: "<lastNumber>"
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | firstZero | secondZero | lastNumber | displayResult |
+|            3, |         0 |          0 |          6 |         3,006 |
+|            0, |         0 |          0 |         31 |        0,0031 |
+|           0,2 |         0 |          0 |        215 |      0,200215 |
+|             4 |         0 |          0 |          0 |          4000 |
+|           0,2 |         0 |          0 |          0 |        0,2000 |
+
+
 @done
 Scenario Outline: Pressing non-operators keys
 Given the user writes the following value: "<displayNumber>"
