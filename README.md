@@ -75,7 +75,12 @@
 - [X] 🟧 **Lint Test:** Error mínim de no-multiple-empty-lines
 - [X] 🟧 **Sintaxis:** Sense errors, personalment hagués utilitzat la funció de isFinite()
 
-## @previous_result_easier
+## @operation_without_second_number
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Millorat amb el isFinite
+
+## @operation_without_first_number
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Futureproofed correctament, sense canvis
