@@ -245,18 +245,21 @@ Examples:
 |            -1 |
 |             0 |
 
+@operation_without_second_number
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
 
+@operation_without_first_number
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
 
+@showing_first_mumber
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -269,6 +272,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
+@equals_without_operation
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -280,6 +284,7 @@ Examples:
 |            10 |            10 |
 |          -10, |           -10 |
 
+@enable_buttons_after_operator
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
