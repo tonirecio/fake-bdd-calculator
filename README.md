@@ -128,3 +128,9 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
+
+## @c_ReenableButtonsNoErrorPressC
+Ha passat el test!  
+Comentaris: 
+* Ha passat el lint
+* Codi ben implementat
