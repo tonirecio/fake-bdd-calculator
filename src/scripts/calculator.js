@@ -20,10 +20,11 @@ const SUBSTRACT_BUTTON = document.getElementsByName('subtract')[0]
 const SUM_BUTTON = document.getElementsByName('sum')[0]
 const EQUAL_BUTTON = document.getElementsByName('equal')[0]
 
-var inMemoryNumber = 0 //El numero que se queda en memoria para poder hacer calculos
-var savedOperator = ''
-var isANumberOnMemory = false
-var isTheOperationFinished = false
+let inMemoryNumber = 0 //El numero que se queda en memoria para poder hacer calculos
+let savedOperator = ''
+let isANumberOnMemory = false
+let isTheOperationFinished = false
+let isRecentlyAddedAOperation = false
 
 const setDisplay = (value) => {
   display.innerHTML = value
@@ -103,6 +104,7 @@ const addToTheDisplay = (value) => {
     }
 
   }
+  isRecentlyAddedAOperation = false
 
 }
 
@@ -138,7 +140,8 @@ const showResults = (value) => {
 
   var result = value.toString();
 
-  if (isADotOnThis(value) == false) {
+  if (isRecentlyAddedAOperation) setDisplay("ERROR")
+  else if (isADotOnThis(value) == false) {
     
     if (isOnRangeOfNotError(value)) setDisplay(result)
     else setDisplay("ERROR") 
@@ -192,6 +195,7 @@ const operatorSelect = (value) => {
 
     }
     isANumberOnMemory = true
+    isRecentlyAddedAOperation = true
 
 }
 const operate = () => {
