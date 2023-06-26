@@ -27,7 +27,31 @@ let isTheOperationFinished = false
 let isRecentlyAddedAOperation = false
 
 const setDisplay = (value) => {
+
+  value = fixComma(value)
+  console.log(value)
   display.innerHTML = value
+
+}
+
+const fixComma = (value) => {
+
+  if(isADotOnThis(value)) {
+    console.log(1)
+    var valueLenght = value.length
+    
+    if (value[valueLenght - 1] == COMMA_CHARACTER) {
+      console.log(2)
+      var newNumberWithoutComma = ''
+      for (var eachNumber = 0; eachNumber < valueLenght - 1; eachNumber++) newNumberWithoutComma += '' + value[eachNumber]
+      return newNumberWithoutComma
+
+    }
+    else return value
+
+  }
+  else return value
+
 }
 
 const getDisplayNumber = () => {
@@ -216,6 +240,10 @@ const operate = () => {
     doDivision()
     resetMemoryNumberAndOperator()
   }
+  else {
+    setDisplay(getDisplayNumber())
+    resetMemoryNumberAndOperator()
+  }
 
 }
 
@@ -295,7 +323,6 @@ MULTUPLY_BUTTON.addEventListener('click', () => { operatorSelect('*') })
 SUBSTRACT_BUTTON.addEventListener('click', () => { operatorSelect('-') })
 SUM_BUTTON.addEventListener('click', () => { operatorSelect('+') })
 EQUAL_BUTTON.addEventListener('click', () => { operate() })
-reset()
 
 const isTheMaxLenght = () => {
 
@@ -380,3 +407,4 @@ const isOnRangeOfNotError = (value) => {
   else return false 
 
 }
+reset()
