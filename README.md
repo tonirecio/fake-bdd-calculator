@@ -65,7 +65,12 @@
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Sintaxis correcta i sense modificacions destacables.
 
-## @previous_result_plus
+## @previous_result_easier
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Error mínim de "Missing EOL"
 - [X] 🟩 **Sintaxis:** Sense errors.
+
+## @divide_by_zero
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟧 **Lint Test:** Error mínim de no-multiple-empty-lines
+- [X] 🟧 **Sintaxis:** Sense errors, personalment hagués utilitzat la funció de isFinite()
