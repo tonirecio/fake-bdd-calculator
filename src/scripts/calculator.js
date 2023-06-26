@@ -49,6 +49,14 @@ const reset = () => {
   setDisplay(currentNumber)
 }
 
+const clear = () => {
+  disableNumericalButtonSet(false)
+  disableButton('zero', true)
+  disableButton('negate', true)
+
+  reset()
+}
+
 const negateCurrentNum = () => {
   currentNumber = -1 * currentNumber
 }
@@ -219,7 +227,7 @@ const init = () => {
   addNumericalButtonClickEvent('nine', 9)
   addNumericalButtonClickEvent('zero', 0)
 
-  addFunctionButtonClickEvent('clean', reset)
+  addFunctionButtonClickEvent('clean', clear)
   addFunctionButtonClickEvent('negate', negateCurrentNum)
   addFunctionButtonClickEvent('point', floatCurrentNum)
   addFunctionButtonClickEvent('equal', completeOperation)
