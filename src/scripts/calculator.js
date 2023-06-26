@@ -158,6 +158,5 @@ const formatNumberToDisplay = (result) => {
   }
   return result
 }
-// TODO: organitzar codi, comprovar que fan funcions, comprovar variables.
 
 init()
