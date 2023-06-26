@@ -40,12 +40,8 @@ const addEventsToButtons = () => {
   document.querySelector('button[name="clean"]').addEventListener('click', handleCleanClick)
   document.querySelector('button[name="negate"]').addEventListener('click', handleNegateClick)
   // Operator buttons
-  document.querySelector('button[name="equal"]').addEventListener('click', () => {
-    previousOperand = performOperation()
-    overrideDisplay = true
-    setDisplay(formatNumberToDisplay(previousOperand))
-    currentOperation = null
-  })
+  document.querySelector('button[name="equal"]').addEventListener('click', handleEqualsClick)
+
   document.querySelector('button[name="sum"]').addEventListener('click', () => handleOperationClick('sum'))
   document.querySelector('button[name="subtract"]').addEventListener('click', () => handleOperationClick('subtract'))
   document.querySelector('button[name="multiply"]').addEventListener('click', () => handleOperationClick('multiply'))
@@ -92,6 +88,14 @@ const handleOperationClick = (operation) => {
   currentOperation = operation
   overrideDisplay = true
   handleButtonEnablingWhenClickingOperator()
+}
+
+const handleEqualsClick = () => {
+  previousOperand = performOperation()
+  overrideDisplay = true
+  currentOperation = null
+  setAllButtonDisabledStatus(false)
+  setDisplay(formatNumberToDisplay(previousOperand))
 }
 
 const setDisplay = (value) => {
@@ -212,7 +216,5 @@ const handleButtonEnablingWhenClickingClean = () => {
   document.querySelector('button[name="zero"]').disabled = true
   document.querySelector('button[name="negate"]').disabled = true
 }
-
-
 
 init()
