@@ -272,7 +272,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
-@wip
+@done
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -284,6 +284,7 @@ Examples:
 |            10 |            10 |
 |          -10, |           -10 |
 
+@wip
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
