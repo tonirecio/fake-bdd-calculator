@@ -88,7 +88,7 @@ const negateNumberAndUpdateDisplay = () => {
 }
 
 const getDigitNumber = (number) => {
-  return number.toString().replace('.', '').length
+  return Math.abs(number).toString().replace('.', '').length
 }
 
 const writeNewNumber = (newNumber) => {
@@ -126,8 +126,8 @@ const handleOperationClick = (operation) => {
 
 const performOperation = () => {
   let result = number
-  if (overrideDisplay) {
-    return 'ERROR'
+  if (overrideDisplay && previousOperand !== 0) {
+    result = NaN
   } else {
     if (currentOperation === 'sum') {
       result = previousOperand + number
@@ -147,9 +147,8 @@ const performOperation = () => {
   return result
 }
 
-
 const formatNumberToDisplay = (result) => {
-  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || isNaN(result)) result = 'ERROR'
+  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(result)) result = 'ERROR'
   if (result !== 'ERROR') {
     if (getDigitNumber(result) > MAX_DIGITS_IN_DISPLAY) {
       const integerPartDigits = parseInt(Math.abs(result)).toString().length
