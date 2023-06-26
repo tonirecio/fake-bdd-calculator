@@ -372,7 +372,7 @@ Examples:
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
-
+@currentWIP
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button

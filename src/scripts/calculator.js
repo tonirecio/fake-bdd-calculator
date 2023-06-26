@@ -2,8 +2,8 @@ const MAX_DIGITS_IN_DISPLAY = 10
 
 const display = document.querySelector('div[name="display"] span')
 
-let currentNumber
-let previousNumber
+let currentNumber = 0
+let previousNumber = 0
 let operationType
 let isNextNumberDecimal = false
 let chainingOperations = false
@@ -175,9 +175,8 @@ const pressedEqual = () => {
     chainingOperations = false
     waitingForBrandNewNumber = false
   }
-  enableNumberButtons()
-  enableButton('point')
-  
+
+
 }
 
 const pressedOperator = (type) => {
@@ -198,7 +197,7 @@ const pressedOperator = (type) => {
 const addNumberTocurrentNumber = (newNumber) => {
 
 
- if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+  if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
       currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
       isNextNumberDecimal = false
@@ -213,7 +212,7 @@ const addNumberTocurrentNumber = (newNumber) => {
   displaycurrentNumber()
   waitingForBrandNewNumber = false
 
-   if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
+  if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
     disableNumberButtons()
     disableButton('point')
   }
@@ -258,7 +257,19 @@ const cleanEverything = () => {
 }
 
 const displayError = () => {
+  disableAllButtons()
   setDisplay('ERROR')
+}
+
+const disableAllButtons = () => {
+  disableButton('point')
+  disableButton('sum')
+  disableButton('subtract')
+  disableButton('divide')
+  disableButton('multiply')
+  disableButton('negate')
+  disableButton('equal')
+  disableNumberButtons()
 }
 
 const getNumberLength = (number) => {
@@ -293,13 +304,14 @@ const displayResultNumber = () => {
 
     if (getNumberLength(currentNumber) <= MAX_DIGITS_IN_DISPLAY) {
       displaycurrentNumber()
+      enableNumberButtons()
+      enableButton('point')
     } else {
       displayError()
     }
     saveToPreviousNumber(currentNumber)
   }
   waitingForBrandNewNumber = false
-  // enableButton('negate')
 }
 
 const displaycurrentNumber = () => {
