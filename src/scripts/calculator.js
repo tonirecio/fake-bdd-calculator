@@ -198,6 +198,8 @@ const addNumberTocurrentNumber = (newNumber) => {
     } else {
       currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
+    enableNumberButtons()
+    enableButton('negate')
   }
   else if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
     disableNumberButtons()
