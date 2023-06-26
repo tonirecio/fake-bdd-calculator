@@ -33,3 +33,5 @@
 *Scenario Outline: Division with 0*: La calculadora no permet operar amb el 0, per exemple, '0 + 0 = ERROR'. El control de si l'operant és 0 només s'hauria de fer per a la divisió.
 
 *Scenario: Doing an operation without a second number*: Està bé.
+
+*Scenario: Doing an operation without a first number*: Està bé.
