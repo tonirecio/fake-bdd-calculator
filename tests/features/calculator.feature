@@ -312,7 +312,7 @@ Examples:
 |   *  |
 |   /  |
 
-@wip
+@done
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button
@@ -333,6 +333,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
+@wip
 Scenario: Reenabling buttons with no error using = button
 Given the user writes the following value: "1234567890"
 When the user presses the "=" button

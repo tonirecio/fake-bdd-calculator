@@ -17,12 +17,6 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
-const getDisplay = () => {
-  const num = display.innerHTML.replace(',', '.')
-
-  return num
-}
-
 const reset = () => {
   setDisplay(0)
   isPoint = false
@@ -34,11 +28,12 @@ const reset = () => {
   isEqualsPressed = false
 
   enableAllButtons()
-  dissableButton('negate')
-  dissableButton('zero')
+  enableDissableButton('negate', true)
+  enableDissableButton('zero', true)
 }
 
 const addNumber = (num) => {
+  enableAllButtons()
   let toDisplay
 
   if (doOperation) {
@@ -59,6 +54,10 @@ const addNumber = (num) => {
     toDisplay = '' + lastNumberWrited + num
 
     if (addDecimal) {
+      if (lastNumberWrited === '') {
+        lastNumberWrited = 0
+      }
+
       lastNumberWrited = lastNumberWrited + '.' + num
 
       toDisplay = '' + lastNumberWrited
@@ -90,7 +89,11 @@ const addPoint = () => {
     isPoint = true
     addDecimal = true
 
-    return lastNumberWrited + ','
+    if (lastNumberWrited !== '') {
+      return lastNumberWrited + ','
+    } else {
+      return 0 + ','
+    }
   } else {
     return lastNumberWrited.toString().replace('.', ',')
   }
@@ -101,7 +104,6 @@ const negateActualNumber = (num) => {
 
   if (!num.includes('-')) {
     if (num !== '0') {
-
       toDisplay = '-' + num
 
       lastNumberWrited = num * -1
@@ -130,11 +132,6 @@ const operate = (num1, operation, num2) => {
   const numberToOperate1 = Number(num1)
   const numberToOperate2 = Number(num2)
 
-  console.log(num1)
-  console.log(numberToOperate1)
-  console.log(num2)
-  console.log(numberToOperate2)
-  
   let toDisplay
 
   isEqualsPressed = true
@@ -203,36 +200,18 @@ const opertionWithoutTwoNumbers = (num, operator) => {
   }
 }
 
-const disableAllButtons = () => {
-  const array = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
-
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    
-    element.disabled = true
-  }
-}
-
-const dissableButton = (name) => {
+const enableDissableButton = (name, value) => {
   const element = document.getElementsByName(name)[0]
-
-  element.disabled = true
+  element.disabled = value
 }
 
 const enableAllButtons = () => {
   const array = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
 
   for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    
+    const element = array[index]
     element.disabled = false
   }
-}
-
-const enableButton = (name) => {
-  const element = document.getElementsByName(name)[0]
-
-  element.disabled = false
 }
 
 const addButtons = () => {
@@ -324,7 +303,7 @@ const addButtons = () => {
     }
 
     enableAllButtons()
-    dissableButton('negate')
+    enableDissableButton('negate', true)
 
     operator = '+'
   })
@@ -343,7 +322,7 @@ const addButtons = () => {
     }
 
     enableAllButtons()
-    dissableButton('negate')
+    enableDissableButton('negate', true)
 
     operator = '-'
   })
@@ -360,7 +339,7 @@ const addButtons = () => {
     }
 
     enableAllButtons()
-    dissableButton('negate')
+    enableDissableButton('negate', true)
 
     operator = '*'
   })
@@ -377,7 +356,7 @@ const addButtons = () => {
     }
 
     enableAllButtons()
-    dissableButton('negate')
+    enableDissableButton('negate', true)
 
     operator = '/'
   })
@@ -388,6 +367,10 @@ const addButtons = () => {
     if (negateNumberWhenEquals) {
       text = negateActualNumber(lastNumberWrited.toString())
     } else if (operator === '') {
+      if (lastNumberWrited === '') {
+        lastNumberWrited = 0
+      }
+
       text = lastNumberWrited.toString().replace('.', ',')
     } else if (lastNumberWrited === '') {
       text = opertionWithoutTwoNumbers(Number(storedNumber), operator).replace('.', ',')
