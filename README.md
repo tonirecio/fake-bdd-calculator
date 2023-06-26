@@ -102,5 +102,5 @@
 
 ## @enable_buttons_after_clean
 - [X] 🟩 **Scenario Test:** Sense errors
-- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Lint Test:** Un error en una linea extra
 - [X] 🟩 **Sintaxis:** Codi ben implementat, intentaria reutilitzar una mica de codi
