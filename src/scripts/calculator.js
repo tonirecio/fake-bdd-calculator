@@ -133,7 +133,7 @@ const enableNumberButtons = () => {
   document.getElementsByName('seven')[0].disabled = false
   document.getElementsByName('eight')[0].disabled = false
   document.getElementsByName('nine')[0].disabled = false
-  enableButton('point')
+
 }
 
 
@@ -176,11 +176,13 @@ const pressedEqual = () => {
     waitingForBrandNewNumber = false
   }
   enableNumberButtons()
+  enableButton('point')
   
 }
 
 const pressedOperator = (type) => {
   enableNumberButtons()
+  enableButton('point')
   if (chainingOperations) {
     performOperation()
     saveToPreviousNumber(currentNumber)
@@ -200,6 +202,7 @@ const addNumberTocurrentNumber = (newNumber) => {
     if (isNextNumberDecimal) {
       currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
       isNextNumberDecimal = false
+      disableButton('point')
     } else {
       currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
@@ -249,6 +252,7 @@ const cleanEverything = () => {
   enableButton('subtract')
   enableButton('divide')
   enableButton('multiply')
+  enableButton('point')
   disableButton('zero')
   disableButton('negate')
 }
