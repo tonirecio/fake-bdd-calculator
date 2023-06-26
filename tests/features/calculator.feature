@@ -333,6 +333,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
+@sc_ReenableButtonsNoErrorPressEqual
 Scenario: Reenabling buttons with no error using = button
 Given the user writes the following value: "1234567890"
 When the user presses the "=" button

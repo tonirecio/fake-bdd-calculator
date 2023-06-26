@@ -51,10 +51,19 @@ const reset = () => {
 
 const clear = () => {
   disableNumericalButtonSet(false)
+  disableOperationButtonSet(false)
   disableButton('zero', true)
   disableButton('negate', true)
 
   reset()
+}
+
+const resolve = () => {
+  disableNumericalButtonSet(false)
+  disableOperationButtonSet(false)
+  disableButton('negate', false)
+
+  completeOperation()
 }
 
 const negateCurrentNum = () => {
@@ -159,6 +168,7 @@ const addOperationButtonClickEvent = (buttonName) => {
       setDisplay(currentNumberToDisplayableString())
     }
     disableNumericalButtonSet(false)
+    disableOperationButtonSet(false)
     disableButton('negate', true)
     currentOperation = buttonName
     previousNumber = currentNumber
@@ -178,6 +188,13 @@ const disableNumericalButtonSet = (boolStatus) => {
   disableButton('eight', boolStatus)
   disableButton('nine', boolStatus)
   disableButton('point', boolStatus)
+}
+
+const disableOperationButtonSet = (boolStatus) => {
+  disableButton('sum', boolStatus)
+  disableButton('subtract', boolStatus)
+  disableButton('multiply', boolStatus)
+  disableButton('divide', boolStatus)
 }
 
 const disableButton = (buttonName, boolStatus) => {
@@ -230,7 +247,7 @@ const init = () => {
   addFunctionButtonClickEvent('clean', clear)
   addFunctionButtonClickEvent('negate', negateCurrentNum)
   addFunctionButtonClickEvent('point', floatCurrentNum)
-  addFunctionButtonClickEvent('equal', completeOperation)
+  addFunctionButtonClickEvent('equal', resolve)
 
   addOperationButtonClickEvent('sum')
   addOperationButtonClickEvent('multiply')
