@@ -161,14 +161,14 @@ Examples:
 |            -1 |      - | 9999999999 |
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
-@current
+
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
 
 
-@current
+
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
@@ -245,13 +245,13 @@ Examples:
 |             1 |
 |            -1 |
 |             0 |
-@current
+
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
-@current
+
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"

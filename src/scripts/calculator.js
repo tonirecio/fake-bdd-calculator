@@ -124,11 +124,11 @@ const pressedOperator = (type) => {
   if (chainingOperations) {
     performOperation()
     saveToPreviousNumber(currentNumber)
-  } else {  
+  } else {
     saveToPreviousNumber(currentNumber)
     chainingOperations = true
   }
-   operationType = type
+  operationType = type
 }
 
 const pressedNumber = (newNumber) => {
@@ -202,24 +202,35 @@ const roundDecimals = (number) => {
 }
 
 const displayResultNumber = () => {
-  if (!Number.isInteger(currentNumber)) {
-    currentNumber = roundDecimals(currentNumber)
-  }
 
-  if (getNumberLength(currentNumber) <= MAX_DIGITS_IN_DISPLAY) {
-    displaycurrentNumber()
-  } else {
+  if (isNaN(currentNumber) || !isFinite(currentNumber)) {
+
     displayError()
   }
-  saveToPreviousNumber(currentNumber)
+
+  else {
+
+    if (!Number.isInteger(currentNumber)) {
+      currentNumber = roundDecimals(currentNumber)
+    }
+
+    if (getNumberLength(currentNumber) <= MAX_DIGITS_IN_DISPLAY) {
+      displaycurrentNumber()
+    } else {
+      displayError()
+    }
+    saveToPreviousNumber(currentNumber)
+  }
 }
 
 const displaycurrentNumber = () => {
+
   if (isNextNumberDecimal) {
     setDisplay(currentNumber.toString() + ',')
   } else {
     setDisplay(currentNumber.toString().replace('.', ','))
   }
+
 }
 
 const setDisplay = (value) => {
