@@ -245,14 +245,14 @@ Examples:
 |            -1 |
 |             0 |
 
-@operation_without_second_number
+@operation_wo_second_number
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
 
-@operation_without_first_number
+@operation_wo_first_number
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"
@@ -272,7 +272,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
-@equals_without_operation
+@equals_wo_operation
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
