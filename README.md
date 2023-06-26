@@ -35,3 +35,5 @@
 *Scenario: Doing an operation without a second number*: Està bé.
 
 *Scenario: Doing an operation without a first number*: Està bé.
+
+*Scenario Outline: Showing the first number after pressing operation*: Està bé.
