@@ -133,6 +133,7 @@ const enableNumberButtons = () => {
   document.getElementsByName('seven')[0].disabled = false
   document.getElementsByName('eight')[0].disabled = false
   document.getElementsByName('nine')[0].disabled = false
+  enableButton('point')
 }
 
 
@@ -155,7 +156,7 @@ const performOperation = () => {
   } else if (operationType === '/') {
     currentNumber = previousNumber / currentNumber
   }
- // enableButton('negate')
+  // enableButton('negate')
   displayResultNumber()
 }
 
@@ -174,6 +175,8 @@ const pressedEqual = () => {
     chainingOperations = false
     waitingForBrandNewNumber = false
   }
+  enableNumberButtons()
+  
 }
 
 const pressedOperator = (type) => {
@@ -191,7 +194,9 @@ const pressedOperator = (type) => {
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
-  if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+
+
+ if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
       currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
       isNextNumberDecimal = false
@@ -201,11 +206,15 @@ const addNumberTocurrentNumber = (newNumber) => {
     enableNumberButtons()
     enableButton('negate')
   }
-  else if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
-    disableNumberButtons()
-  }
+
   displaycurrentNumber()
   waitingForBrandNewNumber = false
+
+   if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
+    disableNumberButtons()
+    disableButton('point')
+  }
+
 }
 
 const negateNumber = (number) => {
@@ -286,7 +295,7 @@ const displayResultNumber = () => {
     saveToPreviousNumber(currentNumber)
   }
   waitingForBrandNewNumber = false
- // enableButton('negate')
+  // enableButton('negate')
 }
 
 const displaycurrentNumber = () => {

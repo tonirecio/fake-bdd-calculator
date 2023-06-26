@@ -280,7 +280,7 @@ Examples:
 |             0 |             0 |
 |            10 |            10 |
 |          -10, |           -10 |
-
+@currentWIP
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
@@ -307,7 +307,7 @@ Examples:
 |   -  |
 |   *  |
 |   /  |
-
+@currentWIP
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button
@@ -347,7 +347,7 @@ And the "+" button should be enabled
 And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
-
+@currentWIP
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled
