@@ -183,7 +183,7 @@ const pressedOperator = (type) => {
   } else {
     saveToPreviousNumber(currentNumber)
     chainingOperations = true
-    //disableButton('negate')
+    disableButton('negate')
   }
   waitingForBrandNewNumber = true
   operationType = type
