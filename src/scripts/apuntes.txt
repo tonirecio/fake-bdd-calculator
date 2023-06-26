@@ -1,0 +1,96 @@
+const sayHello = () => {
+  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+}
+
+document.getElementsByName('multiply')[0].addEventListener('click', () => {
+  sayHello()
+})
+reset()
+
+
+numberButtons.forEach(numberButton => {
+  numberButton.addEventListener('click', () =>{
+  if(parseInt(currentValue) === 0){
+    currentValue = numberButton.textContent
+  }
+  else {
+    currentValue += numberButton.textContent
+  }
+  setDisplay(currentValue)
+  })
+})
+
+------------------------------------------------
+const MAX_DIGITS_IN_DISPLAY = 10
+
+const setDisplay = (value) => {
+  value = parseInt(value)
+  display.innerHTML = value
+}
+/*
+const updateDisplay = (value) => {
+  setDisplay(value)
+}*/
+
+let currentValue = 0
+let previousOperand
+
+const reset = () => {
+  currentValue = 0
+  previousOperand = 0
+  setDisplay(0)
+}
+
+document.getElementsByName('clean')[0].addEventListener('click', () => {
+  reset()
+})
+
+const display = document.querySelector('div[name="display"] span')
+
+//const charButtons = document.querySelectorAll('[aria-label]')
+
+const numberButtons = document.querySelectorAll('button:not([aria-label])')
+numberButtons.forEach(numberButton =>{
+  numberButton.addEventListener('click', () => {
+    setDisplay(numberButton.textContent)
+  })
+})
+
+numberButtons.forEach(numberButton => {
+  numberButton.addEventListener('click', () =>{
+  if(currentValue != 0  || numberButton.textContent == ',' ){
+    currentValue += numberButton.textContent
+  }
+  else {
+    currentValue = numberButton.textContent
+  }
+  setDisplay(currentValue)
+  })
+})
+
+const negateButton = (displayValue) => {
+  displayValue = displayValue * -1
+  currentValue = displayValue
+  setDisplay(displayValue)
+}
+
+document.getElementsByName('negate')[0].addEventListener('click', () => {
+  negateButton(currentValue)
+})
+
+/*keydown numbers, escape, control and comma*/
+
+document.addEventListener("keydown",(event)=> {
+    let pressedKey = event.key
+    if(pressedKey >= '0' && pressedKey <= '9' || pressedKey == ','){
+      if(currentValue != 0 || pressedKey.toString().includes(',')){
+        currentValue += pressedKey 
+      }
+      else {
+        currentValue = pressedKey
+      }
+      setDisplay(currentValue)
+  
+    }
+})
+----------------------------------------
