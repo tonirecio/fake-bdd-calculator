@@ -37,7 +37,7 @@ const addEventsToButtons = () => {
   document.querySelector('button[name="nine"]').addEventListener('click', () => writeNewNumber(9))
   // Non operator buttons
   document.querySelector('button[name="point"]').addEventListener('click', writeComma)
-  document.querySelector('button[name="clean"]').addEventListener('click', reset)
+  document.querySelector('button[name="clean"]').addEventListener('click', handleCleanClick)
   document.querySelector('button[name="negate"]').addEventListener('click', handleNegateClick)
   // Operator buttons
   document.querySelector('button[name="equal"]').addEventListener('click', () => {
@@ -61,12 +61,17 @@ const addEventsToKeyboard = () => {
       if (keyName === ',') {
         writeComma()
       } else if (keyName === 'Escape') {
-        reset()
+        handleCleanClick()
       } else if (keyName === 'Control') {
         handleNegateClick()
       }
     }
   })
+}
+
+const handleCleanClick = () => {
+  handleButtonEnablingWhenClickingClean()
+  reset()
 }
 
 const handleNegateClick = () => {
@@ -172,11 +177,6 @@ const formatNumberToDisplay = (result) => {
 }
 
 // Functions for button enabling/disabling
-const handleButtonEnablingWhenClickingOperator = () => {
-  setAllButtonDisabledStatus(false)
-  document.querySelector('button[name="negate"]').disabled = true
-}
-
 const setAllButtonDisabledStatus = (disabled) => {
   setNonOperatorButtonDisabledStatus(disabled)
   document.querySelector('button[name="clean"]').disabled = disabled
@@ -201,5 +201,18 @@ const setNonOperatorButtonDisabledStatus = (disabled) => {
   document.querySelector('button[name="nine"]').disabled = disabled
   document.querySelector('button[name="point"]').disabled = disabled
 }
+
+const handleButtonEnablingWhenClickingOperator = () => {
+  setAllButtonDisabledStatus(false)
+  document.querySelector('button[name="negate"]').disabled = true
+}
+
+const handleButtonEnablingWhenClickingClean = () => {
+  setAllButtonDisabledStatus(false)
+  document.querySelector('button[name="zero"]').disabled = true
+  document.querySelector('button[name="negate"]').disabled = true
+}
+
+
 
 init()
