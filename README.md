@@ -97,3 +97,9 @@ Comentaris:
 * Codi ben refactoritzat, es nota que s'han canviat els noms de les funcions i variables concretant-les més. 
 * Ben realitzat el canvi de variable amb la que es treballa, de tipus String a Number
 * Sí que es podria canviar encara el tema de treure els trailing 0 del número
+
+## @sc_OpMissingSecondValue
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Codi ben implementat
