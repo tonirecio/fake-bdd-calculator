@@ -161,7 +161,7 @@ const pressNumber = (buttonNumber) => {
     if (currentNumberDisplayableStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
       disableButtonLogic('enable_numericals')
       if (pendingPoint) {
-        if (buttonNumber !== 0 && buttonNumber !== "0") {
+        if (buttonNumber !== 0 && buttonNumber !== '0') {
           currentNumberDisplayableString += buttonNumber
           pendingZeros = 0
           pendingPoint = false
@@ -169,7 +169,7 @@ const pressNumber = (buttonNumber) => {
           pendingZeros++
         }
       } else {
-        if (currentNumber !== 0 && currentNumberDisplayableString.includes(POINT_LOCALE) && (buttonNumber === 0 || buttonNumber === "0")) {
+        if (currentNumber !== 0 && currentNumberDisplayableString.includes(POINT_LOCALE) && (buttonNumber === 0 || buttonNumber === '0')) {
           pendingZeros++
         } else {
           currentNumberDisplayableString += buttonNumber
