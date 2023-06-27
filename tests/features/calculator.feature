@@ -201,7 +201,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@done
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button

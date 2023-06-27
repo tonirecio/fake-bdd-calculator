@@ -160,8 +160,19 @@ nonOperatorButtons.forEach(nonOperatorButton => {
 
     if (nonOperatorNonNumberButtons.includes(buttonName)) {
       currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
-    } else if (operatorButtons.includes(buttonName)) {
+    } else if (operatorButtons.includes(buttonName) && operandSymbolInUse === '') {
       pastOperand = saveAndResetCurrentOperand(currentOperand)
+      operandSymbolInUse = operatorButtonPressed(buttonName)
+    } else if (operatorButtons.includes(buttonName) && operandSymbolInUse !== '') {
+      if (currentOperand !== 0) {
+        operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
+        if (isOperationResultOverLength(operationResult)) {
+          updateDisplay('ERROR')
+        } else {
+          updateDisplay(operationResult)
+          pastOperand = operationResult
+        }
+      }
       operandSymbolInUse = operatorButtonPressed(buttonName)
     } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
       operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
@@ -171,7 +182,7 @@ nonOperatorButtons.forEach(nonOperatorButton => {
         updateDisplay(operationResult)
         pastOperand = operationResult
       }
-    }
+    } 
   })
 })
 
@@ -308,3 +319,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Doing a new operation (line 279)
 
 // [Scenario] Using the previous result in a new operation (line 172)
+
+// [Scenario] Using previous result in new operation easier (line 166-176)
