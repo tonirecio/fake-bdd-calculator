@@ -47,3 +47,5 @@
 *Scenario: Reenabling buttons with no error using = button* : Ok
 
 *Scenario Outline: Disabling buttons* : Ok
+
+*Scenario: Disabling the second comma* : Ok, tot i que penso que a l'hora de seleccionar un sol botó per desactivar-lo, a més de passar el botó sencer, li pasaría només el nom i dins de la funció ja accediría a la funció de document.getElements...
