@@ -63,10 +63,6 @@ const getDisplayNumber = () => {
 
 }
 
-const sayHello = () => {
-  window.alert('Comprobacion boolean: ' + isRecentlyAddedAOperation)
-}
-
 const invertNumberDisplay = () => {
   
   if (isOnDisplayZero() == false && isOnDisplayZeroWithDot() == false) {
@@ -113,7 +109,8 @@ const disableOrEnableButtons = () => {
     SEVEN_BUTTON.disabled = false
     EIGHT_BUTTON.disabled = false
     NINE_BUTTON.disabled = false
-    COMMA_BUTTON.disabled = false
+    if (!isADotOnDisplay()) COMMA_BUTTON.disabled = false
+    else COMMA_BUTTON.disabled = true
   }
   else{
     ZERO_BUTTON.disabled = true
@@ -349,7 +346,6 @@ document.addEventListener('keydown', () => {
   else if (event.key === "-") operatorSelect('-')
   else if (event.key === "*") operatorSelect('*')
   else if (event.key === "/") operatorSelect('/')
-  else if (event.key === "h") sayHello()
   else if (event.key === COMMA_CHARACTER) addToTheDisplay(COMMA_CHARACTER)
 })
 
