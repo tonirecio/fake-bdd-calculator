@@ -3,7 +3,6 @@ const display = document.querySelector('div[name="display"] span')
 
 let currentValue = '0'
 let previousValue
-let isResult
 let result
 let isResultUsed = false
 let isOperatorClicked = false
@@ -161,62 +160,24 @@ let firstOperand, secondOperand, operator
 // OPERATIONS
 // Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  if (isOperatorClicked && isOperandEntered) {
-    result = calculate(firstOperand, currentValue, operator)
-    reset()
-    setDisplay(result)
-    firstOperand = result
-    isOperandEntered = false
-  } else {
-    handleOperand()
-    isOperatorClicked = true
-  }
-  reset()
+  handleOperation()
   operator = '+'
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  if (isOperatorClicked && isOperandEntered) {
-    result = calculate(firstOperand, currentValue, operator)
-    reset()
-    setDisplay(result)
-    firstOperand = result
-    isOperandEntered = false
-  } else {
-    handleOperand()
-    isOperatorClicked = true
-  }
-  reset()
+  handleOperation()
   operator = '-'
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  if (isOperatorClicked && isOperandEntered) {
-    result = calculate(firstOperand, currentValue, operator)
-    reset()
-    setDisplay(result)
-    firstOperand = result
-    isOperandEntered = false
-  } else {
-    handleOperand()
-    isOperatorClicked = true
+  if (!isOperatorClicked) {
+  handleOperation()
   }
-  reset()
   operator = '*'
 })
 // Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  if (isOperatorClicked && isOperandEntered) {
-    result = calculate(firstOperand, currentValue, operator)
-    reset()
-    setDisplay(result)
-    firstOperand = result
-    isOperandEntered = false
-  } else {
-    handleOperand()
-    isOperatorClicked = true
-  }
-  reset()
+  handleOperation()
   operator = '/'
 })
 
@@ -241,6 +202,20 @@ const handleOperand = () => {
     isResultUsed = false
   }
   isOperandEntered = true
+}
+
+const handleOperation = () => {
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
+  } else {
+    handleOperand()
+    isOperatorClicked = true
+  }
+  reset()
 }
 
 const calculate = (firstOperand, secondOperand, operator) => {
@@ -270,22 +245,11 @@ const calculate = (firstOperand, secondOperand, operator) => {
     result = 'ERROR'
   }
 
+  if (operator == '/' && secondOperand == '0') {
+    result = 'ERROR'
+  }
+
   result = result.toString()
 
   return result
 }
-
-// // Modify the event listener for the click event after a result
-// if (isResult) {
-//   document.addEventListener('click', () => {
-//     reset();
-//     isResult = false;
-//   })
-// }
-
-// // Equal
-// document.getElementsByName('equal')[0].addEventListener('click', () => {
-//   const secondOperand = parseFloat(currentValue.replace(',', '.'));
-//   calculate();
-//   isResult = true;
-// })
