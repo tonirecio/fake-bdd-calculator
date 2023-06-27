@@ -163,6 +163,7 @@ const operate = (num1, operation, num2) => {
         case '/':
           if (numberToOperate1 === 0 || numberToOperate2 === 0) {
             lastNumberWrited = 'ERROR'
+            disableAllButtons()
           } else {
             lastNumberWrited = numberToOperate1 / numberToOperate2
           }
@@ -243,12 +244,12 @@ const operateAndDisplay = () => {
     enableAllButtons()
 
     text = lastNumberWrited.toString().replace('.', ',')
+    enableDissableButton('point', false)
   } else if (lastNumberWrited === '') {
     text = opertionWithoutTwoNumbers(operator).replace('.', ',')
   } else {
     text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
   }
-  enableDissableButton('point', false)
   setDisplay(text)
 }
 
@@ -265,6 +266,18 @@ const enableAllButtons = () => {
 
     if (element.name !== 'point') {
       element.disabled = false
+    }
+  }
+}
+
+const disableAllButtons = () => {
+  const array = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
+
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index]
+
+    if (element.name !== 'clean') {
+      element.disabled = true
     }
   }
 }

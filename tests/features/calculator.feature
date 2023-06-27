@@ -376,11 +376,12 @@ Examples:
 |   123456789,5 |
 |  -123456789,5 |
 
-@wip
+@done
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
 
+@wip
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button
