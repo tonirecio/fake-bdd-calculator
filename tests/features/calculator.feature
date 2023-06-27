@@ -431,3 +431,44 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
+
+@ex_EnableZeroAndNegate
+Scenario: Enable zero and negate after comma
+Given the user writes the following value: "0"
+And the user presses the "C" button
+When the user presses the "," button
+Then the "0" button should be enabled
+And the "1" button should be enabled
+And the "2" button should be enabled
+And the "3" button should be enabled
+And the "4" button should be enabled
+And the "5" button should be enabled
+And the "6" button should be enabled
+And the "7" button should be enabled
+And the "8" button should be enabled
+And the "9" button should be enabled
+And the "," button should be disabled
+And the "+" button should be enabled
+And the "-" button should be enabled
+And the "*" button should be enabled
+And the "/" button should be enabled
+And the "+-" button should be enabled
+And the "=" button should be enabled
+And the "C" button should be enabled
+
+@ex_MultipleZeros
+Scenario: Writing numbers with multiple zeros
+Given the user writes the following value: "<displayNumber>"
+When the user presses the "<button>" button
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button | displayResult |
+|             0 |      , |            0, | 
+|            0, |      0 |           0,0 | 
+|           0,0 |      0 |          0,00 |
+|          0,00 |      1 |         0,001 |
+|             1 |      , |            1, | 
+|            1, |      2 |           1,2 | 
+|           1,2 |      0 |          1,20 |
+|          1,20 |      1 |         1,201 |

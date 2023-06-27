@@ -48,11 +48,20 @@ const disableButtonLogic = (status) => {
       disableNumericalButtonSet(false)
       disableButton('negate', false)
       break
+    case 'existing_point':
+      disableButtonLogic('enable_numericals')
+      disableButton('point', true)
+      break
     case 'error':
       disableNumericalButtonSet(true)
       disableOperationButtonSet(true)
       disableNonOperationButtonSet(true)
       disableButton('clean', false)
+      break
+    case 'init':
+      disableNumericalButtonSet(false)
+      disableOperationButtonSet(false)
+      disableNonOperationButtonSet(false)
       break
     default:
       console.warn('[WARNING] ' + status + ' logic state not contemplated / implemented.')
@@ -157,10 +166,15 @@ const pressNumber = (buttonNumber) => {
           pendingZeros = 0
           pendingPoint = false
         } else {
-          pendingZeros = pendingZeros + 1
+          pendingZeros++
         }
       } else {
-        currentNumberDisplayableString += buttonNumber
+        if (currentNumber !== 0 && currentNumberDisplayableString.includes(POINT_LOCALE) && (buttonNumber === 0 || buttonNumber === "0")) {
+          pendingZeros++
+        } else {
+          currentNumberDisplayableString += buttonNumber
+          pendingZeros = 0
+        }
       }
     }
   }
@@ -303,7 +317,7 @@ const init = () => {
   addOperationButtonClickEvent('subtract')
   addOperationButtonClickEvent('divide')
   // force enabled buttons at start
-  disableButtonLogic('enable_numericals')
+  disableButtonLogic('init')
 }
 
 // INITIALIZATION
