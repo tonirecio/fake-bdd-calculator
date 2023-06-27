@@ -1,55 +1,112 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
+let currentNumber = 0
+let previousNumber = 0
+let operation = ''
+let result = 0
+const numberStack = []
+
+const display = document.querySelector('div[name="display"] span')
+
 const setDisplay = value => {
-  const updatedValue = value.replace('.', ',')
-  display.innerHTML = updatedValue
+  display.innerHTML = value
 }
 
 const reset = () => {
-  storedNumber = '0'
-  setDisplay(storedNumber)
+  numberStack.length = 0
+  numberStack.push(0)
+  setDisplay(stackToNumber(numberStack))
 }
 
-const negate = () => {
-  if (storedNumber !== '0') {
-    const temp = storedNumber
-    storedNumber = (parseFloat(storedNumber) * -1).toString()
-    if (temp.endsWith('.')) {
-      storedNumber += '.'
+const stackToNumber = stack => {
+  let result = 0
+  let number = 0
+  let decimal = 0
+  let decimalMultiplier = 1
+  let isNegative = false
+
+  const stackCopy = [...stack]
+
+  if (stackCopy[0] < 0) {
+    isNegative = true
+    stackCopy.shift()
+  }
+
+  stackCopy.forEach(element => {
+    if (element === null) {
+      decimalMultiplier = 0.1
+    } else if (decimalMultiplier === 1) {
+      number = number * 10 + element
+    } else {
+      decimal += element * decimalMultiplier
+      decimalMultiplier *= 0.1
     }
-    setDisplay(storedNumber)
+  })
+
+  result = number + decimal
+  if (isNegative) {
+    result *= -1
+  }
+
+  return result
+}
+
+const negateNumberStack = stack => {
+  if (stack[0] === -1) {
+    stack.shift()
+  } else {
+    stack.unshift(-1)
   }
 }
 
-const appendNumber = value => {
-  if (storedNumber === '0') {
-    storedNumber = ''
-  }
-  if (storedNumber.replace('.', '').length < MAX_DIGITS_IN_DISPLAY) {
-    storedNumber += value
-  }
-  setDisplay(storedNumber)
+const stackToString = stack => {
+  let result = ''
+
+  stack.forEach((element, index) => {
+    if (index === 0 && element === -1) {
+      result += '-'
+    } else if (element === null) {
+      result += ','
+    } else {
+      result += element.toString()
+    }
+  })
+
+  return result
 }
 
-const appendDot = () => {
-  if (
-    !storedNumber.includes('.') &&
-    storedNumber.length < MAX_DIGITS_IN_DISPLAY
-  ) {
-    storedNumber += '.'
+const canPushToNumberStack = stack => {
+  let result = false
+  let lengthLimit = MAX_DIGITS_IN_DISPLAY
+
+  if (stack.includes(null)) {
+    lengthLimit++
   }
-  setDisplay(storedNumber)
+  if (stack[0] === -1) {
+    lengthLimit++
+  }
+
+  result = stack.length < lengthLimit
+
+  return result
+}
+
+const pushToNumberStack = (stack, number) => {
+  if (stack.length === 1 && stack[0] === 0) {
+    stack.shift()
+  }
+  stack.push(number)
 }
 
 const updateOperation = operationType => {
-  tempNumber = parseFloat(storedNumber).toString()
-  storedNumber = '0'
+  previousNumber = stackToNumber(numberStack)
+  numberStack.length = 0
   operation = operationType
 }
 
 const executeOperation = operationType => {
-  const firstOperand = parseFloat(tempNumber)
-  const secondOperand = parseFloat(storedNumber)
+  const firstOperand = parseFloat(previousNumber)
+  const secondOperand = parseFloat(currentNumber)
 
   switch (operationType) {
     case 'sum':
@@ -69,160 +126,172 @@ const executeOperation = operationType => {
   }
 
   result = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
-  setDisplay(result.toString())
+  setDisplay(result.toString().replace('.', ','))
 }
 
-const display = document.querySelector('div[name="display"] span')
+document.getElementsByName('zero')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 0)
+  }
+  setDisplay(stackToString(numberStack))
+})
 
-let storedNumber = '0'
-let tempNumber = '0'
-let operation = ''
-let result = 0
+document.getElementsByName('one')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 1)
+  }
+  setDisplay(stackToString(numberStack))
+})
 
-const buttons = [
-  'one',
-  'two',
-  'three',
-  'four',
-  'five',
-  'six',
-  'seven',
-  'eight',
-  'nine',
-  'zero',
-  'point',
-  'clean',
-  'negate',
-  'sum',
-  'subtract',
-  'multiply',
-  'divide',
-  'equal'
-]
+document.getElementsByName('two')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 2)
+  }
+  setDisplay(stackToString(numberStack))
+})
 
-buttons.forEach(button => {
-  const value = document.getElementsByName(button)[0]
-  value.addEventListener('click', () => {
-    switch (button) {
-      case 'one':
-        appendNumber(1)
+document.getElementsByName('three')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 3)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('four')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 4)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('five')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 5)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('six')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 6)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('seven')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 7)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('eight')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 8)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('nine')[0].addEventListener('click', () => {
+  if (canPushToNumberStack(numberStack)) {
+    pushToNumberStack(numberStack, 9)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('point')[0].addEventListener('click', () => {
+  if (!numberStack.includes(null) && canPushToNumberStack(numberStack)) {
+    numberStack.push(null)
+  }
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('clean')[0].addEventListener('click', () => {
+  reset()
+})
+
+document.getElementsByName('negate')[0].addEventListener('click', () => {
+  if (stackToNumber(numberStack) !== 0) {
+    negateNumberStack(numberStack)
+  }
+  console.log(numberStack)
+  setDisplay(stackToString(numberStack))
+})
+
+document.getElementsByName('sum')[0].addEventListener('click', () => {
+  updateOperation('sum')
+})
+
+document.getElementsByName('subtract')[0].addEventListener('click', () => {
+  if (numberStack.length === 0) {
+    numberStack.push(-1)
+    console.log(numberStack)
+  } else {
+    updateOperation('subtract')
+  }
+})
+
+document.getElementsByName('multiply')[0].addEventListener('click', () => {
+  updateOperation('multiply')
+})
+
+document.getElementsByName('divide')[0].addEventListener('click', () => {
+  updateOperation('divide')
+})
+
+document.getElementsByName('equal')[0].addEventListener('click', () => {
+  currentNumber = stackToNumber(numberStack)
+  executeOperation(operation)
+})
+
+document.body.addEventListener('keydown', event => {
+  const key = event.key
+
+  if (key >= 0 && key <= 9) {
+    const keyNumber = parseInt(key)
+    if (canPushToNumberStack(numberStack)) {
+      pushToNumberStack(numberStack, keyNumber)
+    }
+    setDisplay(stackToString(numberStack))
+  } else {
+    switch (key) {
+      case ',':
+        if (!numberStack.includes(null) && canPushToNumberStack(numberStack)) {
+          numberStack.push(null)
+        }
+        setDisplay(stackToString(numberStack))
         break
-      case 'two':
-        appendNumber(2)
-        break
-      case 'three':
-        appendNumber(3)
-        break
-      case 'four':
-        appendNumber(4)
-        break
-      case 'five':
-        appendNumber(5)
-        break
-      case 'six':
-        appendNumber(6)
-        break
-      case 'seven':
-        appendNumber(7)
-        break
-      case 'eight':
-        appendNumber(8)
-        break
-      case 'nine':
-        appendNumber(9)
-        break
-      case 'zero':
-        appendNumber(0)
-        break
-      case 'point':
-        appendDot()
-        break
-      case 'clean':
+      case 'Escape':
         reset()
         break
-      case 'negate':
-        negate()
+      case 'Control':
+        if (stackToNumber(numberStack) !== 0) {
+          negateNumberStack(numberStack)
+        }
+        setDisplay(stackToString(numberStack))
         break
-      case 'sum':
+      case '+':
         updateOperation('sum')
         break
-      case 'subtract':
+      case '-':
+        if (numberStack.length === 0) {
+          numberStack.push(-1)
+        }
         updateOperation('subtract')
         break
-      case 'multiply':
+      case '*':
         updateOperation('multiply')
         break
-      case 'divide':
+      case '/':
         updateOperation('divide')
         break
-      case 'equal':
+      case 'Enter':
+        currentNumber = stackToNumber(numberStack)
         executeOperation(operation)
         break
       default:
         break
     }
-  })
-})
-
-document.addEventListener('keydown', event => {
-  const key = event.key
-  switch (key) {
-    case '1':
-      appendNumber(1)
-      break
-    case '2':
-      appendNumber(2)
-      break
-    case '3':
-      appendNumber(3)
-      break
-    case '4':
-      appendNumber(4)
-      break
-    case '5':
-      appendNumber(5)
-      break
-    case '6':
-      appendNumber(6)
-      break
-    case '7':
-      appendNumber(7)
-      break
-    case '8':
-      appendNumber(8)
-      break
-    case '9':
-      appendNumber(9)
-      break
-    case '0':
-      appendNumber(0)
-      break
-    case ',':
-      appendDot()
-      break
-    case 'Escape':
-      reset()
-      break
-    case 'Control':
-      negate()
-      break
-    case 'sum':
-      updateOperation('sum')
-      break
-    case 'subtract':
-      updateOperation('subtract')
-      break
-    case 'multiply':
-      updateOperation('multiply')
-      break
-    case 'divide':
-      updateOperation('divide')
-      break
-    case 'equal':
-      executeOperation(operation)
-      break
-    default:
-      break
   }
 })
 
