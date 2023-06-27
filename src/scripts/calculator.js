@@ -326,3 +326,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Division with 0 (line 139, 178)
 
 // [Scenario] Doing an operation without a second number (line 14, 28, 169, 184, 241)
+
+// [Scenario] Doing an operation without a first number (the 271 line const alreasy does the job of changing the sign of the value)
