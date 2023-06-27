@@ -34,23 +34,23 @@ const setDisplay = (value) => {
 
 }
 
-const fixComma = (value) => {
+const fixComma = (numberToFix) => {
 
-  if(isADotOnThis(value)) {
+  if(isADotOnThis(numberToFix)) {
     console.log(1)
-    var valueLenght = value.length
+    var valueLenght = numberToFix.length
     
-    if (value[valueLenght - 1] == COMMA_CHARACTER) {
+    if (numberToFix[valueLenght - 1] == COMMA_CHARACTER) {
       console.log(2)
       var newNumberWithoutComma = ''
-      for (var eachNumber = 0; eachNumber < valueLenght - 1; eachNumber++) newNumberWithoutComma += '' + value[eachNumber]
+      for (var eachNumber = 0; eachNumber < valueLenght - 1; eachNumber++) newNumberWithoutComma += '' + numberToFix[eachNumber]
       return newNumberWithoutComma
 
     }
-    else return value
+    else return numberToFix
 
   }
-  else return value
+  else return numberToFix
 
 }
 
@@ -97,7 +97,7 @@ const disableOrEnableButtons = () => {
   else NEGATE_BUTTON.disabled = false
 
 if (!isAnErrorOnDisplay()){
-    if (!isTheMaxLenght()) {
+    if (!isTheMaxLenght() || isRecentlyAddedAOperation) {
       if (isOnDisplayZero()) {
         ZERO_BUTTON.disabled = true
         NEGATE_BUTTON.disabled = true
@@ -199,27 +199,27 @@ const addToTheDisplay = (value) => {
 
 }
 
-const numbersBeforeComma = (value) => {
+const numbersBeforeComma = (numberToCheck) => {
 
-  var numero = value.toString().split('.')[0].replace('-','')
+  var numero = numberToCheck.toString().split('.')[0].replace('-','')
   return numero.length;
 
 }
 
-const numberAfterComma = (value) => {
+const numberAfterComma = (numberToCheck) => {
 
-  var numero = value.toString().split('.')[1]
+  var numero = numberToCheck.toString().split('.')[1]
   return numero.length;
 
 }
 
-const roundNumber = (value, decimal) => {
+const roundNumber = (numberToRound, decimal) => {
 
   var multiple = 1
 
   for (var i = 0; i < decimal; i++) multiple *= 10
 
-  var numero = value * multiple
+  var numero = numberToRound * multiple
   numero = Math.round(numero)
   numero /= multiple
 
@@ -269,25 +269,25 @@ const emptyStoredMemory = () => {
 
 }
 
-const operatorSelect = (value) => {
+const operatorSelect = (operator) => {
   if (isRecentlyAddedAOperation == false){
     if (!isANumberOnMemory) {
 
-      savedOperator = value 
+      savedOperator = operator 
       emptyStoredMemory()
 
     }
     else {
 
       operate()
-      savedOperator = value 
+      savedOperator = operator 
       emptyStoredMemory()
 
     }
     isANumberOnMemory = true
     isRecentlyAddedAOperation = true
   }
-  else savedOperator = value
+  else savedOperator = operator
 
   disableOrEnableButtons()
 
@@ -465,7 +465,7 @@ const operationUnselected = () => {
 
 }
 
-const isOnRangeOfNotError = (value) => {
+const isOnRangeOfNotError = (number) => {
 
   var numeroLimite = '' 
 
@@ -473,7 +473,7 @@ const isOnRangeOfNotError = (value) => {
 
   numeroLimite = parseInt(numeroLimite) 
 
-  if (numeroLimite >= value && value >= -numeroLimite) return true 
+  if (numeroLimite >= number && number >= -numeroLimite) return true 
   else return false 
 
 }
