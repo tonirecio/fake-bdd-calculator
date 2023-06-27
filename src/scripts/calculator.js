@@ -169,7 +169,7 @@ nonOperatorButtons.forEach(nonOperatorButton => {
         updateDisplay('ERROR')
       } else {
         updateDisplay(operationResult)
-        //pastOperand = operationResult
+        pastOperand = operationResult
       }
     }
   })
@@ -304,3 +304,7 @@ const isOperationResultOverLength = (operationResult) => {
     return false
   }
 }
+
+// [Scenario] Doing a new operation (line 279)
+
+// [Scenario] Using the previous result in a new operation (line 172)
