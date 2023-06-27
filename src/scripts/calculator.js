@@ -5,10 +5,10 @@ const lenNumber = (number) => {
   return (stringNumber.length)
 }
 
-/* TODO: millorar(treure el *1) */
 const roundNumber = (number) => {
   const maxDecimals = MAX_DIGITS_IN_DISPLAY - lenNumber(Math.round(number))
-  number = number.toFixed(maxDecimals) * 1
+  number = number.toFixed(maxDecimals)
+  number = parseFloat(number)
   return (number)
 }
 
