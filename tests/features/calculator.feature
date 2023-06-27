@@ -354,7 +354,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
-@wip
+@done
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled
@@ -376,6 +376,7 @@ Examples:
 |   123456789,5 |
 |  -123456789,5 |
 
+@wip
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled

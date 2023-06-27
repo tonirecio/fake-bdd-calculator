@@ -30,6 +30,7 @@ const reset = () => {
   enableAllButtons()
   enableDissableButton('negate', true)
   enableDissableButton('zero', true)
+  enableDissableButton('point', false)
 }
 
 const addNumber = (num) => {
@@ -75,6 +76,12 @@ const addNumber = (num) => {
   }
 
   return toDisplay
+}
+
+const addNumberAndDisplay = (num) => {
+  const text = addNumber(num)
+
+  setDisplay(text)
 }
 
 const maxLenght = (num) => {
@@ -205,6 +212,46 @@ const opertionWithoutTwoNumbers = (operator) => {
   }
 }
 
+const prepareAndOperateIfSecondOperation = (op) => {
+  if (doMultipleOperations && !isEqualsPressed) {
+    lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
+
+    doMultipleOperations = false
+  }
+
+  if (!doOperation) {
+    prepareForOperation()
+  }
+
+  operator = op
+
+  enableAllButtons()
+  enableDissableButton('negate', true)
+  enableDissableButton('point', false)
+}
+
+const operateAndDisplay = () => {
+  let text
+
+  if (negateNumberWhenEquals) {
+    text = negateActualNumber(lastNumberWrited.toString())
+  } else if (operator === '') {
+    if (lastNumberWrited === '') {
+      lastNumberWrited = 0
+    }
+
+    enableAllButtons()
+
+    text = lastNumberWrited.toString().replace('.', ',')
+  } else if (lastNumberWrited === '') {
+    text = opertionWithoutTwoNumbers(operator).replace('.', ',')
+  } else {
+    text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
+  }
+  enableDissableButton('point', false)
+  setDisplay(text)
+}
+
 const enableDissableButton = (name, value) => {
   const element = document.getElementsByName(name)[0]
   element.disabled = value
@@ -215,7 +262,10 @@ const enableAllButtons = () => {
 
   for (let index = 0; index < array.length; index++) {
     const element = array[index]
-    element.disabled = false
+
+    if (element.name !== 'point') {
+      element.disabled = false
+    }
   }
 }
 
@@ -234,63 +284,43 @@ const disableNumberButtons = () => {
 
 const addButtons = () => {
   document.getElementsByName('one')[0].addEventListener('click', () => {
-    const text = addNumber(1)
-
-    setDisplay(text)
+    addNumberAndDisplay(1)
   })
 
   document.getElementsByName('two')[0].addEventListener('click', () => {
-    const text = addNumber(2)
-
-    setDisplay(text)
+    addNumberAndDisplay(2)
   })
 
   document.getElementsByName('three')[0].addEventListener('click', () => {
-    const text = addNumber(3)
-
-    setDisplay(text)
+    addNumberAndDisplay(3)
   })
 
   document.getElementsByName('four')[0].addEventListener('click', () => {
-    const text = addNumber(4)
-
-    setDisplay(text)
+    addNumberAndDisplay(4)
   })
 
   document.getElementsByName('five')[0].addEventListener('click', () => {
-    const text = addNumber(5)
-
-    setDisplay(text)
+    addNumberAndDisplay(5)
   })
 
   document.getElementsByName('six')[0].addEventListener('click', () => {
-    const text = addNumber(6)
-
-    setDisplay(text)
+    addNumberAndDisplay(6)
   })
 
   document.getElementsByName('seven')[0].addEventListener('click', () => {
-    const text = addNumber(7)
-
-    setDisplay(text)
+    addNumberAndDisplay(7)
   })
 
   document.getElementsByName('eight')[0].addEventListener('click', () => {
-    const text = addNumber(8)
-
-    setDisplay(text)
+    addNumberAndDisplay(8)
   })
 
   document.getElementsByName('nine')[0].addEventListener('click', () => {
-    const text = addNumber(9)
-
-    setDisplay(text)
+    addNumberAndDisplay(9)
   })
 
   document.getElementsByName('zero')[0].addEventListener('click', () => {
-    const text = addNumber(0)
-
-    setDisplay(text)
+    addNumberAndDisplay(0)
   })
 
   document.getElementsByName('clean')[0].addEventListener('click', () => {
@@ -299,6 +329,8 @@ const addButtons = () => {
 
   document.getElementsByName('point')[0].addEventListener('click', () => {
     const text = addPoint()
+
+    enableDissableButton('point', true)
 
     setDisplay(text)
   })
@@ -310,102 +342,33 @@ const addButtons = () => {
   })
 
   document.getElementsByName('sum')[0].addEventListener('click', () => {
-    if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
-
-      doMultipleOperations = false
-    }
-
-    if (!doOperation) {
-      prepareForOperation()
-    }
-
-    enableAllButtons()
-    enableDissableButton('negate', true)
-
-    operator = '+'
+    prepareAndOperateIfSecondOperation('+')
   })
 
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
     if (lastNumberWrited === '' && !doOperation) {
       negateNumberWhenEquals = true
-    } else if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
-
-      doMultipleOperations = false
     }
 
-    if (!doOperation) {
-      prepareForOperation()
-    }
-
-    enableAllButtons()
-    enableDissableButton('negate', true)
-
-    operator = '-'
+    prepareAndOperateIfSecondOperation('-')
   })
 
   document.getElementsByName('multiply')[0].addEventListener('click', () => {
-    if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
-
-      doMultipleOperations = false
-    }
-
-    if (!doOperation) {
-      prepareForOperation()
-    }
-
-    enableAllButtons()
-    enableDissableButton('negate', true)
-
-    operator = '*'
+    prepareAndOperateIfSecondOperation('*')
   })
 
   document.getElementsByName('divide')[0].addEventListener('click', () => {
-    if (doMultipleOperations && !isEqualsPressed) {
-      lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
-
-      doMultipleOperations = false
-    }
-
-    if (!doOperation) {
-      prepareForOperation()
-    }
-
-    enableAllButtons()
-    enableDissableButton('negate', true)
-
-    operator = '/'
+    prepareAndOperateIfSecondOperation('/')
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
-    let text
-
-    if (negateNumberWhenEquals) {
-      text = negateActualNumber(lastNumberWrited.toString())
-    } else if (operator === '') {
-      if (lastNumberWrited === '') {
-        lastNumberWrited = 0
-      }
-
-      enableAllButtons()
-
-      text = lastNumberWrited.toString().replace('.', ',')
-    } else if (lastNumberWrited === '') {
-      text = opertionWithoutTwoNumbers(operator).replace('.', ',')
-    } else {
-      text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
-    }
-    setDisplay(text)
+    operateAndDisplay()
   })
 }
 
 document.addEventListener('keydown', (event) => {
   if (event.key >= 0 && event.key <= 9) {
-    const text = addNumber(event.key)
-
-    setDisplay(text)
+    addNumberAndDisplay(event.key)
   } else if (event.key === ',') {
     const text = addPoint()
 
