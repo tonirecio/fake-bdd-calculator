@@ -146,3 +146,9 @@ Ha passat el test!
 Comentaris:
 * No ha passat el lint
 * Codi ben implementat, amb una funció que gestiona les funcions d'activar/desactivar botons de forma entenedora
+
+## @sc_DisableComma
+Ha passat el test!  
+Comentaris:
+* No ha passat el lint
+* Codi ben implementat
