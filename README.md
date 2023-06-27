@@ -47,3 +47,5 @@
 *Scenario: Reenabling buttons with no error using = button*: Ok.
 
 *Scenario Outline: Disabling buttons*: Ok.
+
+*Scenario: Disabling the second comma*: Crec que tot el referent a activar i desactivar botons no hauria d'estar a la funció de 'addNumber', sinó que hauria d'estar a la funció 'addNumberAndDisplay'. Amb la coma, per exemple, crec que està bé, perquè la desactivació del botó no està a la funció 'addPoint'. 
