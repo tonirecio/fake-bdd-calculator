@@ -22,31 +22,64 @@ const disableButtonLogic = (status) => {
   switch (status){
     case 'clear':
       disableNumericalButtonSet(false)
+      disableButton('point', false)
       disableOperationButtonSet(false)
       disableButton('zero', true)
       disableButton('negate', true)
       break
     case 'resolve':
       disableNumericalButtonSet(false)
+      disableButton('point', false)
       disableOperationButtonSet(false)
       disableButton('negate', false)
       break
     case 'max_digits_in_display':
       disableNumericalButtonSet(true)
+      disableButton('point', true)
       break
     case 'operator':
       disableNumericalButtonSet(false)
+      disableButton('point', false)
       disableOperationButtonSet(false)
       disableButton('negate', true)
       break
-    case 'enable_all':
+    case 'enable_numericals':
       disableNumericalButtonSet(false)
-      disableOperationButtonSet(false)
-      disableNonOperationButtonSet(false)
       break
     default:
       console.warn('[WARNING] ' + status + ' logic state not contemplated / implemented.')
   }
+}
+
+const disableNumericalButtonSet = (boolStatus) => {
+  disableButton('zero', boolStatus)
+  disableButton('one', boolStatus)
+  disableButton('two', boolStatus)
+  disableButton('three', boolStatus)
+  disableButton('four', boolStatus)
+  disableButton('five', boolStatus)
+  disableButton('six', boolStatus)
+  disableButton('seven', boolStatus)
+  disableButton('eight', boolStatus)
+  disableButton('nine', boolStatus)
+}
+
+const disableOperationButtonSet = (boolStatus) => {
+  disableButton('sum', boolStatus)
+  disableButton('subtract', boolStatus)
+  disableButton('multiply', boolStatus)
+  disableButton('divide', boolStatus)
+}
+
+const disableNonOperationButtonSet = (boolStatus) => {
+  disableButton('clean', boolStatus)
+  disableButton('negate', boolStatus)
+  disableButton('equal', boolStatus)
+  disableButton('point', boolStatus)
+}
+
+const disableButton = (buttonName, boolStatus) => {
+  document.getElementsByName(buttonName)[0].disabled = boolStatus
 }
 
 const currentNumberToDisplayableString = () => {
@@ -103,12 +136,12 @@ const pressNumber = (buttonNumber) => {
   }
   // main number logic
   if (clearDisplay || currentNumber === 'ERROR') {
-    disableButtonLogic('enable_all')
+    disableButtonLogic('enable_numericals')
     currentNumberDisplayableString = buttonNumber.toString()
     clearDisplay = false
   } else {
     if (currentNumberDisplayableStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
-      disableButtonLogic('enable_all')
+      disableButtonLogic('enable_numericals')
       if (pendingPoint) {
         if (buttonNumber !== 0) {
           currentNumberDisplayableString += buttonNumber
@@ -132,6 +165,7 @@ const pressNumber = (buttonNumber) => {
 const floatCurrentNum = () => {
   const currentNumberDisplayableString = currentNumberToDisplayableString()
   if (!currentNumberDisplayableString.includes(POINT_LOCALE) && currentNumberDisplayableString.length < MAX_DIGITS_IN_DISPLAY) {
+    disableButton('point',true)
     pendingPoint = true
   }
 }
@@ -206,37 +240,6 @@ const addOperationButtonClickEvent = (buttonName) => {
   })
 }
 
-const disableNumericalButtonSet = (boolStatus) => {
-  disableButton('zero', boolStatus)
-  disableButton('one', boolStatus)
-  disableButton('two', boolStatus)
-  disableButton('three', boolStatus)
-  disableButton('four', boolStatus)
-  disableButton('five', boolStatus)
-  disableButton('six', boolStatus)
-  disableButton('seven', boolStatus)
-  disableButton('eight', boolStatus)
-  disableButton('nine', boolStatus)
-  disableButton('point', boolStatus)
-}
-
-const disableOperationButtonSet = (boolStatus) => {
-  disableButton('sum', boolStatus)
-  disableButton('subtract', boolStatus)
-  disableButton('multiply', boolStatus)
-  disableButton('divide', boolStatus)
-}
-
-const disableNonOperationButtonSet = (boolStatus) => {
-  disableButton('clean', boolStatus)
-  disableButton('negate', boolStatus)
-  disableButton('equal', boolStatus)
-}
-
-const disableButton = (buttonName, boolStatus) => {
-  document.getElementsByName(buttonName)[0].disabled = boolStatus
-}
-
 const init = () => {
   // KEYBOARD EVENT LISTENER
   document.addEventListener('keyup', (event) => {
@@ -290,7 +293,7 @@ const init = () => {
   addOperationButtonClickEvent('subtract')
   addOperationButtonClickEvent('divide')
   // force enabled buttons at start
-  disableButtonLogic('enable_all')
+  disableButtonLogic('enable_numericals')
 }
 
 // INITIALIZATION
