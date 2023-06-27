@@ -248,10 +248,8 @@ const checkLimits = (num) => {
   }
 }
 
-const opertionWithoutTwoNumbers = (operator) => {
-  if (operator === '+') {
-    return 'ERROR'
-  }
+const opertionWithoutTwoNumbers = () => {
+  return 'ERROR'
 }
 
 const prepareAndOperateIfSecondOperation = (op) => {
@@ -287,7 +285,7 @@ const operateAndDisplay = () => {
     text = lastNumberWrited.toString().replace('.', ',')
     enableDissableButton('point', false)
   } else if (lastNumberWrited === null) {
-    text = opertionWithoutTwoNumbers(operator).replace('.', ',')
+    text = opertionWithoutTwoNumbers()
   } else {
     text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
 

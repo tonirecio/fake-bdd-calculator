@@ -451,7 +451,7 @@ Examples:
 |          1234 |      + |         31 |          502 |       / |          50 |         10,04 |
 |          9,26 |      * |       2,15 |          139 |       + |           2 |           141 |
 
-@wip
+@done
 Scenario Outline: Doing two operations one after clicking = button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -469,12 +469,14 @@ Examples:
 |            42 |      + |         87 |           10 |       / |           2 |             5 |
 |          9,26 |      * |       2,15 |          123 |       + |         234 |           357 |
 
+@wip
 Scenario Outline: Doing an operation without a second number
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
 
+Examples:
 | displayNumber | button |
 |            52 |      / |
 |          9283 |      - |
@@ -488,6 +490,7 @@ And the user presses the "<number>" button
 And the user presses the "0" button
 Then the display should show the following value: "<displayNumber>"
 
+Examples:
 | button | button2 | number | displayNumber |
 |      = |       , |      0 |          0,00 |
 |      = |       0 |      0 |             0 |
