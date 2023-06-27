@@ -20,8 +20,8 @@ const reset = () => {
   actualNumberHasPoint = false
   setDisplay(0)
   enableAllButtons()
-  disableOneButton(document.getElementsByName('zero')[0])
-  disableOneButton(document.getElementsByName('negate')[0])
+  changeDisableOneButton(document.getElementsByName('zero')[0], true)
+  changeDisableOneButton(document.getElementsByName('negate')[0], true)
 }
 
 const setDisplay = (value) => {
@@ -117,7 +117,7 @@ const pressingOperator = (newOperator) => {
   } else if (operator === null && accumulatedNumber === null) {
     accumulatedNumber = actualNumber
     enableAllButtons()
-    disableOneButton(document.getElementsByName('negate')[0])
+    changeDisableOneButton(document.getElementsByName('negate')[0], true)
   }
   operator = newOperator
   actualNumberisNull = true
@@ -144,18 +144,14 @@ const pressingEqual = () => {
   setDisplay(displayValue)
 }
 
-const disableOneButton = (button) => {
-  button.disabled = true
-}
-
-const enableOneButton = (button) => {
-  button.disabled = false
+const changeDisableOneButton = (button, disabled) => {
+  button.disabled = disabled
 }
 
 const enableAllButtons = () => {
   const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
   for (const button of buttons) {
-    enableOneButton(button)
+    changeDisableOneButton(button, false)
   }
 }
 
