@@ -7,7 +7,7 @@ let previousNumber = 0
 let operationType
 let isNextNumberDecimal = false
 let chainingOperations = false
-let waitin = false
+let waitingForNewNumber = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
@@ -154,13 +154,13 @@ const pressedNegate = () => {
 }
 
 const pressedEqual = () => {
-  if (waitin) {
+  if (waitingForNewNumber) {
     displayError()
   } else {
     isNextNumberDecimal = false
     performOperation()
     chainingOperations = false
-    waitin = false
+    waitingForNewNumber = false
   }
 }
 
@@ -175,7 +175,7 @@ const pressedOperator = (type) => {
     chainingOperations = true
     disableButton('negate')
   }
-  waitin = true
+  waitingForNewNumber = true
   operationType = type
 }
 
@@ -193,7 +193,7 @@ const addNumberTocurrentNumber = (newNumber) => {
   }
 
   displaycurrentNumber()
-  waitin = false
+  waitingForNewNumber = false
 
   if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
     disableNumberButtons()
@@ -298,7 +298,7 @@ const displayResultNumber = () => {
     }
     saveToPreviousNumber(currentNumber)
   }
-  waitin = false
+  waitingForNewNumber = false
 }
 
 const displaycurrentNumber = () => {

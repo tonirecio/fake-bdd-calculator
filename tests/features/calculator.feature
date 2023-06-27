@@ -421,3 +421,40 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
+
+Scenario Outline: Handling the number 0 while writing integers
+Given the user writes the following value: "<userNumber>"
+And the user writes the following value: "<secondNumber>"
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| userNumber       | secondNumber      |   resultDisplay       |             
+|            0     |                1  |                    1  |
+|            00    |                1  |                    1  |
+|            0     |               -1  |                   -1  |
+|            00    |               -1  |                   -1  |
+
+Scenario Outline: Handling the number 0 while writing decimals
+Given the user writes the number: "<userValue>"
+Then the user presses the ',' key
+Then the user writes the number: "<secondNumber>"
+Then the user writes the number: "<thirdNumber>"
+Then the display should show the following value: "<displayNumber>"
+
+Examples:
+| userValue      | secondNumber      |  thirdNumber        |   displayNumber      |  
+|             0  |            0      |         1           |          0,01        |   
+|            00  |            0      |         1           |          0,01        |          
+|             1  |            0      |         1           |          1,01        |
+|             1  |           00      |         1           |         1,001        |
+|             1  |          000      |         1           |        1,0001        |
+
+Scenario Outline: Writing a negative number with the '-' key
+Given the user presses the "-" key
+Then the user writes the following value: "<userValue>"
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| userValue     | resultDisplay |
+|             1 |            -1 |
+|            ,1 |          -0,1 |
