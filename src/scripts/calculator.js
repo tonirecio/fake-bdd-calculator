@@ -3,7 +3,6 @@ const MAX_DIGITS_IN_DISPLAY = 10
 let currentNumber = 0
 let previousNumber = 0
 let operation = ''
-let result = 0
 const numberStack = []
 
 const display = document.querySelector('div[name="display"] span')
@@ -99,14 +98,20 @@ const pushToNumberStack = (stack, number) => {
 }
 
 const updateOperation = operationType => {
-  previousNumber = stackToNumber(numberStack)
-  numberStack.length = 0
+  if (previousNumber === 0) {
+    previousNumber = stackToNumber(numberStack)
+    numberStack.length = 0
+    numberStack.push(0)
+  }
   operation = operationType
 }
 
 const executeOperation = operationType => {
   const firstOperand = parseFloat(previousNumber)
   const secondOperand = parseFloat(currentNumber)
+  let result = 0
+  let digitCount = 0
+  let resultOutput = ''
 
   switch (operationType) {
     case 'sum':
@@ -126,158 +131,126 @@ const executeOperation = operationType => {
   }
 
   result = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
-  setDisplay(result.toString().replace('.', ','))
+  digitCount = result.toString().replace('.', '').length
+
+  if (digitCount <= MAX_DIGITS_IN_DISPLAY) {
+    resultOutput = result.toString().replace('.', ',')
+  } else {
+    resultOutput = 'ERROR'
+  }
+
+  previousNumber = currentNumber = 0
+  return resultOutput
 }
 
-document.getElementsByName('zero')[0].addEventListener('click', () => {
+const handleNumberClick = number => {
   if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 0)
+    pushToNumberStack(numberStack, number)
   }
   setDisplay(stackToString(numberStack))
-})
+}
 
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 1)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 2)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 3)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 4)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 5)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 6)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 7)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 8)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, 9)
-  }
-  setDisplay(stackToString(numberStack))
-})
-
-document.getElementsByName('point')[0].addEventListener('click', () => {
+const handlePointClick = () => {
   if (!numberStack.includes(null) && canPushToNumberStack(numberStack)) {
     numberStack.push(null)
   }
   setDisplay(stackToString(numberStack))
-})
+}
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
-})
-
-document.getElementsByName('negate')[0].addEventListener('click', () => {
+const handleNegateClick = () => {
   if (stackToNumber(numberStack) !== 0) {
     negateNumberStack(numberStack)
   }
-  console.log(numberStack)
   setDisplay(stackToString(numberStack))
-})
+}
 
-document.getElementsByName('sum')[0].addEventListener('click', () => {
-  updateOperation('sum')
-})
-
-document.getElementsByName('subtract')[0].addEventListener('click', () => {
+const handleSubtractClick = () => {
   if (numberStack.length === 0) {
     numberStack.push(-1)
-    console.log(numberStack)
-  } else {
-    updateOperation('subtract')
   }
-})
+  updateOperation('subtract')
+}
 
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  updateOperation('multiply')
-})
-
-document.getElementsByName('divide')[0].addEventListener('click', () => {
-  updateOperation('divide')
-})
-
-document.getElementsByName('equal')[0].addEventListener('click', () => {
+const handleEqualClick = () => {
   currentNumber = stackToNumber(numberStack)
-  executeOperation(operation)
-})
+  setDisplay(executeOperation(operation))
+}
+
+document
+  .getElementsByName('zero')[0]
+  .addEventListener('click', () => handleNumberClick(0))
+document
+  .getElementsByName('one')[0]
+  .addEventListener('click', () => handleNumberClick(1))
+document
+  .getElementsByName('two')[0]
+  .addEventListener('click', () => handleNumberClick(2))
+document
+  .getElementsByName('three')[0]
+  .addEventListener('click', () => handleNumberClick(3))
+document
+  .getElementsByName('four')[0]
+  .addEventListener('click', () => handleNumberClick(4))
+document
+  .getElementsByName('five')[0]
+  .addEventListener('click', () => handleNumberClick(5))
+document
+  .getElementsByName('six')[0]
+  .addEventListener('click', () => handleNumberClick(6))
+document
+  .getElementsByName('seven')[0]
+  .addEventListener('click', () => handleNumberClick(7))
+document
+  .getElementsByName('eight')[0]
+  .addEventListener('click', () => handleNumberClick(8))
+document
+  .getElementsByName('nine')[0]
+  .addEventListener('click', () => handleNumberClick(9))
+document
+  .getElementsByName('point')[0]
+  .addEventListener('click', handlePointClick)
+document.getElementsByName('clean')[0].addEventListener('click', reset)
+document
+  .getElementsByName('negate')[0]
+  .addEventListener('click', handleNegateClick)
+document
+  .getElementsByName('sum')[0]
+  .addEventListener('click', () => updateOperation('sum'))
+document
+  .getElementsByName('subtract')[0]
+  .addEventListener('click', handleSubtractClick)
+document
+  .getElementsByName('multiply')[0]
+  .addEventListener('click', () => updateOperation('multiply'))
+document
+  .getElementsByName('divide')[0]
+  .addEventListener('click', () => updateOperation('divide'))
+document
+  .getElementsByName('equal')[0]
+  .addEventListener('click', handleEqualClick)
 
 document.body.addEventListener('keydown', event => {
   const key = event.key
 
   if (key >= 0 && key <= 9) {
     const keyNumber = parseInt(key)
-    if (canPushToNumberStack(numberStack)) {
-      pushToNumberStack(numberStack, keyNumber)
-    }
-    setDisplay(stackToString(numberStack))
+    handleNumberClick(keyNumber)
   } else {
     switch (key) {
       case ',':
-        if (!numberStack.includes(null) && canPushToNumberStack(numberStack)) {
-          numberStack.push(null)
-        }
-        setDisplay(stackToString(numberStack))
+        handlePointClick()
         break
       case 'Escape':
         reset()
         break
       case 'Control':
-        if (stackToNumber(numberStack) !== 0) {
-          negateNumberStack(numberStack)
-        }
-        setDisplay(stackToString(numberStack))
+        handleNegateClick()
         break
       case '+':
         updateOperation('sum')
         break
       case '-':
-        if (numberStack.length === 0) {
-          numberStack.push(-1)
-        }
-        updateOperation('subtract')
+        handleSubtractClick()
         break
       case '*':
         updateOperation('multiply')
@@ -286,8 +259,7 @@ document.body.addEventListener('keydown', event => {
         updateOperation('divide')
         break
       case 'Enter':
-        currentNumber = stackToNumber(numberStack)
-        executeOperation(operation)
+        handleEqualClick()
         break
       default:
         break

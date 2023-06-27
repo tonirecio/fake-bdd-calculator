@@ -142,7 +142,7 @@ Examples:
 |         13,14 |      * |      2,781 |
 |            84 |      / |       -4,3 |
 
-@wip
+@done
 Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -157,16 +157,19 @@ Examples:
 |    9999999999 |      * |          2 |
 |    9999999999 |      / |        0,1 |
 
+@done
 Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
 
+@done
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
+@wip
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
