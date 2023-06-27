@@ -45,3 +45,5 @@
 *Scenario: Reenabling buttons with no error using C button* : Ok, tot i que jo juntaría les funcions 'enableOneButton' i 'disableOneButton' pasant-li el nom i el valor 'true' o 'false'
 
 *Scenario: Reenabling buttons with no error using = button* : Ok
+
+*Scenario Outline: Disabling buttons* : Ok
