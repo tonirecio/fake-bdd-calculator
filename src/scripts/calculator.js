@@ -83,6 +83,7 @@ const invertNumberDisplay = () => {
 
 const reset = () => {
   setDisplay(0)
+  disableOrEnableButtons()
   inMemoryNumber = 0
   savedOperator = ''
 }
@@ -91,6 +92,15 @@ const disableOrEnableButtons = () => {
 
   if (isRecentlyAddedAOperation) NEGATE_BUTTON.disabled = true
   else NEGATE_BUTTON.disabled = false
+
+  if (isOnDisplayZero()) {
+    ZERO_BUTTON.disabled = true
+    NEGATE_BUTTON.disabled = true
+  }
+  else {
+    ZERO_BUTTON.disabled = false
+    NEGATE_BUTTON.disabled = false
+  }
 
 }
 
