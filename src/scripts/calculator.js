@@ -19,7 +19,7 @@ const setDisplay = (value) => {
 }
 
 const disableButtonLogic = (status) => {
-  switch (status){
+  switch (status) {
     case 'clear':
       disableNumericalButtonSet(false)
       disableButton('point', false)
@@ -45,6 +45,12 @@ const disableButtonLogic = (status) => {
       break
     case 'enable_numericals':
       disableNumericalButtonSet(false)
+      break
+    case 'error':
+      disableNumericalButtonSet(true)
+      disableOperationButtonSet(true)
+      disableNonOperationButtonSet(true)
+      disableButton('clean', false)
       break
     default:
       console.warn('[WARNING] ' + status + ' logic state not contemplated / implemented.')
@@ -97,6 +103,7 @@ const currentNumberToDisplayableString = () => {
     }
   } else {
     displayValue = 'ERROR'
+    disableButtonLogic('error')
   }
   return displayValue
 }
@@ -155,8 +162,7 @@ const pressNumber = (buttonNumber) => {
       }
     }
   }
-  if (currentNumberDisplayableStringSanitized.length + 1 >= MAX_DIGITS_IN_DISPLAY)
-  {
+  if (currentNumberDisplayableStringSanitized.length + 1 >= MAX_DIGITS_IN_DISPLAY) {
     disableButtonLogic('max_digits_in_display')
   }
   currentNumber = parseFloat(currentNumberDisplayableString.replace(POINT_LOCALE, '.'))
@@ -165,7 +171,7 @@ const pressNumber = (buttonNumber) => {
 const floatCurrentNum = () => {
   const currentNumberDisplayableString = currentNumberToDisplayableString()
   if (!currentNumberDisplayableString.includes(POINT_LOCALE) && currentNumberDisplayableString.length < MAX_DIGITS_IN_DISPLAY) {
-    disableButton('point',true)
+    disableButton('point', true)
     pendingPoint = true
   }
 }
