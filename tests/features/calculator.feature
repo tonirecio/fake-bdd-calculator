@@ -354,6 +354,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
+@sc_DisableButtons
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled

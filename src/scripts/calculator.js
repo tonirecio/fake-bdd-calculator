@@ -46,6 +46,9 @@ const reset = () => {
   pendingZeros = 0
   clearDisplay = false
 
+  disableNumericalButtonSet(false)
+  disableOperationButtonSet(false)
+
   setDisplay(currentNumber)
 }
 
@@ -73,9 +76,11 @@ const negateCurrentNum = () => {
 const pressNumber = (buttonNumber) => {
   let currentNumberDisplayableString = currentNumberToDisplayableString()
   const currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
+  // avoid missing the second number on an operation
   if (currentOperation !== null) {
     pendingOperation = true
   }
+  // main number logic
   if (clearDisplay || currentNumber === 'ERROR') {
     currentNumberDisplayableString = buttonNumber.toString()
     clearDisplay = false
@@ -93,6 +98,10 @@ const pressNumber = (buttonNumber) => {
         currentNumberDisplayableString += buttonNumber
       }
     }
+  }
+  if (currentNumberDisplayableStringSanitized.length + 1 >= MAX_DIGITS_IN_DISPLAY)
+  {
+    disableNumericalButtonSet(true)
   }
   currentNumber = parseFloat(currentNumberDisplayableString.replace(POINT_LOCALE, '.'))
 }
