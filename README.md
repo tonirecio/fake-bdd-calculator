@@ -39,3 +39,5 @@
 *Scenario Outline: Showing the first number after pressing operation* : Ok
 
 *Scenario Outline: Using the Equals button without operation* : Ok
+
+*Scenario Outline: Reenabling buttons with no error using operators* : Ok
