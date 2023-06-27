@@ -82,7 +82,7 @@ const handleCommaClick = () => {
 const handleOperationClick = (operation) => {
   if (!overrideDisplay && currentOperation !== null) {
     previousOperand = performOperation()
-  } else if (previousOperand === 0) {
+  } else if (previousOperand === 0 && number !== null) {
     previousOperand = number
   }
   numberHasComma = false
@@ -95,6 +95,7 @@ const handleEqualsClick = () => {
   previousOperand = performOperation()
   overrideDisplay = true
   currentOperation = null
+  number = null
   setAllButtonDisabledStatus(false)
   setDisplay(formatNumberToDisplay(previousOperand))
 }
@@ -124,7 +125,7 @@ const negateNumber = (number) => {
 }
 
 const getDigitNumber = (number) => {
-  return Math.abs(number).toString().replace('.', '').length
+  return Math.abs(number).toString().replace('.', '').length + pendingZeros
 }
 
 const writeNewNumber = (newNumber) => {
