@@ -165,11 +165,11 @@ nonOperatorButtons.forEach(nonOperatorButton => {
       operandSymbolInUse = operatorButtonPressed(buttonName)
     } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
       operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-      console.log(operationResult)
       if (isOperationResultOverLength(operationResult)) {
         updateDisplay('ERROR')
       } else {
         updateDisplay(operationResult)
+        //pastOperand = operationResult
       }
     }
   })
@@ -276,6 +276,7 @@ const performOperation = (pastOperand, currentOperand, operandSymbolInUse) => {
   }
   integerCount = countIntegersFromNumber(operationResult, integerCount)
   operationResult = roundNumber(operationResult, integerCount)
+  reset()
   return operationResult
 }
 
@@ -295,9 +296,7 @@ const roundNumber = (number, integerCount) => {
 
 const isOperationResultOverLength = (operationResult) => {
   resultString = operationResult.toString()
-  console.log(resultString.length)
   if (resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY + 1) {
-    console.log('cs')
     return true
   } else if (!resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY) {
     return true
