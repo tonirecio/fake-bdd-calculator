@@ -122,6 +122,11 @@ const pressingOperator = (newOperator) => {
     accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
     actualNumberHasPoint = false
     setDisplay(accumulatedNumber)
+    if (accumulatedNumber === 'ERROR') {
+      changeDisableWhenError()
+    } else {
+      changeDisableAllButtons(buttons, false)
+    }
   } else if (operator === null && accumulatedNumber === null) {
     accumulatedNumber = actualNumber
     changeDisableAllButtons(buttons, false)
@@ -137,6 +142,7 @@ const pressingEqual = () => {
   let displayValue
   if (actualNumberisNull && operator !== null) {
     displayValue = 'ERROR'
+    changeDisableWhenError()
   } else {
     if (operator === null) {
       accumulatedNumber = actualNumber
@@ -148,9 +154,13 @@ const pressingEqual = () => {
     actualNumberisNull = true
     actualNumberHasPoint = false
     displayValue = accumulatedNumber
+    if (displayValue === 'ERROR') {
+      changeDisableWhenError()
+    } else {
+      changeDisableAllButtons(buttons, false)
+    }
   }
   setDisplay(displayValue)
-  changeDisableAllButtons(buttons, false)
 }
 
 const changeDisableOneButton = (button, disabled) => {
@@ -174,6 +184,11 @@ const changeDisableNumberButtons = (disabled) => {
   document.getElementsByName('seven')[0].disabled = disabled
   document.getElementsByName('eight')[0].disabled = disabled
   document.getElementsByName('nine')[0].disabled = disabled
+}
+
+const changeDisableWhenError = () => {
+  changeDisableAllButtons(buttons, true)
+  changeDisableOneButton(document.getElementsByName('clean')[0], false)
 }
 
 const getEventsListenersButtons = () => {
