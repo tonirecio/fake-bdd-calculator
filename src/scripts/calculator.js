@@ -324,3 +324,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Using previous result in new operation easier (line 166-176)
 
 // [Scenario] Division with 0 (line 139, 178)
+
+// [Scenario] Doing an operation without a second number (line 14, 28, 169, 184, 241)
