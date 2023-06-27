@@ -381,6 +381,7 @@ Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
 
+@disable_when_error
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -405,6 +406,7 @@ And the "+-" button should be disabled
 And the "=" button should be disabled
 And the "C" button should be enabled
 
+@enable_after_error
 Scenario: Reenabling buttons with error
 Given the user writes the following value: "1"
 And the user presses the "/" button

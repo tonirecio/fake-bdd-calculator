@@ -113,6 +113,8 @@ const setDisplay = (value) => {
       setAllButtonDisabledStatus(false)
       setNonOperatorButtonDisabledStatus(true)
     }
+  } else {
+    handleButtonEnablingWhenError()
   }
   display.innerHTML = displayValue
 }
@@ -229,6 +231,11 @@ const handleButtonEnablingWhenReset = () => {
 const handleButtonEnablingWhenClickingComma = () => {
   setAllButtonDisabledStatus(false)
   document.querySelector('button[name="point"]').disabled = true
+}
+
+const handleButtonEnablingWhenError = () => {
+  setAllButtonDisabledStatus(true)
+  document.querySelector('button[name="clean"]').disabled = false
 }
 
 init()
