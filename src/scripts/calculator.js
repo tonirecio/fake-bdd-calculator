@@ -46,6 +46,7 @@ const disableButtonLogic = (status) => {
       break
     case 'enable_numericals':
       disableNumericalButtonSet(false)
+      disableButton('negate', false)
       break
     case 'error':
       disableNumericalButtonSet(true)
@@ -137,7 +138,7 @@ const negateCurrentNum = () => {
 
 const pressNumber = (buttonNumber) => {
   let currentNumberDisplayableString = currentNumberToDisplayableString()
-  const currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
+  let currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
   // avoid missing the second number on an operation
   if (currentOperation !== null) {
     pendingOperation = true
@@ -163,7 +164,8 @@ const pressNumber = (buttonNumber) => {
       }
     }
   }
-  if (currentNumberDisplayableStringSanitized.length + 1 >= MAX_DIGITS_IN_DISPLAY) {
+  currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
+  if (currentNumberDisplayableStringSanitized.length + 1 > MAX_DIGITS_IN_DISPLAY) {
     disableButtonLogic('max_digits_in_display')
   }
   currentNumber = parseFloat(currentNumberDisplayableString.replace(POINT_LOCALE, '.'))
