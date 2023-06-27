@@ -25,6 +25,7 @@ const disableButtonLogic = (status) => {
       disableButton('point', false)
       disableOperationButtonSet(false)
       disableButton('zero', true)
+      disableNonOperationButtonSet(false)
       disableButton('negate', true)
       break
     case 'resolve':
