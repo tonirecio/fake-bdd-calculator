@@ -239,3 +239,4 @@ const handleButtonEnablingWhenError = () => {
 }
 
 init()
+// TODO: arreglar previousOperand = number
