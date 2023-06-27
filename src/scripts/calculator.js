@@ -5,6 +5,9 @@ let currentValue = '0'
 let previousValue
 let isResult
 let result
+let isResultUsed = false
+let isOperatorClicked = false
+let isOperandEntered = false
 
 const setDisplay = (currentValue) => {
   displayValue = currentValue.replace('.', ',')
@@ -12,8 +15,16 @@ const setDisplay = (currentValue) => {
 }
 
 const reset = () => {
-  previousValue = currentValue
   currentValue = '0'
+  setDisplay(currentValue)
+}
+
+const totalReset = () => {
+  currentValue = '0'
+  previousValue = '0'
+  firstOperand = undefined
+  result = undefined
+  console.log(currentValue, previousValue, firstOperand, result)
   setDisplay(currentValue)
 }
 
@@ -21,17 +32,12 @@ const appendNumber = (value) => {
   let onlyDigits = currentValue.replace('.', '')
   onlyDigits = onlyDigits.replace('-', '')
 
-  console.log(onlyDigits)
   const digitCount = onlyDigits.length
-  console.log(digitCount)
-
-  if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
-    return
-  }
 
   if (currentValue == '0') {
-    currentValue = value.toString()
-  } else {
+    currentValue = ''
+  }
+  if (digitCount < MAX_DIGITS_IN_DISPLAY) {
     currentValue += value.toString()
   }
 
@@ -41,7 +47,6 @@ const appendNumber = (value) => {
 const appendPoint = () => {
   if (!currentValue.includes('.') && (currentValue.length < MAX_DIGITS_IN_DISPLAY)) {
     currentValue += '.'
-    console.log(currentValue)
     return currentValue
   }
 }
@@ -127,7 +132,7 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
 })
 
 document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
+  totalReset()
 })
 
 // BUTTONS IN KEYS
@@ -144,7 +149,7 @@ document.addEventListener('keydown', (event) => {
     setDisplay(currentValue)
   }
   if (key === 'Escape') {
-    reset()
+    totalReset()
   }
   if (key === 'Control') {
     setNegation()
@@ -156,47 +161,86 @@ let firstOperand, secondOperand, operator
 // OPERATIONS
 // Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  operator = '+'
-  handleOperand()
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
+  } else {
+    handleOperand()
+    isOperatorClicked = true
+  }
   reset()
+  operator = '+'
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  operator = '-'
-  handleOperand()
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
+  } else {
+    handleOperand()
+    isOperatorClicked = true
+  }
   reset()
+  operator = '-'
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  operator = '*'
-  handleOperand()
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
+  } else {
+    handleOperand()
+    isOperatorClicked = true
+  }
   reset()
+  operator = '*'
 })
 // Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  operator = '/'
-  handleOperand()
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
+  } else {
+    handleOperand()
+    isOperatorClicked = true
+  }
   reset()
+  operator = '/'
 })
 
-// Modify the event listener for the equal button
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
+  if (result != undefined) {
+    firstOperand = result
+    isResultUsed = true
+  }
+  isOperatorClicked = false
   result = calculate(firstOperand, secondOperand, operator)
-
-  isResult = true
+  console.log(firstOperand, secondOperand, operator)
   reset()
   setDisplay(result)
+
+  isOperandEntered = false
 })
 
 const handleOperand = () => {
-  if (firstOperand == undefined) {
+  if (firstOperand == undefined || firstOperand == 0 || isResultUsed) {
     firstOperand = currentValue
+    isResultUsed = false
   }
-  if (isResult == true) {
-    firstOperand = result
-    isResult = false
-  }
+  isOperandEntered = true
 }
 
 const calculate = (firstOperand, secondOperand, operator) => {
