@@ -38,10 +38,6 @@ const negate = (operand) => {
 
 reset()
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
-})
-
 // [Scenario] Pressing non-operators screen buttons
 const getNumber = (buttonName) => {
   let numberValue
@@ -80,6 +76,7 @@ const getNumber = (buttonName) => {
       window.alert('Not a usable number')
       break
   }
+  
   return numberValue
 }
 
@@ -89,7 +86,6 @@ const appendIntegerNumbers = (currentOperand, number) => {
 }
 
 const appendDecimalNumbers = (currentOperand, number) => {
-  console.log(decimalPlacement)
   if (currentOperand < 0) {
     currentOperand -= number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
   } else {
@@ -137,11 +133,12 @@ const nonOperatorNonNumberButtons = ['clean', 'negate', 'point']
 const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 const operatorButtons = ['divide', 'multiply', 'subtract', 'sum']
 const resultErrors = ['Infinity', '-Infinity', 'NaN']
-const nonOperatorButtons = document.querySelectorAll('div[name="keypad"] button')
+const keypadButtons = document.querySelectorAll('div[name="keypad"] button')
 
-nonOperatorButtons.forEach(nonOperatorButton => {
-  nonOperatorButton.addEventListener('click', () => {
-    let buttonName = nonOperatorButton.getAttribute('name')
+keypadButtons.forEach(keypadButton => {
+  keypadButton.disabled = false
+  keypadButton.addEventListener('click', () => {
+    let buttonName = keypadButton.getAttribute('name')
     if (countDigits < MAX_DIGITS_IN_DISPLAY) {
       if (numberButtons.includes(buttonName) && !decimalSymbolUsage) {
         numberValue = getNumber(buttonName)
@@ -162,13 +159,15 @@ nonOperatorButtons.forEach(nonOperatorButton => {
     if (nonOperatorNonNumberButtons.includes(buttonName)) {
       currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse === '') {
+      //console.log(document.getElementsByName('negate').textContent)
       pastOperand = saveAndResetCurrentOperand(currentOperand)
       operandSymbolInUse = operatorButtonPressed(buttonName)
       updateDisplay(pastOperand)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse !== '') {
+      document.getElementsByName('negate')
       if (currentOperand !== '') {
         operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-        pastOperand = operationResult        
+        pastOperand = operationResult
       }
       operandSymbolInUse = operatorButtonPressed(buttonName)
     } else if (buttonName === 'equal' && operandSymbolInUse !== '' && currentOperand !== '') {
@@ -181,6 +180,8 @@ nonOperatorButtons.forEach(nonOperatorButton => {
         updateDisplay(operationResult)
         pastOperand = operationResult
       }
+    } else if (buttonName === 'equal' && operandSymbolInUse === '') {
+      updateDisplay(currentOperand)
     } else if (currentOperand === ''){
       updateDisplay('ERROR')
     }
@@ -330,3 +331,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Doing an operation without a first number (the 271 line const alreasy does the job of changing the sign of the value)
 
 // [Scenario] Showing the first number after pressing operation (line 167)
+
+// [Scenario] Using the Equals button without operation (line 183-184)

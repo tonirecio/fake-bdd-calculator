@@ -241,7 +241,7 @@ Given the user presses the "-" button
 And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
-@done1
+@done
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -253,7 +253,7 @@ Examples:
 |         -17,2 |      - |
 |        3,1415 |      * |
 |         -2718 |      / |
-
+@done
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -264,7 +264,7 @@ Examples:
 |             0 |             0 |
 |            10 |            10 |
 |          -10, |           -10 |
-
+@wip
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
