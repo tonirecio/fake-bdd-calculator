@@ -30,7 +30,7 @@ Examples:
 |             1 |     +- |            -1 |
 |            -1 |     +- |             1 |
 
-@wip
+@done
 Scenario Outline: Numbers with zeros
 Given the user writes the following value: "<displayNumber>"
 And the user writes the number: "<firstZero>"
