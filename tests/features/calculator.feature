@@ -3,6 +3,7 @@ Feature: Calculator
 Background:
 Given a user opens the app
 
+@done
 Scenario: Default display screen
 Then the display should show the following value: "0"
 
@@ -51,7 +52,7 @@ Examples:
 |             1 |     Escape |             0 |
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
-
+@wip4
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -78,6 +79,7 @@ Examples:
 |          1234 |     +- |         -1234 |
 |         -1234 |     +- |          1234 |
 
+@done5
 Scenario Outline: Writing numbers of more than 10 digits
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
