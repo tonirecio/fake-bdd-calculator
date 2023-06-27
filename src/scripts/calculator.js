@@ -5,13 +5,13 @@ const DIGITO_COMA = ',';
 const display = document.querySelector('div[name="display"] span')
 
 let firstOperator = null;
+let isRecentlyPutAOperator = false
 
 let operator = null;
 
 const setDisplay = (value) => {
 
   var formattedValue = value;
-  console.log(formattedValue)
 
   if (formattedValue.length > MAX_DIGITS_IN_DISPLAY + 1) {
     formattedValue = roundToDecimalPlaces(value, MAX_DIGITS_IN_DISPLAY - 1);
@@ -135,6 +135,7 @@ const addToDisplay = (value) => {
 
     }
     setDisplay(currentValue);
+    isRecentlyPutAOperator = false;
 }
 
 const isMaxLength = () => {
@@ -177,20 +178,29 @@ const invertNumberDisplay = () => {
 
 const seleccionarOperador = (op) => {
 
-  operator = op;
+  console.log('Pre-Funcion Memoria: ' + firstOperator)
+  if (isRecentlyPutAOperator === false){
+    if (firstOperator !== null) {
+      toOperate();
+    }
 
-  firstOperator = display.innerHTML;
-  firstOperator = firstOperator.replace(DIGITO_COMA, '.')
-  firstOperator = parseFloat(firstOperator)
+    operator = op;
 
-  reset();
+    firstOperator = display.innerHTML;
+    firstOperator = firstOperator.replace(DIGITO_COMA, '.')
+    firstOperator = parseFloat(firstOperator)
 
+    reset();
+  }
+  else operator = op;
+  isRecentlyPutAOperator = true
+
+  console.log('Post-Funcion Memoria: ' + firstOperator)
 }
-
 
 const toOperate = () => {
 
-  console.log(display.innerHTML)
+  console.log('Display: '+display.innerHTML)
   var secondOperator = display.innerHTML;
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
@@ -222,7 +232,7 @@ const toOperate = () => {
       result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
 
     }
-    console.log(firstOperator + " + " + secondOperator + " = " + result)
+    console.log('Memoria: '+firstOperator + " + Display: " + secondOperator + " = " + result)
     setDisplay(result);
 
     firstOperator = result;
