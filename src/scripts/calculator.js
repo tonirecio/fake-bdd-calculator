@@ -1,9 +1,25 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-const DIGITO_COMA = ','
+const DIGITO_COMA = ',';
+
+const display = document.querySelector('div[name="display"] span')
+
+let firstOperator = null;
+
+let operator = null;
 
 const setDisplay = (value) => {
-  display.innerHTML = value
+
+  var formattedValue = value;
+  console.log(formattedValue)
+
+  if (formattedValue.length > MAX_DIGITS_IN_DISPLAY + 1) {
+    formattedValue = roundToDecimalPlaces(value, MAX_DIGITS_IN_DISPLAY - 1);
+
+  }
+  formattedValue = formattedValue.toString()  
+  formattedValue = formattedValue.replace('.', DIGITO_COMA);
+  display.innerHTML = formattedValue;
 }
 
 const sayHello = () => {
@@ -14,16 +30,14 @@ const reset = () => {
   setDisplay(0)
 }
 
-const display = document.querySelector('div[name="display"] span')
-
 document.getElementsByName('point')[0].addEventListener('click', () => {
   addToDisplay(DIGITO_COMA)
 })
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  invertNumberDisplay() 
+  invertNumberDisplay()
 })
 document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset() 
+  reset()
 })
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   addToDisplay(0)
@@ -68,9 +82,9 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
   seleccionarOperador('+')
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  operar()
+  toOperate()
 })
-reset()
+
 document.addEventListener('keydown', () => {
   if (event.key === "Escape" || event.keyCode === 27) reset()
   else if (event.ctrlKey) invertNumberDisplay()
@@ -98,7 +112,7 @@ const addToDisplay = (value) => {
     let currentValue = display.innerHTML;
 
     const isSign = value === '-';
-    
+   
     if (!isSign && !isMaxLength()) {
 
         if (currentValue === '0') {
@@ -106,7 +120,7 @@ const addToDisplay = (value) => {
                 currentValue += value;
             } else {
                 currentValue = value;
-            } 
+            }
 
         } else {
             if (value === DIGITO_COMA ) {
@@ -160,3 +174,76 @@ const invertNumberDisplay = () => {
 
   }
 };
+
+const seleccionarOperador = (op) => {
+
+  operator = op;
+
+  firstOperator = display.innerHTML;
+  firstOperator = firstOperator.replace(DIGITO_COMA, '.')
+  firstOperator = parseFloat(firstOperator)
+
+  reset();
+
+}
+
+
+const toOperate = () => {
+
+  console.log(display.innerHTML)
+  var secondOperator = display.innerHTML;
+  secondOperator = secondOperator.replace(DIGITO_COMA, '.')
+  secondOperator = parseFloat(secondOperator)
+
+  let result = 0;
+
+  if (operator === '+') {
+    result = firstOperator + secondOperator;
+
+  } else if (operator === '-') {
+    result = firstOperator - secondOperator;
+
+  } else if (operator === '*') {
+    result = firstOperator * secondOperator;
+
+  } else if (operator === '/') {
+    result = firstOperator / secondOperator;
+
+  }
+  var numTotalBeforeComma = numberBeforeComma(result);
+  if (result < 0) {
+    result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
+  } else {
+    result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+  }
+  console.log(firstOperator + " + " + secondOperator + " = " + result)
+  setDisplay(result);
+
+  firstOperator = result;
+
+  operator = null;
+
+}
+
+const roundToDecimalPlaces = (value, decimalPlaces) => {
+
+  var multiple = 1;
+
+  for(var numDecimals = 0; numDecimals < decimalPlaces; numDecimals++) {
+    multiple *= 10;
+  }
+  var num = value * multiple;
+  num = Math.round(num);
+  num = num/multiple
+  return num;
+
+};
+
+const numberBeforeComma = (value) => {
+
+  var numTotalBeforeComma = value.toString().split('.')[0]
+  return numTotalBeforeComma.length
+
+}
+
+reset()
