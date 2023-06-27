@@ -104,3 +104,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Un error en una linea extra
 - [X] 🟩 **Sintaxis:** Codi ben implementat, intentaria reutilitzar una mica de codi
+
+## @enable_buttons_after_equal
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Un error en una linea extra
+- [X] 🟩 **Sintaxis:** Millorat respecte l'anterior commit
