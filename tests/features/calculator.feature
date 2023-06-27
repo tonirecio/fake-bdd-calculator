@@ -432,7 +432,7 @@ And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@wip
+@done
 Scenario Outline: Clicking two different operation buttons after using C button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -451,7 +451,8 @@ Examples:
 |          1234 |      + |         31 |          502 |       / |          50 |         10,04 |
 |          9,26 |      * |       2,15 |          139 |       + |           2 |           141 |
 
-Scenario Outline: Clicking two different operation buttons after using C button
+@wip
+Scenario Outline: Doing two operations one after clicking = button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
 And the user writes the number: "<userNumber>"
