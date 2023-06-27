@@ -37,7 +37,7 @@ const addEventsToButtons = () => {
   document.querySelector('button[name="eight"]').addEventListener('click', () => writeNewNumber(8))
   document.querySelector('button[name="nine"]').addEventListener('click', () => writeNewNumber(9))
   // Non operator buttons
-  document.querySelector('button[name="point"]').addEventListener('click', writeComma)
+  document.querySelector('button[name="point"]').addEventListener('click', handleCommaClick)
   document.querySelector('button[name="clean"]').addEventListener('click', reset)
   document.querySelector('button[name="negate"]').addEventListener('click', handleNegateClick)
   // Operator buttons
@@ -56,7 +56,7 @@ const addEventsToKeyboard = () => {
       writeNewNumber(parseInt(keyName))
     } else {
       if (keyName === ',') {
-        writeComma()
+        handleCommaClick()
       } else if (keyName === 'Escape') {
         reset()
       } else if (keyName === 'Control') {
@@ -72,6 +72,11 @@ const handleNegateClick = () => {
     writeComma()
   }
   setDisplay(formatNumberToDisplay(number))
+}
+
+const handleCommaClick = () => {
+  handleButtonEnablingWhenClickingComma()
+  writeComma()
 }
 
 const handleOperationClick = (operation) => {
@@ -219,6 +224,11 @@ const handleButtonEnablingWhenReset = () => {
   setAllButtonDisabledStatus(false)
   document.querySelector('button[name="zero"]').disabled = true
   document.querySelector('button[name="negate"]').disabled = true
+}
+
+const handleButtonEnablingWhenClickingComma = () => {
+  setAllButtonDisabledStatus(false)
+  document.querySelector('button[name="point"]').disabled = true
 }
 
 init()
