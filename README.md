@@ -114,3 +114,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Sense errors
 - [X] 🟩 **Sintaxis:** Refactoritzat part del codi, programació correcta
+
+## @disable_buttons
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Programació correcta i concreta
