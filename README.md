@@ -41,3 +41,5 @@
 *Scenario Outline: Using the Equals button without operation* : Ok
 
 *Scenario Outline: Reenabling buttons with no error using operators* : Ok
+
+*Scenario: Reenabling buttons with no error using C button* : Ok, tot i que jo juntaría les funcions 'enableOneButton' i 'disableOneButton' pasant-li el nom i el valor 'true' o 'false'
