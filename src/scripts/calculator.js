@@ -164,7 +164,7 @@ nonOperatorButtons.forEach(nonOperatorButton => {
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse === '') {
       pastOperand = saveAndResetCurrentOperand(currentOperand)
       operandSymbolInUse = operatorButtonPressed(buttonName)
-      //updateDisplay(pastOperand)
+      updateDisplay(pastOperand)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse !== '') {
       if (currentOperand !== '') {
         operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
@@ -328,3 +328,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Doing an operation without a second number (line 14, 28, 169, 184, 241)
 
 // [Scenario] Doing an operation without a first number (the 271 line const alreasy does the job of changing the sign of the value)
+
+// [Scenario] Showing the first number after pressing operation (line 167)
