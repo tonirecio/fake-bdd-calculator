@@ -86,6 +86,13 @@ const reset = () => {
 
 const disableOrEnableButtons = () => {
 
+  SUM_BUTTON.disabled = false
+  MULTUPLY_BUTTON.disabled = false
+  SUBSTRACT_BUTTON.disabled = false
+  NEGATE_BUTTON.disabled = false
+  DIVIDE_BUTTON.disabled = false
+  EQUAL_BUTTON.disabled = false
+
   if (isRecentlyAddedAOperation) NEGATE_BUTTON.disabled = true
   else NEGATE_BUTTON.disabled = false
 
@@ -98,34 +105,54 @@ const disableOrEnableButtons = () => {
     NEGATE_BUTTON.disabled = false
   }
 
-  if (!isTheMaxLenght()) {
-    ZERO_BUTTON.disabled = false
-    ONE_BUTTON.disabled = false
-    TWO_BUTTON.disabled = false
-    THREE_BUTTON.disabled = false
-    FOUR_BUTTON.disabled = false
-    FIVE_BUTTON.disabled = false
-    SIX_BUTTON.disabled = false
-    SEVEN_BUTTON.disabled = false
-    EIGHT_BUTTON.disabled = false
-    NINE_BUTTON.disabled = false
-    if (!isADotOnDisplay()) COMMA_BUTTON.disabled = false
-    else COMMA_BUTTON.disabled = true
+if (!isAnErrorOnDisplay()){
+    if (!isTheMaxLenght()) {
+      ZERO_BUTTON.disabled = false
+      ONE_BUTTON.disabled = false
+      TWO_BUTTON.disabled = false
+      THREE_BUTTON.disabled = false
+      FOUR_BUTTON.disabled = false
+      FIVE_BUTTON.disabled = false
+      SIX_BUTTON.disabled = false
+      SEVEN_BUTTON.disabled = false
+      EIGHT_BUTTON.disabled = false
+      NINE_BUTTON.disabled = false
+      if (!isADotOnDisplay()) COMMA_BUTTON.disabled = false
+      else COMMA_BUTTON.disabled = true
+    }
+    else{
+      ZERO_BUTTON.disabled = true
+      ONE_BUTTON.disabled = true
+      TWO_BUTTON.disabled = true
+      THREE_BUTTON.disabled = true
+      FOUR_BUTTON.disabled = true
+      FIVE_BUTTON.disabled = true
+      SIX_BUTTON.disabled = true
+      SEVEN_BUTTON.disabled = true
+      EIGHT_BUTTON.disabled = true
+      NINE_BUTTON.disabled = true
+      COMMA_BUTTON.disabled = true
+    }
   }
   else{
-    ZERO_BUTTON.disabled = true
-    ONE_BUTTON.disabled = true
-    TWO_BUTTON.disabled = true
-    THREE_BUTTON.disabled = true
-    FOUR_BUTTON.disabled = true
-    FIVE_BUTTON.disabled = true
-    SIX_BUTTON.disabled = true
-    SEVEN_BUTTON.disabled = true
-    EIGHT_BUTTON.disabled = true
-    NINE_BUTTON.disabled = true
-    COMMA_BUTTON.disabled = true
+      ZERO_BUTTON.disabled = true
+      ONE_BUTTON.disabled = true
+      TWO_BUTTON.disabled = true
+      THREE_BUTTON.disabled = true
+      FOUR_BUTTON.disabled = true
+      FIVE_BUTTON.disabled = true
+      SIX_BUTTON.disabled = true
+      SEVEN_BUTTON.disabled = true
+      EIGHT_BUTTON.disabled = true
+      NINE_BUTTON.disabled = true
+      COMMA_BUTTON.disabled = true
+      SUM_BUTTON.disabled = true
+      MULTUPLY_BUTTON.disabled = true
+      SUBSTRACT_BUTTON.disabled = true
+      NEGATE_BUTTON.disabled = true
+      DIVIDE_BUTTON.disabled = true
+      EQUAL_BUTTON.disabled = true
   }
-
 }
 
 const addToTheDisplay = (value) => {
@@ -290,6 +317,7 @@ const operate = () => {
     resetMemoryNumberAndOperator()
   }
 
+  disableOrEnableButtons()
 }
 
 const resetMemoryNumberAndOperator = () => {
@@ -449,6 +477,13 @@ const isOnRangeOfNotError = (value) => {
 
   if (numeroLimite >= value && value >= -numeroLimite) return true 
   else return false 
+
+}
+
+const isAnErrorOnDisplay = () => {
+
+  if (display.innerHTML == 'ERROR') return true
+  else return false
 
 }
 reset()
