@@ -174,6 +174,7 @@ const pressNumber = (buttonNumber) => {
 const floatCurrentNum = () => {
   const currentNumberDisplayableString = currentNumberToDisplayableString()
   if (!currentNumberDisplayableString.includes(POINT_LOCALE) && currentNumberDisplayableString.length < MAX_DIGITS_IN_DISPLAY) {
+    disableButtonLogic('enable_numericals')
     disableButton('point', true)
     pendingPoint = true
   }
