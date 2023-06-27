@@ -469,8 +469,8 @@ Examples:
 |            42 |      + |         87 |           10 |       / |           2 |             5 |
 |          9,26 |      * |       2,15 |          123 |       + |         234 |           357 |
 
-@wip
-Scenario Outline: Doing an operation without a second number
+@done
+Scenario Outline: Doing an operation without a second number 2.0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
 When the user presses the "=" button
@@ -482,23 +482,25 @@ Examples:
 |          9283 |      - |
 |         1,234 |      * |
 
+@wip
 Scenario Outline: Clicking the button 0 after operate
 When the user presses the "<button>" button
 And the user presses the "0" button
 And the user presses the "<button2>" button
 And the user presses the "<number>" button
 And the user presses the "0" button
+And the user presses the "0" button
 Then the display should show the following value: "<displayNumber>"
 
 Examples:
 | button | button2 | number | displayNumber |
-|      = |       , |      0 |          0,00 |
+|      = |       , |      0 |         0,000 |
 |      = |       0 |      0 |             0 |
-|      + |       , |      0 |          0,00 |
+|      + |       , |      0 |         0,000 |
 |      + |       0 |      0 |             0 |
-|      / |       , |      0 |          0,00 |
+|      / |       , |      0 |         0,000 |
 |      / |       0 |      0 |             0 |
-|      - |       , |      0 |          0,00 |
+|      - |       , |      0 |         0,000 |
 |      - |       0 |      0 |             0 |
-|      * |       , |      0 |          0,00 |
+|      * |       , |      0 |         0,000 |
 |      * |       0 |      0 |             0 |
