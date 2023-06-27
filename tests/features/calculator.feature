@@ -456,8 +456,8 @@ And the "+-" button should be enabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@ex_MultipleZeros
-Scenario: Writing numbers with multiple zeros
+@ex_ComplexZeros
+Scenario: Writing complex float numbers
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
 Then the display should show the following value: "<displayResult>"
