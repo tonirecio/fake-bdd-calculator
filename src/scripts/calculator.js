@@ -25,7 +25,7 @@ const updateDisplay = (value) => {
 const reset = () => {
   updateDisplay(0)
   countDigits = 0
-  currentOperand = 0
+  currentOperand = ''
   decimalSymbolUsage = false
   decimalPlacement = 1
   isPointUsedWithoutDecimal = false
@@ -136,6 +136,7 @@ const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
 const nonOperatorNonNumberButtons = ['clean', 'negate', 'point']
 const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 const operatorButtons = ['divide', 'multiply', 'subtract', 'sum']
+const resultErrors = ['Infinity', '-Infinity', 'NaN']
 const nonOperatorButtons = document.querySelectorAll('div[name="keypad"] button')
 
 nonOperatorButtons.forEach(nonOperatorButton => {
@@ -163,26 +164,26 @@ nonOperatorButtons.forEach(nonOperatorButton => {
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse === '') {
       pastOperand = saveAndResetCurrentOperand(currentOperand)
       operandSymbolInUse = operatorButtonPressed(buttonName)
+      //updateDisplay(pastOperand)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse !== '') {
-      if (currentOperand !== 0) {
+      if (currentOperand !== '') {
         operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-        if (isOperationResultOverLength(operationResult)) {
-          updateDisplay('ERROR')
-        } else {
-          updateDisplay(operationResult)
-          pastOperand = operationResult
-        }
+        pastOperand = operationResult        
       }
       operandSymbolInUse = operatorButtonPressed(buttonName)
-    } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
+    } else if (buttonName === 'equal' && operandSymbolInUse !== '' && currentOperand !== '') {
       operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
       if (isOperationResultOverLength(operationResult)) {
+        updateDisplay('ERROR')
+      } else if (resultErrors.includes(operationResult.toString())) {
         updateDisplay('ERROR')
       } else {
         updateDisplay(operationResult)
         pastOperand = operationResult
       }
-    } 
+    } else if (currentOperand === ''){
+      updateDisplay('ERROR')
+    }
   })
 })
 
@@ -237,7 +238,7 @@ document.addEventListener('keydown', (event) => {
 
 // [Scenario] Performing two number operations
 const saveAndResetCurrentOperand = (currentOperand) => {
-  if (currentOperand !== 0) {
+  if (currentOperand !== '') {
     pastOperand = currentOperand
     reset()
   } else {
@@ -321,3 +322,5 @@ const isOperationResultOverLength = (operationResult) => {
 // [Scenario] Using the previous result in a new operation (line 172)
 
 // [Scenario] Using previous result in new operation easier (line 166-176)
+
+// [Scenario] Division with 0 (line 139, 178)
