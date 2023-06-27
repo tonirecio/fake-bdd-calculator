@@ -96,18 +96,16 @@ const disableOrEnableButtons = () => {
   if (isRecentlyAddedAOperation) NEGATE_BUTTON.disabled = true
   else NEGATE_BUTTON.disabled = false
 
-  if (isOnDisplayZero()) {
-    ZERO_BUTTON.disabled = true
-    NEGATE_BUTTON.disabled = true
-  }
-  else {
-    ZERO_BUTTON.disabled = false
-    NEGATE_BUTTON.disabled = false
-  }
-
 if (!isAnErrorOnDisplay()){
     if (!isTheMaxLenght()) {
-      ZERO_BUTTON.disabled = false
+      if (isOnDisplayZero()) {
+        ZERO_BUTTON.disabled = true
+        NEGATE_BUTTON.disabled = true
+      }
+      else {
+        ZERO_BUTTON.disabled = false
+        NEGATE_BUTTON.disabled = false
+      }
       ONE_BUTTON.disabled = false
       TWO_BUTTON.disabled = false
       THREE_BUTTON.disabled = false
