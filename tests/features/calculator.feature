@@ -169,7 +169,7 @@ Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
-@wip
+@done
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -184,6 +184,7 @@ Examples:
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
 
+@done
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -197,6 +198,7 @@ Examples:
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
 
+@done
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -213,6 +215,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
+@wip
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button

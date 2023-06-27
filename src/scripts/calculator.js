@@ -14,6 +14,8 @@ const setDisplay = value => {
 const reset = () => {
   numberStack.length = 0
   numberStack.push(0)
+  currentNumber = 0
+  previousNumber = 0
   setDisplay(stackToNumber(numberStack))
 }
 
@@ -139,7 +141,10 @@ const executeOperation = operationType => {
     resultOutput = 'ERROR'
   }
 
-  previousNumber = currentNumber = 0
+  previousNumber = result
+  currentNumber = 0
+  numberStack.length = 0
+  numberStack.push(0)
   return resultOutput
 }
 
