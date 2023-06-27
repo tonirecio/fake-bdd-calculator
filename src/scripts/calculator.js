@@ -94,7 +94,10 @@ const pressingNumber = (newNumber) => {
   actualNumberisNull = false
   setDisplay(actualNumber)
   changeDisableAllButtons(buttons, false)
-  if(lenNumber(actualNumber) >= MAX_DIGITS_IN_DISPLAY) {
+  if (actualNumberHasPoint) {
+    changeDisableOneButton(document.getElementsByName('point')[0], true)
+  }
+  if (lenNumber(actualNumber) >= MAX_DIGITS_IN_DISPLAY) {
     changeDisableNumberButtons(true)
     changeDisableOneButton(document.getElementsByName('point')[0], true)
   }
@@ -111,6 +114,7 @@ const pressingPoint = () => {
   }
   setDisplay(actualNumber)
   actualNumberisNull = false
+  changeDisableOneButton(document.getElementsByName('point')[0], true)
 }
 
 const pressingOperator = (newOperator) => {
