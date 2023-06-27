@@ -421,7 +421,7 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
-
+@newTest
 Scenario Outline: Handling the number 0 while writing integers
 Given the user writes the following value: "<userNumber>"
 And the user writes the following value: "<secondNumber>"
