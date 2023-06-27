@@ -39,3 +39,5 @@
 *Scenario Outline: Showing the first number after pressing operation*: Està bé.
 
 *Scenario Outline: Using the Equals button without operation*: Quan s'ha de negar el número, fa servir la funció 'getDisplay', en comptes d'agafar el número de la variable que ja té 'lastNumberWrited'.
+
+*Scenario Outline: Reenabling buttons with no error using operators*: Crec que les funcions d'activar i desactivar estan bé.
