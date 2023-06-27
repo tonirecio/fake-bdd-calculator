@@ -109,3 +109,8 @@
 - [X] 🟩 **Scenario Test:** Sense errors
 - [X] 🟩 **Lint Test:** Un error en una linea extra
 - [X] 🟩 **Sintaxis:** Millorat respecte l'anterior commit
+
+## @disable_buttons
+- [X] 🟩 **Scenario Test:** Sense errors
+- [X] 🟩 **Lint Test:** Sense errors
+- [X] 🟩 **Sintaxis:** Refactoritzat part del codi, programació correcta
