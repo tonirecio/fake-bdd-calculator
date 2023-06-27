@@ -18,6 +18,37 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
+const disableButtonLogic = (status) => {
+  switch (status){
+    case 'clear':
+      disableNumericalButtonSet(false)
+      disableOperationButtonSet(false)
+      disableButton('zero', true)
+      disableButton('negate', true)
+      break
+    case 'resolve':
+      disableNumericalButtonSet(false)
+      disableOperationButtonSet(false)
+      disableButton('negate', false)
+      break
+    case 'max_digits_in_display':
+      disableNumericalButtonSet(true)
+      break
+    case 'operator':
+      disableNumericalButtonSet(false)
+      disableOperationButtonSet(false)
+      disableButton('negate', true)
+      break
+    case 'enable_all':
+      disableNumericalButtonSet(false)
+      disableOperationButtonSet(false)
+      disableNonOperationButtonSet(false)
+      break
+    default:
+      console.warn('[WARNING] ' + status + ' logic state not contemplated / implemented.')
+  }
+}
+
 const currentNumberToDisplayableString = () => {
   let displayValue
   if (isFinite(currentNumber)) {
@@ -46,26 +77,16 @@ const reset = () => {
   pendingZeros = 0
   clearDisplay = false
 
-  disableNumericalButtonSet(false)
-  disableOperationButtonSet(false)
-
   setDisplay(currentNumber)
 }
 
 const clear = () => {
-  disableNumericalButtonSet(false)
-  disableOperationButtonSet(false)
-  disableButton('zero', true)
-  disableButton('negate', true)
-
+  disableButtonLogic('clear')
   reset()
 }
 
 const resolve = () => {
-  disableNumericalButtonSet(false)
-  disableOperationButtonSet(false)
-  disableButton('negate', false)
-
+  disableButtonLogic('resolve')
   completeOperation()
 }
 
@@ -82,10 +103,12 @@ const pressNumber = (buttonNumber) => {
   }
   // main number logic
   if (clearDisplay || currentNumber === 'ERROR') {
+    disableButtonLogic('enable_all')
     currentNumberDisplayableString = buttonNumber.toString()
     clearDisplay = false
   } else {
     if (currentNumberDisplayableStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
+      disableButtonLogic('enable_all')
       if (pendingPoint) {
         if (buttonNumber !== 0) {
           currentNumberDisplayableString += buttonNumber
@@ -101,7 +124,7 @@ const pressNumber = (buttonNumber) => {
   }
   if (currentNumberDisplayableStringSanitized.length + 1 >= MAX_DIGITS_IN_DISPLAY)
   {
-    disableNumericalButtonSet(true)
+    disableButtonLogic('max_digits_in_display')
   }
   currentNumber = parseFloat(currentNumberDisplayableString.replace(POINT_LOCALE, '.'))
 }
@@ -176,9 +199,7 @@ const addOperationButtonClickEvent = (buttonName) => {
       completeOperation()
       setDisplay(currentNumberToDisplayableString())
     }
-    disableNumericalButtonSet(false)
-    disableOperationButtonSet(false)
-    disableButton('negate', true)
+    disableButtonLogic('operator')
     currentOperation = buttonName
     previousNumber = currentNumber
     clearDisplay = true
@@ -204,6 +225,12 @@ const disableOperationButtonSet = (boolStatus) => {
   disableButton('subtract', boolStatus)
   disableButton('multiply', boolStatus)
   disableButton('divide', boolStatus)
+}
+
+const disableNonOperationButtonSet = (boolStatus) => {
+  disableButton('clean', boolStatus)
+  disableButton('negate', boolStatus)
+  disableButton('equal', boolStatus)
 }
 
 const disableButton = (buttonName, boolStatus) => {
@@ -262,6 +289,8 @@ const init = () => {
   addOperationButtonClickEvent('multiply')
   addOperationButtonClickEvent('subtract')
   addOperationButtonClickEvent('divide')
+  // force enabled buttons at start
+  disableButtonLogic('enable_all')
 }
 
 // INITIALIZATION
