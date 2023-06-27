@@ -45,3 +45,5 @@
 *Scenario: Reenabling buttons with no error using C button*: Crec que s'hauria de dividir la funció 'addButtons' en funcions més petites, perquè crec que fa masses coses.
 
 *Scenario: Reenabling buttons with no error using = button*: Ok.
+
+*Scenario Outline: Disabling buttons*: Ok.
