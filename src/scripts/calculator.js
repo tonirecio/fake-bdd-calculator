@@ -26,6 +26,8 @@ const reset = () => {
   addDecimal = false
   doOperation = false
   isEqualsPressed = false
+  doMultipleOperations = false
+  negateNumberWhenEquals = false
 
   enableAllButtons()
   enableDissableButton('negate', true)
@@ -44,7 +46,7 @@ const addNumber = (num) => {
     doMultipleOperations = true
   }
 
-  if ((lastNumberWrited === '0' || isEqualsPressed) && !addDecimal) {
+  if ((lastNumberWrited === '' || isEqualsPressed) && !addDecimal) {
     toDisplay = num.toString()
     lastNumberWrited = num
 
@@ -70,16 +72,16 @@ const addNumber = (num) => {
   }
   toDisplay = toDisplay.replace('.', ',')
 
-  if (maxLenght(lastNumberWrited)) {
-    disableNumberButtons()
-    enableDissableButton('point', true)
-  }
-
   return toDisplay
 }
 
 const addNumberAndDisplay = (num) => {
   const text = addNumber(num)
+
+  if (maxLenght(lastNumberWrited)) {
+    disableNumberButtons()
+    enableDissableButton('point', true)
+  }
 
   setDisplay(text)
 }
@@ -149,7 +151,8 @@ const operate = (num1, operation, num2) => {
   isEqualsPressed = true
 
   if (!negateNumberWhenEquals) {
-    if (num1 !== '' && num2 !== '') {
+
+    if (num1 !== '' || num2 !== '') {
       switch (operation) {
         case '+':
           lastNumberWrited = numberToOperate1 + numberToOperate2
@@ -163,7 +166,6 @@ const operate = (num1, operation, num2) => {
         case '/':
           if (numberToOperate1 === 0 || numberToOperate2 === 0) {
             lastNumberWrited = 'ERROR'
-            disableAllButtons()
           } else {
             lastNumberWrited = numberToOperate1 / numberToOperate2
           }
@@ -249,6 +251,10 @@ const operateAndDisplay = () => {
     text = opertionWithoutTwoNumbers(operator).replace('.', ',')
   } else {
     text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
+
+    if (text === 'ERROR') {
+      disableAllButtons()
+    }
   }
   setDisplay(text)
 }

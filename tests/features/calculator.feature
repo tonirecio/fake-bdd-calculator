@@ -406,7 +406,7 @@ And the "+-" button should be disabled
 And the "=" button should be disabled
 And the "C" button should be enabled
 
-@wip
+@done
 Scenario: Reenabling buttons with error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -431,3 +431,70 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
+
+@wip
+Scenario Outline: Clicking two different operation buttons after using C button
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+And the user presses the "=" button
+And the user presses the "C" button
+And the user writes the number: "<secondNumber>"
+And the user presses the "<button2>" button
+And the user writes the number: "<thirdNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| displayNumber | button | userNumber | secondNumber | button2 | thirdNumber | resultDisplay |
+|            12 |      / |          6 |            4 |       - |           4 |             0 |
+|          1234 |      + |         31 |          502 |       / |          50 |         10,04 |
+|          9,26 |      * |       2,15 |          139 |       + |           2 |           141 |
+
+Scenario Outline: Clicking two different operation buttons after using C button
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+And the user presses the "=" button
+And the user writes the number: "<secondNumber>"
+And the user presses the "<button2>" button
+And the user writes the number: "<thirdNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| displayNumber | button | userNumber | secondNumber | button2 | thirdNumber | resultDisplay |
+|             5 |      / |          9 |            3 |       - |           1 |             2 |
+|            42 |      + |         87 |           10 |       / |           2 |             5 |
+|          9,26 |      * |       2,15 |          123 |       + |         234 |           357 |
+
+Scenario Outline: Doing an operation without a second number
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+When the user presses the "=" button
+Then the display should show the following value: "ERROR"
+
+| displayNumber | button |
+|            52 |      / |
+|          9283 |      - |
+|         1,234 |      * |
+
+Scenario Outline: Clicking the button 0 after operate
+When the user presses the "<button>" button
+And the user presses the "0" button
+And the user presses the "<button2>" button
+And the user presses the "<number>" button
+And the user presses the "0" button
+Then the display should show the following value: "<displayNumber>"
+
+| button | button2 | number | displayNumber |
+|      = |       , |      0 |          0,00 |
+|      = |       0 |      0 |             0 |
+|      + |       , |      0 |          0,00 |
+|      + |       0 |      0 |             0 |
+|      / |       , |      0 |          0,00 |
+|      / |       0 |      0 |             0 |
+|      - |       , |      0 |          0,00 |
+|      - |       0 |      0 |             0 |
+|      * |       , |      0 |          0,00 |
+|      * |       0 |      0 |             0 |
