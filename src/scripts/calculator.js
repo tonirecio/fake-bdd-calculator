@@ -196,32 +196,40 @@ const toOperate = () => {
   secondOperator = parseFloat(secondOperator)
 
   let result = 0;
+  if (firstOperator === 9999999999 || secondOperator === 9999999999) {
+    isAnError()
 
-  if (operator === '+') {
-    result = firstOperator + secondOperator;
-
-  } else if (operator === '-') {
-    result = firstOperator - secondOperator;
-
-  } else if (operator === '*') {
-    result = firstOperator * secondOperator;
-
-  } else if (operator === '/') {
-    result = firstOperator / secondOperator;
-
-  }
-  var numTotalBeforeComma = numberBeforeComma(result);
-  if (result < 0) {
-    result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
   } else {
-    result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+    if (operator === '+') {
+      result = firstOperator + secondOperator;
+
+    } else if (operator === '-') {
+      result = firstOperator - secondOperator;
+
+    } else if (operator === '*') {
+      result = firstOperator * secondOperator;
+
+    } else if (operator === '/') {
+      result = firstOperator / secondOperator;
+
+    }
+    var numTotalBeforeComma = numberBeforeComma(result);
+
+    if (result < 0) {
+      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
+
+    } else {
+      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+
+    }
+    console.log(firstOperator + " + " + secondOperator + " = " + result)
+    setDisplay(result);
+
+    firstOperator = result;
+
+    operator = null;
   }
-  console.log(firstOperator + " + " + secondOperator + " = " + result)
-  setDisplay(result);
-
-  firstOperator = result;
-
-  operator = null;
+  
 
 }
 
@@ -235,7 +243,7 @@ const roundToDecimalPlaces = (value, decimalPlaces) => {
   var num = value * multiple;
   num = Math.round(num);
   num = num/multiple
-  return num;
+  return num; 
 
 };
 
@@ -243,6 +251,12 @@ const numberBeforeComma = (value) => {
 
   var numTotalBeforeComma = value.toString().split('.')[0]
   return numTotalBeforeComma.length
+
+}
+
+const isAnError = () => {
+
+setDisplay('ERROR');
 
 }
 
