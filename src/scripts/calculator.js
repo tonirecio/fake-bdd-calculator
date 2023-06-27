@@ -87,6 +87,13 @@ const reset = () => {
   savedOperator = ''
 }
 
+const disableOrEnableButtons = () => {
+
+  if (isRecentlyAddedAOperation) NEGATE_BUTTON.disabled = true
+  else NEGATE_BUTTON.disabled = false
+
+}
+
 const addToTheDisplay = (value) => {
 
   if (isRecentlyAddedAOperation) setDisplay(0)
@@ -129,6 +136,7 @@ const addToTheDisplay = (value) => {
 
   }
   isRecentlyAddedAOperation = false
+  disableOrEnableButtons()
 
 }
 
@@ -221,6 +229,9 @@ const operatorSelect = (value) => {
     isRecentlyAddedAOperation = true
   }
   else savedOperator = value
+
+  disableOrEnableButtons()
+
 }
 const operate = () => {
 
@@ -286,7 +297,7 @@ const doDivision = () => {
 
 document.addEventListener('keydown', () => {
   if (event.key === "Escape" || event.keyCode === 27) reset()
-  else if (event.ctrlKey) invertNumberDisplay()
+  else if (event.ctrlKey && isRecentlyAddedAOperation == false) invertNumberDisplay()
   else if (event.key === "0") addToTheDisplay(0)
   else if (event.key === "1") addToTheDisplay(1)
   else if (event.key === "2") addToTheDisplay(2)
@@ -306,7 +317,7 @@ document.addEventListener('keydown', () => {
 })
 
 COMMA_BUTTON.addEventListener('click', () => { addToTheDisplay(COMMA_CHARACTER) })
-NEGATE_BUTTON.addEventListener('click', () => { invertNumberDisplay() })
+NEGATE_BUTTON.addEventListener('click', () => { if (isRecentlyAddedAOperation == false) invertNumberDisplay() })
 CLEAN_BUTTON.addEventListener('click', () => { reset() })
 ZERO_BUTTON.addEventListener('click', () => { addToTheDisplay(0) })
 ONE_BUTTON.addEventListener('click', () => { addToTheDisplay(1) })
