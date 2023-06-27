@@ -20,6 +20,7 @@ const reset = () => {
   numberHasComma = false
   number = null
   pendingZeros = 0
+  handleButtonEnablingWhenReset()
   setDisplay(0)
 }
 
@@ -37,7 +38,7 @@ const addEventsToButtons = () => {
   document.querySelector('button[name="nine"]').addEventListener('click', () => writeNewNumber(9))
   // Non operator buttons
   document.querySelector('button[name="point"]').addEventListener('click', writeComma)
-  document.querySelector('button[name="clean"]').addEventListener('click', handleCleanClick)
+  document.querySelector('button[name="clean"]').addEventListener('click', reset)
   document.querySelector('button[name="negate"]').addEventListener('click', handleNegateClick)
   // Operator buttons
   document.querySelector('button[name="equal"]').addEventListener('click', handleEqualsClick)
@@ -57,17 +58,12 @@ const addEventsToKeyboard = () => {
       if (keyName === ',') {
         writeComma()
       } else if (keyName === 'Escape') {
-        handleCleanClick()
+        reset()
       } else if (keyName === 'Control') {
         handleNegateClick()
       }
     }
   })
-}
-
-const handleCleanClick = () => {
-  handleButtonEnablingWhenClickingClean()
-  reset()
 }
 
 const handleNegateClick = () => {
@@ -105,6 +101,13 @@ const setDisplay = (value) => {
     if (numberHasComma && !displayValue.includes(COMMA_SYMBOL)) {
       displayValue += COMMA_SYMBOL
     }
+    for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
+      displayValue += '0'
+    }
+    if (getDigitNumber(value) >= MAX_DIGITS_IN_DISPLAY && !overrideDisplay) {
+      setAllButtonDisabledStatus(false)
+      setNonOperatorButtonDisabledStatus(true)
+    }
   }
   display.innerHTML = displayValue
 }
@@ -122,6 +125,7 @@ const writeNewNumber = (newNumber) => {
     overrideDisplay = false
     numberHasComma = false
     number = newNumber
+    setAllButtonDisabledStatus(false)
   } else if (getDigitNumber(number) < MAX_DIGITS_IN_DISPLAY) {
     if (Number.isInteger(number) && numberHasComma) {
       if (newNumber === 0) {
@@ -211,7 +215,7 @@ const handleButtonEnablingWhenClickingOperator = () => {
   document.querySelector('button[name="negate"]').disabled = true
 }
 
-const handleButtonEnablingWhenClickingClean = () => {
+const handleButtonEnablingWhenReset = () => {
   setAllButtonDisabledStatus(false)
   document.querySelector('button[name="zero"]').disabled = true
   document.querySelector('button[name="negate"]').disabled = true
