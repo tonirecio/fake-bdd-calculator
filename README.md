@@ -158,3 +158,9 @@ Ha passat el test!
 Comentaris:
 * Ha passat el lint
 * Codi ben implementat
+
+## @sc_ReenableError
+Ha passat el test!  
+Comentaris:
+* Ha passat el lint
+* Codi ben implementat
