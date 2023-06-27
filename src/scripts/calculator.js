@@ -19,7 +19,7 @@ const reset = () => {
   actualNumberisNull = true
   actualNumberHasPoint = false
   setDisplay(0)
-  enableAllButtons()
+  changeDisableAllButtons(buttons, false)
   changeDisableOneButton(document.getElementsByName('zero')[0], true)
   changeDisableOneButton(document.getElementsByName('negate')[0], true)
 }
@@ -93,7 +93,11 @@ const pressingNumber = (newNumber) => {
   }
   actualNumberisNull = false
   setDisplay(actualNumber)
-  enableAllButtons()
+  changeDisableAllButtons(buttons, false)
+  if(lenNumber(actualNumber) >= MAX_DIGITS_IN_DISPLAY) {
+    changeDisableNumberButtons(true)
+    changeDisableOneButton(document.getElementsByName('point')[0], true)
+  }
 }
 
 const pressingNegate = () => {
@@ -116,7 +120,7 @@ const pressingOperator = (newOperator) => {
     setDisplay(accumulatedNumber)
   } else if (operator === null && accumulatedNumber === null) {
     accumulatedNumber = actualNumber
-    enableAllButtons()
+    changeDisableAllButtons(buttons, false)
     changeDisableOneButton(document.getElementsByName('negate')[0], true)
   }
   operator = newOperator
@@ -142,17 +146,30 @@ const pressingEqual = () => {
     displayValue = accumulatedNumber
   }
   setDisplay(displayValue)
+  changeDisableAllButtons(buttons, false)
 }
 
 const changeDisableOneButton = (button, disabled) => {
   button.disabled = disabled
 }
 
-const enableAllButtons = () => {
-  const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
-  for (const button of buttons) {
-    changeDisableOneButton(button, false)
+const changeDisableAllButtons = (buttonsList, disabled) => {
+  for (const button of buttonsList) {
+    changeDisableOneButton(button, disabled)
   }
+}
+
+const changeDisableNumberButtons = (disabled) => {
+  document.getElementsByName('zero')[0].disabled = disabled
+  document.getElementsByName('one')[0].disabled = disabled
+  document.getElementsByName('two')[0].disabled = disabled
+  document.getElementsByName('three')[0].disabled = disabled
+  document.getElementsByName('four')[0].disabled = disabled
+  document.getElementsByName('five')[0].disabled = disabled
+  document.getElementsByName('six')[0].disabled = disabled
+  document.getElementsByName('seven')[0].disabled = disabled
+  document.getElementsByName('eight')[0].disabled = disabled
+  document.getElementsByName('nine')[0].disabled = disabled
 }
 
 const getEventsListenersButtons = () => {
@@ -213,6 +230,7 @@ const getEventsListenersKeyboard = () => {
 
 const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
+const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
 let operator = null
 let accumulatedNumber = null
 let actualNumber = 0
