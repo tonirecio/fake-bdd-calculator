@@ -51,3 +51,5 @@
 *Scenario: Disabling the second comma*: Crec que tot el referent a activar i desactivar botons no hauria d'estar a la funció de 'addNumber', sinó que hauria d'estar a la funció 'addNumberAndDisplay'. Amb la coma, per exemple, crec que està bé, perquè la desactivació del botó no està a la funció 'addPoint'. 
 
 *Scenario: Disabling because of error*: Només desactiva els botons quan l'error es genera per la divisió entre 0. A més a més, ho desactiva en la funció 'operate', i crec que, per tal de que aquesta funció sigui reutilitzable, només hauria de fer l'operació. 
+
+*Scenario: Reenabling buttons with error*: Ok.
