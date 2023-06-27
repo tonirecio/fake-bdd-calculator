@@ -432,7 +432,7 @@ And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@created
+@created @done
 Scenario Outline: Writing numbers that have zeros in the decimals
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -444,3 +444,4 @@ Examples:
 |        1,0001 |        1,0001 |
 |         -2,03 |         -2,03 |
 |         -0,00 |             0 |
+|       3,00102 |       3,00102 |

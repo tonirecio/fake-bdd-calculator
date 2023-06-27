@@ -12,12 +12,17 @@ const roundNumber = (number) => {
   return (number)
 }
 
+const resetActualNumber = () => {
+  actualNumberisNull = true
+  actualNumber = 0
+  pendingZeros = 0
+  actualNumberHasPoint = false
+}
+
 const reset = () => {
   operator = null
   accumulatedNumber = null
-  actualNumber = 0
-  actualNumberisNull = true
-  actualNumberHasPoint = false
+  resetActualNumber()
   setDisplay(0)
   changeDisableAllButtons(buttons, false)
   changeDisableOneButton(document.getElementsByName('zero')[0], true)
@@ -30,8 +35,13 @@ const setDisplay = (value) => {
     displayValue = value
   } else {
     displayValue = String(value).replace('.', ',')
-    if (actualNumberHasPoint && !displayValue.includes(',')) {
-      displayValue = displayValue.concat(',')
+    if (actualNumberHasPoint) {
+      if (!displayValue.includes(',')) {
+        displayValue = displayValue.concat(',')
+      }
+      for (let i = 0; i < pendingZeros; i++) {
+        displayValue = displayValue.concat('0')
+      }
     }
   }
   display.innerHTML = displayValue
@@ -42,11 +52,11 @@ const negateNum = (number) => {
   return (number)
 }
 
-const appendNumber = (number, numberToAppend, hasPoint) => {
+const appendNumber = (number, numberToAppend, hasPoint, pendingZeroDecimals) => {
   let result
   if (lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
     if (hasPoint) {
-      const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1
+      const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1 + pendingZeroDecimals
       result = number + (numberToAppend * Math.pow(0.1, numDecimals))
     } else {
       result = number * 10 + numberToAppend
@@ -88,8 +98,11 @@ const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
 const pressingNumber = (newNumber) => {
   if ((actualNumber === 0 && !actualNumberHasPoint) || actualNumberisNull) {
     actualNumber = newNumber
+  } else if (newNumber === 0 && actualNumberHasPoint) {
+    pendingZeros++
   } else {
-    actualNumber = appendNumber(actualNumber, newNumber, actualNumberHasPoint)
+    actualNumber = appendNumber(actualNumber, newNumber, actualNumberHasPoint, pendingZeros)
+    pendingZeros = 0
   }
   actualNumberisNull = false
   setDisplay(actualNumber)
@@ -114,6 +127,7 @@ const pressingPoint = () => {
   }
   setDisplay(actualNumber)
   actualNumberisNull = false
+  changeDisableAllButtons(buttons, false)
   changeDisableOneButton(document.getElementsByName('point')[0], true)
 }
 
@@ -133,9 +147,7 @@ const pressingOperator = (newOperator) => {
     changeDisableOneButton(document.getElementsByName('negate')[0], true)
   }
   operator = newOperator
-  actualNumberisNull = true
-  actualNumber = 0
-  actualNumberHasPoint = false
+  resetActualNumber()
 }
 
 const pressingEqual = () => {
@@ -150,9 +162,7 @@ const pressingEqual = () => {
       accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
       operator = null
     }
-    actualNumber = 0
-    actualNumberisNull = true
-    actualNumberHasPoint = false
+    resetActualNumber()
     displayValue = accumulatedNumber
     if (displayValue === 'ERROR') {
       changeDisableWhenError()
@@ -250,11 +260,12 @@ const getEventsListenersKeyboard = () => {
 const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
-let operator = null
-let accumulatedNumber = null
-let actualNumber = 0
-let actualNumberHasPoint = false
-let actualNumberisNull = true
+let operator
+let accumulatedNumber
+let actualNumberisNull
+let actualNumber
+let actualNumberHasPoint
+let pendingZeros
 
 reset()
 getEventsListenersButtons()
