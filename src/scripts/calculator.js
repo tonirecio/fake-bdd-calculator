@@ -102,6 +102,33 @@ const disableOrEnableButtons = () => {
     NEGATE_BUTTON.disabled = false
   }
 
+  if (!isTheMaxLenght()) {
+    ZERO_BUTTON.disabled = false
+    ONE_BUTTON.disabled = false
+    TWO_BUTTON.disabled = false
+    THREE_BUTTON.disabled = false
+    FOUR_BUTTON.disabled = false
+    FIVE_BUTTON.disabled = false
+    SIX_BUTTON.disabled = false
+    SEVEN_BUTTON.disabled = false
+    EIGHT_BUTTON.disabled = false
+    NINE_BUTTON.disabled = false
+    COMMA_BUTTON.disabled = false
+  }
+  else{
+    ZERO_BUTTON.disabled = true
+    ONE_BUTTON.disabled = true
+    TWO_BUTTON.disabled = true
+    THREE_BUTTON.disabled = true
+    FOUR_BUTTON.disabled = true
+    FIVE_BUTTON.disabled = true
+    SIX_BUTTON.disabled = true
+    SEVEN_BUTTON.disabled = true
+    EIGHT_BUTTON.disabled = true
+    NINE_BUTTON.disabled = true
+    COMMA_BUTTON.disabled = true
+  }
+
 }
 
 const addToTheDisplay = (value) => {
