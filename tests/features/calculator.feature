@@ -432,7 +432,7 @@ And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@wip
+@using_previous_result_zero
 Scenario Outline: Using the previous zero result in a new operation
 Given the user presses the "<firstButton>" button
 And the user writes the number: "<secondNumber>"
@@ -447,7 +447,7 @@ Examples:
 |           * |            6 |            + |           3 |             3 |
 |           / |            3 |            + |           6 |             6 |
 
-@wip
+@small_decimal_results
 Scenario Outline: Small decimal results
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
