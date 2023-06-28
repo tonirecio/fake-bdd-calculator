@@ -16,6 +16,7 @@ const setDisplay = (currentValue) => {
 
 const reset = () => {
   currentValue = '0'
+  operator = null
   setDisplay(currentValue)
 }
 
@@ -181,6 +182,12 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
 
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
+
+  if (operator == undefined) {
+    currentValue = currentValue.replace('.', '')
+    setDisplay(currentValue)
+    return
+  }
   if (secondOperand === '0' || secondOperand === undefined) {
     setDisplay('ERROR')
     return

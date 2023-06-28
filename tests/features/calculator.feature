@@ -272,6 +272,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
+@done
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
