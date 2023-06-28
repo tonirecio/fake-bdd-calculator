@@ -135,15 +135,22 @@ const writeNewNumber = (newNumber) => {
     number = newNumber
     setAllButtonDisabledStatus(false)
   } else if (getDigitNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-    if (Number.isInteger(number) && numberHasComma) {
+    if (Number.isInteger(number) && !numberHasComma) {
+      number = parseFloat(number + newNumber.toString())
+    } else {
       if (newNumber === 0) {
         pendingZeros++
-      } else {
+      } else if (Number.isInteger(number)) {
         number += newNumber / (Math.pow(10, pendingZeros + 1))
         pendingZeros = 0
+      } else {
+        let zeroString = ''
+        for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
+          zeroString += '0'
+        }
+        number = parseFloat(number + zeroString + newNumber.toString())
+        pendingZeros = 0
       }
-    } else if (getDigitNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-      number = parseFloat(number + newNumber.toString())
     }
   }
   setDisplay(formatNumberToDisplay(number))
@@ -181,7 +188,9 @@ const performOperation = () => {
 }
 
 const formatNumberToDisplay = (result) => {
-  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(result)) result = 'ERROR'
+  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(result)) {
+    result = 'ERROR'
+  }
   if (result !== 'ERROR') {
     if (getDigitNumber(result) > MAX_DIGITS_IN_DISPLAY) {
       const integerPartDigits = parseInt(Math.abs(result)).toString().length
