@@ -116,8 +116,8 @@ const addToDisplay = (value) => {
     let currentValue = '';
 
     const isSign = value === '-';
-    console.log('valor Introducido: ' + value)
-    if (isTheOperationFinisehd === true) {
+    console.log('valor Introducido: ' + value + ', valor en memoria: ' + firstOperator)
+    if (isTheOperationFinisehd  || isRecentlyPutAOperator) {
       setDisplay(0)
       isTheOperationFinisehd = false;
     } else currentValue = display.innerHTML;
@@ -190,17 +190,18 @@ const seleccionarOperador = (op) => {
   console.log('Pre-Funcion Memoria: ' + firstOperator)
   if (isRecentlyPutAOperator === false){
     if (firstOperator !== null) {
+      
+      toOperate();
+
       if (result !== null) {
+        console.log('result en memoria: ' + result)
         firstOperator = result;
       }
-      toOperate();
+    
     }
 
     operator = op;
-
     addInDisplayFirstOperator()
-
-    reset() 
     
   }
   else operator = op
