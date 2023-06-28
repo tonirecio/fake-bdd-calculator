@@ -274,14 +274,7 @@ const addFunctionButtonClickEvent = (buttonName, assignedFunction) => {
 
 const addOperationButtonClickEvent = (buttonName) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
-    if (pendingOperation) {
-      completeOperation()
-      setDisplay(currentNumberToDisplayableString())
-    }
-    disableButtonLogic('operator')
-    currentOperation = buttonName
-    previousNumber = currentNumber
-    clearDisplay = true
+    buttonOperation(buttonName)
   })
 }
 
@@ -301,6 +294,18 @@ const init = () => {
       case '8':
       case '9':
         pressNumber(keyName)
+        break
+      case '+':
+        buttonOperation('sum')
+        break
+      case '-':
+        buttonOperation('subtract')
+        break
+      case '*':
+        buttonOperation('multiply')
+        break
+      case '/':
+        buttonOperation('divide')
         break
       case 'Escape':
         reset()
@@ -344,3 +349,14 @@ const init = () => {
 // INITIALIZATION
 init()
 reset()
+function buttonOperation(buttonName) {
+  if (pendingOperation) {
+    completeOperation()
+    setDisplay(currentNumberToDisplayableString())
+  }
+  disableButtonLogic('operator')
+  currentOperation = buttonName
+  previousNumber = currentNumber
+  clearDisplay = true
+}
+

@@ -488,3 +488,34 @@ Examples:
 |      0,010203 |      - |  123,020043 |    -123,00984 |
 |          1234 |      * | 0,001203040 |    1,48455136 |
 |          1234 |      / | 0,010203045 |   120944,2867 |
+
+@ex_ComplexZerosOperations
+Scenario Outline: Doing operations with complex float number
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button |  userNumber | displayResult |
+|   0,000000010 |      + | 0,000000011 |   0,000000021 |
+|            10 |      + | 0,000000068 |   10,00000007 |
+|      0,010203 |      - |  123,020043 |    -123,00984 |
+|          1234 |      * | 0,001203040 |    1,48455136 |
+|          1234 |      / | 0,010203045 |   120944,2867 |
+
+@ex_OperationsKeyboard
+Scenario Outline: Performing two number operations with keyboard
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<key>" key
+And the user writes the number: "<userNumber>"
+When the user presses the "=" button                             
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber |    key | userNumber | displayResult |
+|            24 |      + |          6 |            30 |
+|            24 |      - |          6 |            18 |
+|            10 |      * |          8 |            80 |
+|            10 |      / |          2 |             5 |
