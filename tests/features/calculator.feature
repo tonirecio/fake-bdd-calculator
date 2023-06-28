@@ -431,3 +431,33 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
+
+@wip
+Scenario Outline: Using the previous zero result in a new operation
+Given the user presses the "<firstButton>" button
+And the user writes the number: "<secondNumber>"
+And the user presses the "=" button
+And the user presses the "<secondButton>" button
+And the user writes the number: "<thirdNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<ResultDisplay>"
+
+Examples:
+| firstButton | secondNumber | secondButton | thirdNumber | ResultDisplay |
+|           * |            6 |            + |           3 |             3 |
+|           / |            3 |            + |           6 |             6 |
+
+@wip
+Scenario Outline: Small decimal results
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<secondNumber>"
+When the user presses the "=" button                             
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button | secondNumber | displayResult |
+|          0,01 |      / |      1000000 |    0,00000001 |
+|        0,0001 |      / |      1000000 |         ERROR |
+|        0,0001 |      * |       0,0001 |     0,0000001 |
+|       -0,0001 |      * |       0,0001 |    -0,0000001 |
