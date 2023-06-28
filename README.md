@@ -19,3 +19,10 @@ Comentarios:
 -Linea 96: La window.alert deberia ser mas descriptva del fallo/error
 -Linea 129: Se tendria que separar el caso de las teclas numericas de las otras para poder seguir trabajando en numeros y no cambiar nuestra variable de operador "currentValue" a String
 -En esta version de codigo no es posible incluir numeros decimales, debido a que no hay una función que añada numeros decimales a el "currentValue"
+
+Scenario Outline: Writing numbers + Writing numbers more than 10 digits
+Comentarios:
+-La variable CurrentValueToString sería mejor iniciarla como string como el nombre da a entender
+-Linea 83/86/114/130: El console.log() no tendría que estar ahí
+-Linea 116/117: El else llega a ser innecesario porque ya se comprueb acon anteriroidad la variable "isDecimal"
+-Linea 145...: Pese a no estar contemplado, seria bueno controlar los digitos que entran por teclado (OPCIONAL) 
