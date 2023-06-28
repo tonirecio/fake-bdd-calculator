@@ -3,8 +3,13 @@ let currentValue = '0'
 let firstValue = null
 let secondValue = null
 let currentOperation = null
+let resetDisplay = false
 
 const appendNumber = (number) => {
+  if (resetDisplay) {
+    currentValue = '0'
+    resetDisplay = false
+  }
   if (currentValue === '0' && number !== 0) {
     currentValue = number.toString()
   } else if (currentValue !== '0' && (currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY) {
@@ -14,6 +19,10 @@ const appendNumber = (number) => {
 }
 
 const appendDot = () => {
+  if (resetDisplay) {
+    currentValue = '0'
+    resetDisplay = false
+  }
   if (!currentValue.includes(',') && (currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY) {
     currentValue += ','
   }
@@ -164,12 +173,21 @@ document.addEventListener('keydown', (event) => {
 const sum = (a, b) => a + b
 const subtract = (a, b) => a - b
 const multiply = (a, b) => a * b
-const divide = (a, b) => a / b
+const divide = (a, b) => {
+  if (b === 0) {
+    return null
+  }
+  return a / b
+}
 
 const operate = () => {
-  console.log(firstValue, secondValue, currentOperation)
   if (firstValue !== null && secondValue !== null && currentOperation !== null) {
     let result = currentOperation(firstValue, secondValue)
+    if (result === null) {
+      currentValue = 'ERROR'
+      setDisplay(currentValue)
+      return
+    }
     firstValue = result
     secondValue = null
     currentOperation = null
@@ -193,15 +211,43 @@ const handleOperation = (operation) => {
   if (firstValue === null) {
     firstValue = parseFloat(currentValue.replace(',', '.'))
     currentValue = '0'
+  } else if (currentValue !== '0') {
+    secondValue = parseFloat(currentValue.replace(',', '.'))
+    operate()
+    currentValue = '0'
   }
   currentOperation = operation
 }
 
 const handleEqual = () => {
+  /*console.log(`firstValue: ${firstValue}`)
+  console.log(`secondValue: ${secondValue}`)
+  console.log(`currentValue: ${currentValue}`)
+  console.log(`currentOperation: ${currentOperation}`)*/
+
+  if (firstValue === null) {
+    firstValue = parseFloat(currentValue.replace(',', '.'))
+  }
+
+  if (currentOperation === null) {
+    if (currentValue.endsWith(',')) {
+      currentValue = currentValue.slice(0, -1)
+    }
+    setDisplay(currentValue)
+    return
+  }
+/*
+  if (secondValue === null && currentOperation === null) {
+    currentValue = 'ERROR'
+    setDisplay(currentValue)
+    return
+  }
+*/
   secondValue = parseFloat(currentValue.replace(',', '.'))
   operate()
   firstValue = null
   currentOperation = null
+  resetDisplay = true
 }
 
 const sumButton = document.querySelector('button[name="sum"]')

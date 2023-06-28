@@ -185,6 +185,7 @@ Examples:
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
 
+@sc10 @done
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -198,6 +199,7 @@ Examples:
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
 
+@sc11 @done
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -214,6 +216,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
+@sc12 @done
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -229,6 +232,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
+@sc13 @done
 Scenario Outline: Division with 0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "/" button
@@ -254,6 +258,7 @@ And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
 
+@sc14 @done
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -266,6 +271,7 @@ Examples:
 |        3,1415 |      * |
 |         -2718 |      / |
 
+@sc15 @done
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -277,6 +283,7 @@ Examples:
 |            10 |            10 |
 |          -10, |           -10 |
 
+@sc16 @done
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
