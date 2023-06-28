@@ -7,9 +7,10 @@ const setDisplay = (value) => {
 
 let currentValue = 0
 let currentValueToString = 0
-let previousOperand
+let nextValue
 let countDigit = 0
 let isDecimal = false
+let isCurrentValueUsingPoint = false
 //  let operator
 //  isdisplaytobecleaned
 
@@ -49,12 +50,18 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  negateButton(currentValue)
+  if (!isCurrentValueUsingPoint) {
+    negateButton(currentValue)
+  } else {
+    negateButton(currentValue)
+    setDisplay(currentValue + ',')
+  }
 })
 document.getElementsByName('divide')[0].addEventListener('click', () => {
 
 })
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
+
 })
 document.getElementsByName('sum')[0].addEventListener('click', () => {
 
@@ -62,7 +69,7 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
 document.getElementsByName('subtract')[0].addEventListener('click', () => { 
 })
 const buttonPointName = document.getElementsByName('point')[0].addEventListener('click', () => {
-  operatorButtons('point')
+  showPointButton('point')
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   
@@ -70,7 +77,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
 
 const reset = () => {
   currentValue = 0
-  previousOperand = 0
+  nextValue = 0
   currentValueToString = 0
   isDecimal = false
   countDigit = 0
@@ -78,10 +85,10 @@ const reset = () => {
 }
 
 const addNumberButtons = (number) => {
-  if(!isDecimal) {
+  if (!isDecimal) {
     currentValue = appendIntegerNumbers(number)
     console.log(typeof currentValue)
-  }else {
+  } else {
     currentValue = appendDecimalNumbers(number)
     console.log(typeof currentValue)
   }
@@ -89,15 +96,15 @@ const addNumberButtons = (number) => {
 }
 
 const appendIntegerNumbers = (value) => {
-  if(countDigit < MAX_DIGITS_IN_DISPLAY) {
-    if(currentValue != 0) {
+  if (countDigit < MAX_DIGITS_IN_DISPLAY) {
+    if (currentValue != 0) {
       currentValue = currentValue * 10 + value
     }
     else {
       currentValue = value
     }
-    countDigit++;
-  }else {
+    countDigit++
+  } else {
     window.alert("You can't add more values")
   }
   return currentValue
@@ -108,20 +115,17 @@ const replaceComma = (value) => {
 }
 
 const appendDecimalNumbers = (value) => {
-  if(countDigit < MAX_DIGITS_IN_DISPLAY) {
-    if(isDecimal) {
+  if (countDigit < MAX_DIGITS_IN_DISPLAY) {
+    if (isDecimal) {
       currentValueToString = currentValue + "," + value
       console.log(typeof currentValueToString)
     }
-    else {
-      currentValue = value
-    }
-    countDigit++;
-  }
-  else {
+    countDigit++
+    isCurrentValueUsingPoint = false
+  } else {
     window.alert("You can't add more values")
   }
-  return parseFloat(currentValueToString.replace(',','.'))
+  return parseFloat(currentValueToString.replace(',', '.'))
 }
 
 const negateButton = (displayValue) => {
@@ -131,32 +135,33 @@ const negateButton = (displayValue) => {
   setDisplay(displayValue)
 }
 
-const operatorButtons = (buttonPointName) => {
+const showPointButton = (buttonPointName) => {
   if (buttonPointName === 'point') {
     if (!isDecimal && countDigit < MAX_DIGITS_IN_DISPLAY) {
-      setDisplay(currentValue + ',');
-      isDecimal = true;
+      setDisplay(currentValue + ',')
+      isDecimal = true
+      isCurrentValueUsingPoint = true
     }
   }
 }
 
 /*keydown numbers, escape, control and comma*/
 
-document.addEventListener("keydown",(event)=> {
-    let pressedKey = event.key
-    if(pressedKey >= '0' && pressedKey <= '9' || pressedKey == ',') {
-      if(currentValue != 0 || pressedKey.toString().includes(',')) {
-        currentValue += pressedKey 
-      }
-      else { 
-        currentValue = pressedKey
-      }
-      setDisplay(currentValue)
-  
+document.addEventListener("keydown", (event) => {
+  const pressedKey = event.key
+  if ((pressedKey >= '0' && pressedKey <= '9') || pressedKey == ',') {
+    if (currentValue != 0 || pressedKey.toString().includes(',')) {
+    currentValue += pressedKey 
     }
-  if(pressedKey === "Escape") {
-    reset()
-  }else if(pressedKey === "Control") {
-    negateButton(currentValue)
+    else { 
+    currentValue = pressedKey
+    }
+    setDisplay(currentValue)
+  }
+  if (pressedKey === "Escape") {
+  reset()
+  } 
+  else if (pressedKey === "Control") {
+  negateButton(currentValue)
   }
 })
