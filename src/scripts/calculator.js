@@ -95,8 +95,12 @@ const setInputValue = (input) => {
     }else if(countZeros > 0 ){
         putZerosAndConcatNumbers(input)
     }else {
-        concatInputsNumbers(input)
-
+        if(handleExponentialNumbers(inputValue, input) === true){
+          setDisplay(valueDisplay)
+          return
+        } else {
+          concatInputsNumbers(input)
+        }
         return
     } 
   }
@@ -104,6 +108,10 @@ const setInputValue = (input) => {
 
 const setDisplay = (value) => {
   valueDisplay = value.toString().replace(".", ",")
+  if(valueDisplay.includes("e-")){
+      handleExponentialNumbers(valueDisplay, null)
+    }
+
   if(isSecondNumber === false){
     display.innerHTML = valueDisplay
   } else {
@@ -112,9 +120,47 @@ const setDisplay = (value) => {
   }
 }
 
+const handleExponentialNumbers = (value, valueToConcat) => {
+  concatened = false
+  valueDisplay = value.toString()
+  if(!valueDisplay.includes('e-')){
+    return
+  }
+  negativeNumber = false
+  numZeros = valueDisplay.slice(-1) - 1
+  number = valueDisplay.charAt(0)
+  if(number === '-'){
+    number = valueDisplay.charAt(1)
+    negativeNumber = true
+  }
+  valueDisplay = '0,'
+  for(cont = 0; cont < numZeros; cont++){
+    valueDisplay += "0"
+  }
+  valueDisplay += number
+  if(negativeNumber === true){
+    valueDisplay = '-' + valueDisplay
+  }
+
+  if(valueToConcat != null){
+    valueDisplay += valueToConcat
+    concatened = true
+  }
+  inputValue = parseFloat(valueDisplay)
+  return concatened
+}
+
 const resetDisplay = () => {
   inputValue = 0
   valueDisplay = '0'
+  firstNumber = null
+  operator = null
+  secondNumber = null
+  result = null
+  isSecondNumber = false
+  tryingNegateNumber = false
+  pointDisabled = false
+  countZeros = 0
   display.innerHTML = valueDisplay
 }
 
@@ -159,7 +205,7 @@ const handleOperation = () => {
     showMessageError()
   } else if(operator === null){
     result = inputValue
-  } else if(firstNumber === 0 && result != 'ERROR'){
+  } else if(firstNumber === 0 && (operator === '+' || operator === '-')){
     if(operator === '-' && secondNumber > 0){
       negateInputValue(secondNumber)
     }
@@ -189,8 +235,11 @@ const controlDecimalsResult = () => {
     lengthOfResult = valueDisplay.length 
     if(lengthOfResult > 10){
         lengthOfResult = 10
-    }      
+    }    
+    console.log(result);  
     result = result.toPrecision(lengthOfResult) * 1
+    
+
     return
   } else if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
     showMessageError()
@@ -239,7 +288,7 @@ const multiplyNumbers = (firstNumber, secondNumber) => {
   return firstNumber * secondNumber
 }
 const divideNumbers = (firstNumber, secondNumber) => {
-  if(secondNumber != 0){
+  if(secondNumber != 0 && firstNumber != 0){
     return firstNumber / secondNumber
   } else {
     
@@ -343,3 +392,5 @@ const createALlButtonsFunctions = () => {
 
 createALlButtonsFunctions();
 resetDisplay()
+
+

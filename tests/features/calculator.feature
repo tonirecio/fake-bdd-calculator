@@ -113,6 +113,20 @@ Examples:
 |   123456789,5 |     +- |  -123456789,5 |
 
 @done
+Scenario Outline: Operations with decimal numbers with zeros
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+When the user presses the "=" button                             
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button |   userNumber | displayResult |
+|   0,000000001 |      + |  0,000000002 |   0,000000003 |
+|   0,000000001 |      - |  0,000000002 |  -0,000000001 |
+
+
+@done
 Scenario Outline: Performing two number operations
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -288,8 +302,8 @@ Examples:
 | displayNumber | button | resultDisplay |
 |            13 |      + |            13 |
 |         -17,2 |      - |         -17,2 |
-|        3,1415 |      * |        3,1415 |
-|         -2718 |      / |         -2718 | 
+|        3,1415 |      * |             0 |
+|         -2718 |      / |         ERROR | 
 
 @done
 Scenario Outline: Showing the first number after pressing operation
