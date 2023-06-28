@@ -78,6 +78,13 @@ const changeButtonState = (state, name) => {
   return
 }
 
+const changeStateAllButtons = (state) => {
+  const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
+  arrButtons.forEach(button => {
+    document.getElementsByName(button)[0].disabled = state;
+  });
+}
+
 // NUMBER BUTTONS
 document.getElementsByName('zero')[0].addEventListener('click', () => {
   appendNumber(0)
@@ -215,6 +222,8 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   reset()
   setDisplay(result)
   isOperandEntered = false
+
+  changeStateAllButtons(false)
 })
 
 
