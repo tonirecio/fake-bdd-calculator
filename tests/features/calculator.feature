@@ -421,7 +421,7 @@ And the "/" button should be enabled
 And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
-@newTest
+
 Scenario Outline: Handling the number 0 while writing integers
 Given the user writes the following value: "<userNumber>"
 And the user writes the following value: "<secondNumber>"
@@ -449,6 +449,7 @@ Examples:
 |             1  |           00      |         1           |         1,001        |
 |             1  |          000      |         1           |        1,0001        |
 
+@newTest
 Scenario Outline: Writing a negative number with the '-' key
 Given the user presses the "-" key
 Then the user writes the following value: "<userValue>"

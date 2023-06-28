@@ -4,17 +4,19 @@ const display = document.querySelector('div[name="display"] span')
 
 let currentNumber = 0
 let previousNumber = 0
-let operationType
+let operationType = ''
+let storedZeros = ''
 let isNextNumberDecimal = false
 let chainingOperations = false
 let waitingForNewNumber = false
+let addingZeros = false
 
 const pressKeys = () => {
   document.addEventListener('keydown', (event) => {
     const keyPressed = event.key
 
     if (keyPressed >= '0' && keyPressed <= '9') {
-      addNumberTocurrentNumber(keyPressed)
+      addNumberTocurrentNumber(parseInt(keyPressed))
     } else if (keyPressed === 'Escape') {
       cleanEverything()
     } else if (keyPressed === 'Control') {
@@ -164,7 +166,7 @@ const pressedEqual = () => {
   }
 }
 
-const pressedOperator = (type) => {
+const pressedOperator = (operatorPressed) => {
   enableNumberButtons()
   enableButton('point')
   if (chainingOperations) {
@@ -176,15 +178,27 @@ const pressedOperator = (type) => {
     disableButton('negate')
   }
   waitingForNewNumber = true
-  operationType = type
+  operationType = operatorPressed
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
-      currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
-      isNextNumberDecimal = false
-      disableButton('point')
+      if (newNumber === 0) {
+        storedZeros += '0'
+        currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
+        addingZeros = true
+      } else if (addingZeros) {
+        currentNumber = parseFloat(currentNumber.toString() + '.' + storedZeros + newNumber.toString())
+        isNextNumberDecimal = false
+        addingZeros = false
+        storedZeros = ''
+        disableButton('point')
+      } else {
+        currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
+        isNextNumberDecimal = false
+        disableButton('point')
+      }
     } else {
       currentNumber = parseFloat(currentNumber.toString() + newNumber.toString())
     }
@@ -207,6 +221,7 @@ const negateNumber = (number) => {
 
 const addPointTocurrentNumber = () => {
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+    enableButton('zero')
     if (Number.isInteger(currentNumber)) {
       isNextNumberDecimal = true
     }
@@ -303,7 +318,7 @@ const displayResultNumber = () => {
 
 const displaycurrentNumber = () => {
   if (isNextNumberDecimal) {
-    setDisplay(currentNumber.toString() + ',')
+    setDisplay(currentNumber.toString() + ',' + storedZeros)
   } else {
     setDisplay(currentNumber.toString().replace('.', ','))
   }
