@@ -109,13 +109,29 @@ const currentNumberToDisplayableString = () => {
       displayValue = displayValue.replace('.', POINT_LOCALE)
     }
 
-    if (pendingZeros > 0) {
-      displayValue = displayValue + '0'.repeat(pendingZeros)
+    if (displayValue.includes('e-')) {
+      displayValue = decimalScientificToString(displayValue) + '0'.repeat(pendingZeros)
+    } else {
+      if (pendingZeros > 0) {
+        displayValue = displayValue + '0'.repeat(pendingZeros)
+      }
     }
   } else {
     displayValue = 'ERROR'
     disableButtonLogic('error')
   }
+  return displayValue
+}
+
+const sanitizeString = (currNumString) => {
+  return currNumString.replace('-', '').replace(POINT_LOCALE, '')
+}
+
+const decimalScientificToString = (displayValue) => {
+  const indexOfE = displayValue.indexOf('e')
+  const exponent = parseInt(displayValue.slice(indexOfE + 2))
+  const mantissa = displayValue.slice(0, indexOfE).replace(',', '')
+  displayValue = '0,' + '0'.repeat(exponent - 1) + mantissa
   return displayValue
 }
 
@@ -146,8 +162,8 @@ const negateCurrentNum = () => {
 }
 
 const pressNumber = (buttonNumber) => {
-  let currentNumberDisplayableString = currentNumberToDisplayableString()
-  let currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
+  let currNumString = currentNumberToDisplayableString()
+  let currNumStringSanitized = sanitizeString(currNumString)
   // avoid missing the second number on an operation
   if (currentOperation !== null) {
     pendingOperation = true
@@ -155,34 +171,39 @@ const pressNumber = (buttonNumber) => {
   // main number logic
   if (clearDisplay || currentNumber === 'ERROR') {
     disableButtonLogic('enable_numericals')
-    currentNumberDisplayableString = buttonNumber.toString()
+    currNumString = buttonNumber.toString()
+    pendingZeros = 0
+    pendingPoint = false
     clearDisplay = false
   } else {
-    if (currentNumberDisplayableStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
+    if (currNumStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
       disableButtonLogic('enable_numericals')
       if (pendingPoint) {
         if (buttonNumber !== 0 && buttonNumber !== '0') {
-          currentNumberDisplayableString += buttonNumber
+          currNumString += buttonNumber
           pendingZeros = 0
           pendingPoint = false
         } else {
           pendingZeros++
         }
       } else {
-        if (currentNumber !== 0 && currentNumberDisplayableString.includes(POINT_LOCALE) && (buttonNumber === 0 || buttonNumber === '0')) {
+        if (currentNumber !== 0 &&
+          currNumString.includes(POINT_LOCALE) &&
+          (buttonNumber === 0 || buttonNumber === '0')) {
           pendingZeros++
         } else {
-          currentNumberDisplayableString += buttonNumber
+          currNumString += buttonNumber
           pendingZeros = 0
         }
       }
     }
   }
-  currentNumberDisplayableStringSanitized = currentNumberDisplayableString.replace('-', '').replace(POINT_LOCALE, '')
-  if (currentNumberDisplayableStringSanitized.length + 1 > MAX_DIGITS_IN_DISPLAY) {
+  currentNumber = parseFloat(currNumString.replace(POINT_LOCALE, '.'))
+
+  currNumStringSanitized = sanitizeString(currentNumberToDisplayableString())
+  if (currNumStringSanitized.length >= MAX_DIGITS_IN_DISPLAY) {
     disableButtonLogic('max_digits_in_display')
   }
-  currentNumber = parseFloat(currentNumberDisplayableString.replace(POINT_LOCALE, '.'))
 }
 
 const floatCurrentNum = () => {
@@ -215,8 +236,6 @@ const completeOperation = () => {
         break
       case null:
         resultNum = currentNumber
-        pendingPoint = false
-        pendingZeros = 0
         break
       default:
         console.warn('[WARNING] ' + currentOperation + ' has not been implemented yet.')
@@ -234,6 +253,8 @@ const completeOperation = () => {
   currentNumber = resultNum
   currentOperation = null
   pendingOperation = false
+  pendingPoint = false
+  pendingZeros = 0
   clearDisplay = true
 }
 
