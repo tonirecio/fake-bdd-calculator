@@ -113,11 +113,11 @@ const currentNumberToDisplayableString = () => {
       displayValue = displayValue + '0'.repeat(pendingZeros)
     }
     // 3,3e-7
-    if(displayValue.includes('e-')){
-      let indexOfE = displayValue.indexOf('e')
-      let exponent = parseInt(displayValue.slice(indexOfE+2))
-      let mantissa = displayValue.slice(0,indexOfE).replace(',','')
-      displayValue = '0,'+ '0'.repeat(exponent-1) + mantissa
+    if (displayValue.includes('e-')) {
+      const indexOfE = displayValue.indexOf('e')
+      const exponent = parseInt(displayValue.slice(indexOfE + 2))
+      const mantissa = displayValue.slice(0, indexOfE).replace(',', '')
+      displayValue = '0,' + '0'.repeat(exponent - 1) + mantissa
     }
   } else {
     displayValue = 'ERROR'
