@@ -41,6 +41,7 @@ const appendNumber = (value) => {
     currentValue += value.toString()
   }
 
+  changeButtonState(false, 'negate')
   return currentValue
 }
 
@@ -67,6 +68,11 @@ const setNegation = () => {
   }
 
   return currentValue
+}
+
+const changeButtonState = (state, name) => {
+  document.getElementsByName(name)[0].disabled = state;
+  return
 }
 
 // NUMBER BUTTONS
@@ -163,22 +169,27 @@ let firstOperand, secondOperand, operator
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   handleOperation()
   operator = '+'
+  changeButtonState(true, 'negate')
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
   handleOperation()
   operator = '-'
+  changeButtonState(true, 'negate')
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   handleOperation()
   operator = '*'
+  changeButtonState(true, 'negate')
 })
 // Divide
 document.getElementsByName('divide')[0].addEventListener('click', () => {
   handleOperation()
   operator = '/'
+  changeButtonState(true, 'negate')
 })
+
 
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
