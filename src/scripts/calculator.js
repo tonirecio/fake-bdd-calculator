@@ -8,6 +8,7 @@ let isResultUsed = false
 let isOperatorClicked = false
 let isOperandEntered = false
 
+
 const setDisplay = (currentValue) => {
   displayValue = currentValue.replace('.', ',')
   display.innerHTML = displayValue
@@ -23,7 +24,6 @@ const totalReset = () => {
   previousValue = '0'
   firstOperand = undefined
   result = undefined
-  console.log(currentValue, previousValue, firstOperand, result)
   setDisplay(currentValue)
 }
 
@@ -170,9 +170,7 @@ document.getElementsByName('subtract')[0].addEventListener('click', () => {
 })
 // Multiply
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  if (!isOperatorClicked) {
   handleOperation()
-  }
   operator = '*'
 })
 // Divide
@@ -183,18 +181,21 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
 
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
+  if (secondOperand === '0' || secondOperand === undefined) {
+    setDisplay('ERROR')
+    return
+  }
   if (result != undefined) {
     firstOperand = result
     isResultUsed = true
   }
   isOperatorClicked = false
   result = calculate(firstOperand, secondOperand, operator)
-  console.log(firstOperand, secondOperand, operator)
   reset()
   setDisplay(result)
-
   isOperandEntered = false
 })
+
 
 const handleOperand = () => {
   if (firstOperand == undefined || firstOperand == 0 || isResultUsed) {
@@ -205,7 +206,7 @@ const handleOperand = () => {
 }
 
 const handleOperation = () => {
-  if (isOperatorClicked && isOperandEntered) {
+  if (isOperatorClicked && isOperandEntered && currentValue !== '0') {
     result = calculate(firstOperand, currentValue, operator)
     reset()
     setDisplay(result)
@@ -215,8 +216,9 @@ const handleOperation = () => {
     handleOperand()
     isOperatorClicked = true
   }
-  reset()
+  currentValue = '0'
 }
+
 
 const calculate = (firstOperand, secondOperand, operator) => {
   let resultLength

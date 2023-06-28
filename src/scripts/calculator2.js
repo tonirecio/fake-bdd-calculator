@@ -1,209 +1,163 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-const regexPoint = '([,])+'
+const display = document.querySelector('div[name="display"] span')
+
+let currentValue = '0'
+let previousValue = null
+let result = null
+let isResultUsed = false
+let isOperatorClicked = false
+let isOperandEntered = false
 
 const setDisplay = (value) => {
-  display.innerHTML = value
-}
-
-const sayHello = () => {
-  window.alert('Hello. The maximum number of digits in the display is ' + MAX_DIGITS_IN_DISPLAY + '.')
+  const displayValue = value.replace('.', ',')
+  display.innerHTML = displayValue
 }
 
 const reset = () => {
-  setDisplay(0)
+  currentValue = '0'
+  setDisplay(currentValue)
 }
 
-const display = document.querySelector('div[name="display"] span')
-
-// Display Functions
-const appendNumber = (value) => {
-  const displayValue = display.innerHTML.replace(/,|-/g, '') // Remove comma and negative sign
-  const digitCount = displayValue.length
-
-  if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
-    return
-  }
-
-  if (display.innerHTML == '0') {
-    display.innerHTML = value
-  } else {
-    display.innerHTML += value
-  }
+const totalReset = () => {
+  currentValue = '0'
+  previousValue = null
+  result = null
+  setDisplay(currentValue)
 }
 
-const appendPoint = (value) => {
-  if (!display.innerHTML.match(regexPoint) && (display.innerHTML.length < MAX_DIGITS_IN_DISPLAY)) {
-    display.innerHTML = display.innerHTML + value
-  }
+// NUMBER BUTTONS
+for (let i = 0; i <= 9; i++) {
+  document.getElementsByName(i.toString())[0].addEventListener('click', () => {
+    appendNumber(i)
+    setDisplay(currentValue)
+  })
 }
 
-const setNegation = () => {
-  let displayValue = display.innerHTML
-  const valueLength = displayValue.length
-  let hasPoint = false
-
-  if (displayValue.charAt(valueLength - 1) == ',') {
-    hasPoint = true
-  }
-
-  if ((displayValue != 0) && (displayValue != '0,')) {
-    displayValue = displayValue.replace(',', '.')
-    displayValue = parseFloat(displayValue) * (-1)
-    displayValue = displayValue.toString().replace('.', ',')
-
-    if (hasPoint == true) {
-      displayValue += ','
-    }
-    display.innerHTML = displayValue
-  }
-}
-
-// Buttons in Display
-document.getElementsByName('zero')[0].addEventListener('click', () => {
-  appendNumber(0)
-})
-
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  appendNumber(1)
-})
-
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  appendNumber(2)
-})
-
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  appendNumber(3)
-})
-
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  appendNumber(4)
-})
-
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  appendNumber(5)
-})
-
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  appendNumber(6)
-})
-
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  appendNumber(7)
-})
-
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  appendNumber(8)
-})
-
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  appendNumber(9)
-})
-
+// OTHER BUTTONS
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  appendPoint(',')
+  appendPoint()
+  setDisplay(currentValue)
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
   setNegation()
+  setDisplay(currentValue)
 })
 
-document.getElementsByName('clean')[0].addEventListener('click', () => {
-  reset()
-})
+document.getElementsByName('clean')[0].addEventListener('click', totalReset)
 
-// Buttons in Keys
+// BUTTONS IN KEYS
 document.addEventListener('keydown', (event) => {
   const key = event.key
 
   if (/[0-9]/.test(key)) {
     appendNumber(Number(key))
+    setDisplay(currentValue)
   }
   if (key === ',') {
-    appendPoint(',')
+    appendPoint()
+    setDisplay(currentValue)
   }
   if (key === 'Escape') {
-    reset()
+    totalReset()
   }
   if (key === 'Control') {
     setNegation()
+    setDisplay(currentValue)
   }
 })
 
-// Operations
-let firstOperand
-let operator
-let isResult
+let firstOperand = null
+let secondOperand = null
+let operator = null
 
-// Sum
-document.getElementsByName('sum')[0].addEventListener('click', () => {
-  operator = '+'
-  handleOperand(firstOperand)
-  reset()
-})
-// Subtract
-document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  operator = '-'
-  handleOperand(firstOperand)
-  reset()
-})
-// Multiply
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  operator = '*'
-  handleOperand(firstOperand)
-  reset()
-})
-// Divide
-document.getElementsByName('divide')[0].addEventListener('click', () => {
-  operator = '/'
-  handleOperand(firstOperand)
-  reset()
-})
-// Equal
-document.getElementsByName('equal')[0].addEventListener('click', () => {
-  const secondOperand = parseFloat(display.innerHTML.replace(',', '.'))
-  calculate(firstOperand, secondOperand, operator)
+// OPERATIONS
+const operations = {
+  sum: '+',
+  subtract: '-',
+  multiply: '*',
+  divide: '/'
+}
 
-  isResult = true
-})
-
-if (isResult) {
-  document.addEventListener('click', () => {
-    reset()
-    isResult = false
+for (const operation in operations) {
+  document.getElementsByName(operation)[0].addEventListener('click', () => {
+    handleOperation()
+    operator = operations[operation]
   })
 }
 
-const handleOperand = () => {
-  if (firstOperand === undefined) {
-    firstOperand = parseFloat(display.innerHTML.replace(',', '.'))
+document.getElementsByName('equal')[0].addEventListener('click', () => {
+  secondOperand = currentValue
+  if (result !== null) {
+    firstOperand = result
+    isResultUsed = true
   }
+  isOperatorClicked = false
+  result = calculate(firstOperand, secondOperand, operator)
+  reset()
+  setDisplay(result)
+
+  isOperandEntered = false
+})
+
+const handleOperand = () => {
+  if (firstOperand === null || firstOperand === '0' || isResultUsed) {
+    firstOperand = currentValue
+    isResultUsed = false
+  }
+  isOperandEntered = true
 }
 
-const calculate = (firstOperand, secondOperand, operation) => {
-  let result
-  let resultLength
-
-  if (operation == '+') {
-    result = firstOperand + secondOperand
-  } else if (operation == '-') {
-    result = firstOperand - secondOperand
-  } else if (operation == '*') {
-    result = firstOperand * secondOperand
+const handleOperation = () => {
+  if (isOperatorClicked && isOperandEntered) {
+    result = calculate(firstOperand, currentValue, operator)
+    reset()
+    setDisplay(result)
+    firstOperand = result
+    isOperandEntered = false
   } else {
-    result = firstOperand / secondOperand
+    handleOperand()
+    isOperatorClicked = true
+  }
+  reset()
+}
+
+const calculate = (firstOperand, secondOperand, operator) => {
+  let resultLength
+  firstOperand = parseFloat(firstOperand)
+  secondOperand = parseFloat(secondOperand)
+
+  switch (operator) {
+    case '+':
+      result = firstOperand + secondOperand
+      break
+    case '-':
+      result = firstOperand - secondOperand
+      break
+    case '*':
+      result = firstOperand * secondOperand
+      break
+    case '/':
+      if (secondOperand === 0) {
+        return 'ERROR'
+      }
+      result = firstOperand / secondOperand
+      break
+    default:
+      return 'ERROR'
   }
 
-  resultLength = result.toString().replace(',', '').length
+  resultLength = result.toString().replace('.', '').length
 
-  if ((resultLength > MAX_DIGITS_IN_DISPLAY)) {
+  if (resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
   }
 
   result = parseFloat(result.toString())
 
-  if (!result.toString().replace('.', ',').match(regexPoint) && resultLength > MAX_DIGITS_IN_DISPLAY) {
+  if (!result.toString().includes('.') && resultLength > MAX_DIGITS_IN_DISPLAY) {
     result = 'ERROR'
   }
 
-  display.innerHTML = result.toString().replace('.', ',')
+  return result.toString()
 }
