@@ -43,8 +43,13 @@ const appendNumber = (value) => {
     currentValue += value.toString()
   }
 
-  changeButtonState(false, 'negate')
+  if (digitCount == MAX_DIGITS_IN_DISPLAY -1) {
+    disableNumbersAndPointButton()
+  } else {
   changeButtonState(false, 'zero')
+  }
+  changeButtonState(false, 'negate')
+
   return currentValue
 }
 
@@ -82,6 +87,13 @@ const changeStateAllButtons = (state) => {
   const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
   arrButtons.forEach(button => {
     document.getElementsByName(button)[0].disabled = state;
+  });
+}
+
+const disableNumbersAndPointButton = () => {
+  const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
+  arrButtons.forEach(button => {
+    document.getElementsByName(button)[0].disabled = true;
   });
 }
 
