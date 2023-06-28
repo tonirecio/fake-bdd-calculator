@@ -332,6 +332,7 @@ const doDivision = () => {
 }
 
 document.addEventListener('keydown', (event) => {
+  event.preventDefault()
   if (event.key === 'Escape' || event.keyCode === 27) reset()
   else if (event.ctrlKey && isRecentlyAddedAOperation === false) invertNumberDisplay()
   else if (event.key === '0') addToTheDisplay(0)
