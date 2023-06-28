@@ -8,7 +8,6 @@ let isResultUsed = false
 let isOperatorClicked = false
 let isOperandEntered = false
 
-
 const setDisplay = (currentValue) => {
   displayValue = currentValue.replace('.', ',')
   display.innerHTML = displayValue
@@ -26,6 +25,7 @@ const totalReset = () => {
   firstOperand = undefined
   result = undefined
   setDisplay(currentValue)
+  changeStateAllButtons(false)
   changeButtonState(true, 'zero')
   changeButtonState(true, 'negate')
 }
@@ -56,6 +56,7 @@ const appendNumber = (value) => {
 const appendPoint = () => {
   if (!currentValue.includes('.') && (currentValue.length < MAX_DIGITS_IN_DISPLAY)) {
     currentValue += '.'
+    changeButtonState(true, 'point')
     return currentValue
   }
 }
@@ -216,6 +217,7 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
 
+  changeStateAllButtons(false)
   if (operator == undefined) {
     currentValue = currentValue.replace('.', '')
     setDisplay(currentValue)
@@ -235,7 +237,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   setDisplay(result)
   isOperandEntered = false
 
-  changeStateAllButtons(false)
+
 })
 
 
@@ -258,6 +260,7 @@ const handleOperation = () => {
     handleOperand()
     isOperatorClicked = true
   }
+  changeStateAllButtons(false)
   currentValue = '0'
 }
 
