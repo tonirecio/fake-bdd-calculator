@@ -29,7 +29,31 @@ let isRecentlyAddedAOperation = false
 const setDisplay = (value) => {
   value = fixComma(value)
   console.log(value)
+  value = value.toString().replace(".", COMMA_CHARACTER)
   display.innerHTML = value
+}
+
+const resetEnabledDisabledButtons = () => {
+
+  COMMA_BUTTON.enabled = true
+  NEGATE_BUTTON.enabled = true
+  CLEAN_BUTTON.enabled = true
+  ZERO_BUTTON.enabled = true
+  ONE_BUTTON.enabled = true
+  TWO_BUTTON.enabled = true
+  THREE_BUTTON.enabled = true
+  FOUR_BUTTON.enabled= true
+  FIVE_BUTTON.enabled = true
+  SIX_BUTTON.enabled = true
+  SEVEN_BUTTON.enabled = true
+  EIGHT_BUTTON.enabled = true
+  NINE_BUTTON.enabled = true
+  DIVIDE_BUTTON.enabled = true
+  MULTUPLY_BUTTON.enabled = true
+  SUBSTRACT_BUTTON.enabled = true
+  SUM_BUTTON.enabled = true
+  EQUAL_BUTTON.enabled = true
+
 }
 
 const fixComma = (numberToFix) => {
@@ -64,13 +88,17 @@ const invertNumberDisplay = () => {
 }
 
 const reset = () => {
+  resetEnabledDisabledButtons()
   setDisplay(0)
   disableOrEnableButtons()
+  ZERO_BUTTON.disabled = true
+  NEGATE_BUTTON.disabled = true
   inMemoryNumber = 0
   savedOperator = ''
 }
 
 const disableOrEnableButtons = () => {
+
   SUM_BUTTON.disabled = false
   MULTUPLY_BUTTON.disabled = false
   SUBSTRACT_BUTTON.disabled = false
@@ -78,11 +106,38 @@ const disableOrEnableButtons = () => {
   DIVIDE_BUTTON.disabled = false
   EQUAL_BUTTON.disabled = false
 
-  if (isRecentlyAddedAOperation) NEGATE_BUTTON.disabled = true
-  else NEGATE_BUTTON.disabled = false
-
   if (!isAnErrorOnDisplay()) {
-    if (!isTheMaxLenght() || isRecentlyAddedAOperation) {
+    if (isTheOperationFinished) {
+
+      ZERO_BUTTON.disabled = false
+      NEGATE_BUTTON.disabled = false
+      ONE_BUTTON.disabled = false
+      TWO_BUTTON.disabled = false
+      THREE_BUTTON.disabled = false
+      FOUR_BUTTON.disabled = false
+      FIVE_BUTTON.disabled = false
+      SIX_BUTTON.disabled = false
+      SEVEN_BUTTON.disabled = false
+      EIGHT_BUTTON.disabled = false
+      NINE_BUTTON.disabled = false
+      COMMA_BUTTON.disabled = false
+
+    } else if (isRecentlyAddedAOperation) {
+
+      ZERO_BUTTON.disabled = false
+      NEGATE_BUTTON.disabled = true
+      ONE_BUTTON.disabled = false
+      TWO_BUTTON.disabled = false
+      THREE_BUTTON.disabled = false
+      FOUR_BUTTON.disabled = false
+      FIVE_BUTTON.disabled = false
+      SIX_BUTTON.disabled = false
+      SEVEN_BUTTON.disabled = false
+      EIGHT_BUTTON.disabled = false
+      NINE_BUTTON.disabled = false
+      COMMA_BUTTON.disabled = false
+
+    } else if (!isTheMaxLenght()) {
       if (isOnDisplayZero()) {
         ZERO_BUTTON.disabled = true
         NEGATE_BUTTON.disabled = true
@@ -191,7 +246,9 @@ const showResults = (value) => {
     if (isOnRangeOfNotError(value)) {
       const countOfNumberBeforeComma = numbersBeforeComma(value)
 
-      if (value < 0) value = roundNumber(value, MAX_DIGITS_IN_DISPLAY + 2 - countOfNumberBeforeComma)
+      // I puted the number ' + 2 ' because i need to count the comma and the minus
+
+      if (value < 0) value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
       else value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
 
       result = value.toString()
@@ -244,6 +301,7 @@ const operate = () => {
   }
 
   disableOrEnableButtons()
+
 }
 
 const resetMemoryNumberAndOperator = () => {
@@ -325,7 +383,7 @@ const isTheMaxLenght = () => {
 const isOnDisplayZero = () => {
   const displayString = display.innerHTML
 
-  if (displayString === 0) return true
+  if (displayString === '0') return true
   else return false
 }
 
