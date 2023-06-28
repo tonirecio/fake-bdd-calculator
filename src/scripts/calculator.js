@@ -6,6 +6,7 @@ const display = document.querySelector('div[name="display"] span')
 
 let firstOperator = null;
 let isRecentlyPutAOperator = false
+let isTheOperationFinisehd = false;
 
 let operator = null;
 
@@ -109,10 +110,15 @@ document.addEventListener('keydown', () => {
 
 const addToDisplay = (value) => {
 
-    let currentValue = display.innerHTML;
+    let currentValue = '';
 
     const isSign = value === '-';
-   
+    console.log('valor Introducido: ' + value)
+    if (isTheOperationFinisehd === true) {
+      setDisplay(0)
+      isTheOperationFinisehd = false;
+    } else currentValue = display.innerHTML;
+
     if (!isSign && !isMaxLength()) {
 
         if (currentValue === '0') {
@@ -200,7 +206,7 @@ const seleccionarOperador = (op) => {
 
 const toOperate = () => {
 
-  console.log('Display: '+display.innerHTML)
+  console.log('Display: ' + display.innerHTML)
   var secondOperator = display.innerHTML;
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
@@ -223,6 +229,7 @@ const toOperate = () => {
       result = firstOperator / secondOperator;
 
     }
+
     var numTotalBeforeComma = numberBeforeComma(result);
 
     if (result < 0) {
@@ -236,7 +243,7 @@ const toOperate = () => {
     setDisplay(result);
 
     firstOperator = result;
-
+    isTheOperationFinisehd = true;
     operator = null;
   }
   
