@@ -1,240 +1,178 @@
-let currentNumber = 0;
-let operator = '';
-let operand1 = null;
-let operand2 = null;
-let addingComma = false;
-const display = document.querySelector('[data-testid="display"]');
-const MAX_DIGITS_IN_DISPLAY = 10;
+let currentNumber = 0
+let addingComma = false
 
+const display = document.querySelector('[data-testid="display"]')
 
+const MAX_DIGITS_IN_DISPLAY = 10
 
 const addNumber = (number) => {
   if (addingComma) {
-    currentNumber = parseFloat(currentNumber.toString() + "." + number.toString());
+    currentNumber = parseFloat(currentNumber.toString() + '.' + number.toString())
     addingComma = false
-    setDisplay();
-
+    setDisplay()
   } else {
-    currentNumber  = parseFloat(currentNumber.toString() + number.toString());
-    setDisplay();
+    currentNumber = parseFloat(currentNumber.toString() + number.toString())
+    setDisplay()
   }
-};
+}
+
+const getNumberLength = (number) => {
+  number = number.toString()
+  number = number.replace('.', '')
+  number = number.replace('-', '')
+  const length = number.length
+  return length
+}
 
 const setDisplay = () => {
-  let displayValue;
+  let displayValue
   if (addingComma) {
     displayValue = currentNumber.toString() + ','
   } else {
-    displayValue = currentNumber.toString().replace('.',',')
+    displayValue = currentNumber.toString().replace('.', ',')
   }
-  display.textContent = displayValue;
-};
+  display.textContent = displayValue
+}
 
 const clean = () => {
-  currentNumber = 0;
-  operator = '';
-  operand1 = null;
-  operand2 = null;
-addingComma = false
-  setDisplay();
-};
+  currentNumber = 0
+  operator = ''
+  operand1 = null
+  operand2 = null
+  addingComma = false
+  setDisplay()
+}
 
 const negate = () => {
   currentNumber = currentNumber * -1
+  setDisplay()
+}
 
-  setDisplay();
-};
-
-const performOperation = () => {
-  if (operator && operand1 !== null && operand2 !== null) {
-    const num1 = operand1;
-    const num2 = operand2;
-
-    let result;
-    switch (operator) {
-      case '+':
-        result = num1 + num2;
-        break;
-      case '-':
-        result = num1 - num2;
-        break;
-      case '*':
-        result = num1 * num2;
-        break;
-      case '/':
-        result = num1 / num2;
-        break;
-    }
-
-    
-    if ((num1 < 0 && num2 >= 0) || (num1 >= 0 && num2 < 0)) {
-      result = -Math.abs(result);
-    }
-
-    currentNumber = result;
-    operator = '';
-    operand1 = null;
-    operand2 = null;
-    setDisplay();
-  }
-};
+const handleComma = () => {
+  if (Number.isInteger(currentNumber)) { addingComma = true }
+  setDisplay()
+}
 
 const handleButtonPress = (button) => {
   switch (button) {
     case 'C':
-      clean();
-      break;
+      clean()
+      break
     case ',':
-      if(Number.isInteger(currentNumber))
-        addingComma = true;
-        setDisplay();
-      
-      break;
+      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+        handleComma()
+      }
+      break
     case '+-':
-      negate();
-      break;
+      negate()
+      break
     case '+':
     case '-':
     case '*':
     case '/':
-      if (operator && operand1 !== null && currentNumber !== 0) {
-        performOperation();
-      }
-      operator = button;
-      operand1 = currentNumber;
-      currentNumber = 0;
-      addingComma = false; 
-      break;
     case '=':
-      if (operator && operand1 !== null) {
-        operand2 = currentNumber;
-        performOperation();
-      }
-      addingComma = false; 
-      break;
     default:
-      if (/^[0-9]$/.test(button)) {
-        addNumber(Number(button));
+      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+        addNumber(Number(button))
       }
-      break;
+      console.log(getNumberLength(currentNumber))
+      break
   }
-};
+}
 
 const handleKeyPress = (event) => {
-  const key = event.key;
-
+  const key = event.key
   switch (key) {
     case 'Escape':
-      clean();
-      break;
+      clean()
+      break
     case 'Control':
-      negate();
-      break;
+      negate()
+      break
     case ',':
-      if (!currentNumber.toString().includes(',')) {
-        currentNumber = currentNumber.toString().replace('.', ',');
-        setDisplay();
+      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+        handleComma()
       }
-      break;
+      break
     case '+':
     case '-':
     case '*':
     case '/':
-      operator = key;
-      operand1 = currentNumber;
-      currentNumber = 0;
-      addingComma = false; 
-      break;
     case '=':
-      if (operator && operand1 !== null) {
-        operand2 = currentNumber;
-        performOperation();
-      }
-      addingComma = false; 
-      break;
     default:
-      if (/^[0-9]$/.test(key)) {
-        addNumber(Number(key));
+      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+        addNumber(Number(key))
       }
-      break;
+      break
   }
-};
+}
 
-setDisplay();
+document.getElementsByName('clean')[0].addEventListener('click', clean)
 
-document.querySelectorAll('[name]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const buttonName = button.getAttribute('name');
-    handleButtonPress(buttonName);
-  });
-});
-
-document.getElementsByName('clean')[0].addEventListener('click', clean);
-
-document.getElementsByName('negate')[0].addEventListener('click', negate);
+document.getElementsByName('negate')[0].addEventListener('click', negate)
 
 document.getElementsByName('zero')[0].addEventListener('click', () => {
-  addNumber(0);
-});
+  handleButtonPress('0')
+})
 
 document.getElementsByName('one')[0].addEventListener('click', () => {
-  addNumber(1);
-});
+  handleButtonPress('1')
+})
 
 document.getElementsByName('two')[0].addEventListener('click', () => {
-  addNumber(2);
-});
+  handleButtonPress('2')
+})
 
 document.getElementsByName('three')[0].addEventListener('click', () => {
-  addNumber(3);
-});
+  handleButtonPress('3')
+})
 
 document.getElementsByName('four')[0].addEventListener('click', () => {
-  addNumber(4);
-});
+  handleButtonPress('4')
+})
 
 document.getElementsByName('five')[0].addEventListener('click', () => {
-  addNumber(5);
-});
+  handleButtonPress('5')
+})
 
 document.getElementsByName('six')[0].addEventListener('click', () => {
-  addNumber(6);
-});
+  handleButtonPress('6')
+})
 
 document.getElementsByName('seven')[0].addEventListener('click', () => {
-  addNumber(7);
-});
+  handleButtonPress('7')
+})
 
 document.getElementsByName('eight')[0].addEventListener('click', () => {
-  addNumber(8);
-});
+  handleButtonPress('8')
+})
 
 document.getElementsByName('nine')[0].addEventListener('click', () => {
-  addNumber(9);
-});
+  handleButtonPress('9')
+})
 
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  handleButtonPress('/');
-});
+  handleButtonPress('/')
+})
 
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  handleButtonPress('*');
-});
+  handleButtonPress('*')
+})
 
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  handleButtonPress('-');
-});
+  handleButtonPress('-')
+})
 
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  handleButtonPress('+');
-});
+  handleButtonPress('+')
+})
 
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  handleButtonPress(',');
-});
+  handleButtonPress(',')
+})
 
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  handleButtonPress('=');
-});
+  handleButtonPress('=')
+})
 
-document.addEventListener('keydown', handleKeyPress);
+document.addEventListener('keydown', handleKeyPress)
