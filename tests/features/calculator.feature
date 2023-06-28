@@ -446,3 +446,121 @@ Examples:
 |    10,0001010 |      2 |   10,00010102 |
 |   90,03045102 |     +- |  -90,03045102 |
 |  -76,06017031 |     +- |   76,06017031 |
+
+@testE2
+Scenario Outline: Clicking two different operation buttons after using C button
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+And the user presses the "=" button
+And the user presses the "C" button
+And the user writes the number: "<secondNumber>"
+And the user presses the "<button2>" button
+And the user writes the number: "<thirdNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| displayNumber | button | userNumber | secondNumber | button2 | thirdNumber | resultDisplay |
+|            12 |      / |          6 |            4 |       - |           4 |             0 |
+|          1234 |      + |         31 |          502 |       / |          50 |         10,04 |
+|          9,26 |      * |       2,15 |          139 |       + |           2 |           141 |
+
+@testE3
+Scenario Outline: Doing two operations one after clicking = button
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+And the user presses the "=" button
+And the user writes the number: "<secondNumber>"
+And the user presses the "<button2>" button
+And the user writes the number: "<thirdNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| displayNumber | button | userNumber | secondNumber | button2 | thirdNumber | resultDisplay |
+|             5 |      / |          9 |            3 |       - |           1 |             2 |
+|            42 |      + |         87 |           10 |       / |           2 |             5 |
+|          9,26 |      * |       2,15 |          123 |       + |         234 |           357 |
+
+@testE4
+Scenario Outline: Doing an operation without a second number 2.0
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+When the user presses the "=" button
+Then the display should show the following value: "ERROR"
+
+Examples:
+| displayNumber | button |
+|            52 |      / |
+|          9283 |      - |
+|         1,234 |      * |
+
+@testE5
+Scenario Outline: Clicking the button 0 after operate
+When the user presses the "<button>" button
+And the user presses the "0" button
+And the user presses the "<button2>" button
+And the user presses the "<number>" button
+And the user presses the "0" button
+And the user presses the "0" button
+Then the display should show the following value: "<displayNumber>"
+
+Examples:
+| button | button2 | number | displayNumber |
+|      = |       , |      0 |         0,000 |
+|      = |       0 |      0 |             0 |
+|      + |       , |      0 |         0,000 |
+|      + |       0 |      0 |             0 |
+|      / |       , |      0 |         0,000 |
+|      / |       0 |      0 |             0 |
+|      - |       , |      0 |        -0,000 |
+|      - |       0 |      0 |            -0 |
+|      * |       , |      0 |         0,000 |
+|      * |       0 |      0 |             0 |
+
+
+@testE6
+Scenario Outline: Handling the number 0 while writing integers
+Given the user writes the following value: "<userNumber>"
+And the user writes the following value: "<secondNumber>"
+Then the display should show the following value: "<resultDisplay>"
+
+Examples:
+| userNumber       | secondNumber      |   resultDisplay       |             
+|            0     |                1  |                    1  |
+|            00    |                1  |                    1  |
+|            0     |               -1  |                   -1  |
+|            00    |               -1  |                   -1  |
+
+@testE7
+Scenario Outline: Handling the number 0 while writing decimals
+Given the user writes the number: "<userValue>"
+Then the user presses the ',' key
+Then the user writes the number: "<secondNumber>"
+Then the user writes the number: "<thirdNumber>"
+Then the display should show the following value: "<displayNumber>"
+
+Examples:
+| userValue      | secondNumber      |  thirdNumber        |   displayNumber      |  
+|             0  |            0      |         1           |          0,01        |   
+|            00  |            0      |         1           |          0,01        |          
+|             1  |            0      |         1           |          1,01        |
+|             1  |           00      |         1           |         1,001        |
+|             1  |          000      |         1           |        1,0001        |
+
+
+@testE8
+Scenario Outline: Writing a negative number with the '-' key
+Given the user presses the "-" key
+Given the user presses the "0" key
+Given the user presses the "," key
+Given the user presses the "1" key
+Then the display should show the following value: "-0,1"
+
+@testE9
+Scenario Outline: Writing a negative number with the '-' key
+Given the user presses the "-" key
+Given the user presses the "1" key
+Then the display should show the following value: "-1"

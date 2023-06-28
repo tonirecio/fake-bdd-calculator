@@ -28,7 +28,6 @@ let isRecentlyAddedAOperation = false
 
 const setDisplay = (value) => {
   value = fixComma(value)
-  console.log(value)
   value = value.toString().replace(".", COMMA_CHARACTER)
   display.innerHTML = value
 }
@@ -58,11 +57,9 @@ const resetEnabledDisabledButtons = () => {
 
 const fixComma = (numberToFix) => {
   if (isADotOnThis(numberToFix)) {
-    console.log(1)
     const valueLenght = numberToFix.length
 
     if (numberToFix[valueLenght - 1] === COMMA_CHARACTER) {
-      console.log(2)
       let newNumberWithoutComma = ''
       for (let eachNumber = 0; eachNumber < valueLenght - 1; eachNumber++) newNumberWithoutComma += '' + numberToFix[eachNumber]
       return newNumberWithoutComma
@@ -202,7 +199,13 @@ const addToTheDisplay = (value) => {
     if (isOnDisplayZero()) {
       if (value === COMMA_CHARACTER) setDisplay('0' + COMMA_CHARACTER)
       else setDisplay(value)
-    } else {
+    } else if (isOnDisplayMinusZero()) {
+      if (value !== 0) {
+        if (value === COMMA_CHARACTER) actualDisplay = '-0,'
+        else actualDisplay = '-' + value
+        setDisplay(actualDisplay)
+      }
+    }else {
       if (value === COMMA_CHARACTER) {
         if (isADotOnDisplay() === false) {
           actualDisplay += value
@@ -245,9 +248,6 @@ const showResults = (value) => {
   } else {
     if (isOnRangeOfNotError(value)) {
       const countOfNumberBeforeComma = numbersBeforeComma(value)
-
-      // I puted the number ' + 2 ' because i need to count the comma and the minus
-
       if (value < 0) value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
       else value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
 
@@ -345,9 +345,13 @@ document.addEventListener('keydown', (event) => {
   else if (event.key === '8') addToTheDisplay(8)
   else if (event.key === '9') addToTheDisplay(9)
   else if (event.key === '+') operatorSelect('+')
-  else if (event.key === '-') operatorSelect('-')
+  else if (event.key === '-') {
+    if (getDisplayNumber() === 0) setDisplay('-0')
+    else operatorSelect('-') 
+  }
   else if (event.key === '*') operatorSelect('*')
   else if (event.key === '/') operatorSelect('/')
+  else if (event.key === 'Enter') operate()
   else if (event.key === COMMA_CHARACTER) addToTheDisplay(COMMA_CHARACTER)
 })
 
@@ -366,7 +370,10 @@ EIGHT_BUTTON.addEventListener('click', () => { addToTheDisplay(8) })
 NINE_BUTTON.addEventListener('click', () => { addToTheDisplay(9) })
 DIVIDE_BUTTON.addEventListener('click', () => { operatorSelect('/') })
 MULTUPLY_BUTTON.addEventListener('click', () => { operatorSelect('*') })
-SUBSTRACT_BUTTON.addEventListener('click', () => { operatorSelect('-') })
+SUBSTRACT_BUTTON.addEventListener('click', () => { 
+  if (getDisplayNumber() === 0) setDisplay('-0')
+  else operatorSelect('-') 
+})
 SUM_BUTTON.addEventListener('click', () => { operatorSelect('+') })
 EQUAL_BUTTON.addEventListener('click', () => { operate() })
 
@@ -385,6 +392,15 @@ const isOnDisplayZero = () => {
 
   if (displayString === '0') return true
   else return false
+}
+
+const isOnDisplayMinusZero = () => {
+
+  const displayString = display.innerHTML
+
+  if (displayString === '-0') return true
+  else return false
+
 }
 
 const isADotOnDisplay = () => {
