@@ -482,7 +482,7 @@ Examples:
 |          9283 |      - |
 |         1,234 |      * |
 
-@wip
+@done
 Scenario Outline: Clicking the button 0 after operate
 When the user presses the "<button>" button
 And the user presses the "0" button
@@ -504,3 +504,20 @@ Examples:
 |      - |       0 |      0 |             0 |
 |      * |       , |      0 |         0,000 |
 |      * |       0 |      0 |             0 |
+
+@wip
+Scenario Outline: Writing numbers with loads of zeros
+Given the user writes the following value: "<displayNumber>"
+When the user presses the "<button>" button
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button | displayResult |
+|          10,0 |      0 |         10,00 | 
+|    10,0000000 |      0 |   10,00000000 |
+|          10,0 |      1 |         10,01 | 
+|    10,0000001 |      0 |   10,00000010 |
+|    10,0000010 |      2 |   10,00000102 |
+|    10,0001010 |      2 |   10,00010102 |
+|   90,03045102 |     +- |  -90,03045102 |
+|  -76,06017031 |     +- |   76,06017031 |

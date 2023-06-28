@@ -18,6 +18,10 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
+const getDisplay = () => {
+  return display.innerHTML.replace(',', '.')
+}
+
 const reset = () => {
   setDisplay(0)
   isPoint = false
@@ -59,26 +63,20 @@ const addNumber = (num) => {
   } else if (maxLenght(lastNumberWrited)) {
     toDisplay = '' + lastNumberWrited
   } else {
-    if (addDecimal) {
-      if (lastNumberWrited === null) {
-        lastNumberWrited = 0
-      }
+    if (lastNumberWrited === null) {
+      lastNumberWrited = 0
+    }
 
-      if (num === 0) {
-        pendingZeros++
+    if (num === 0) {
+      pendingZeros++
 
-        toDisplay = showPendingZeros()
-      } else {
-        lastNumberWrited = addPendingZeros(num)
-
-        toDisplay = '' + lastNumberWrited
-
-        addDecimal = false
-      }
+      toDisplay = showPendingZeros()
     } else {
-      toDisplay = '' + lastNumberWrited + num
+      lastNumberWrited = addPendingZeros(num)
 
-      lastNumberWrited = Number(toDisplay)
+      toDisplay = '' + lastNumberWrited
+
+      addDecimal = false
     }
   }
   toDisplay = toDisplay.replace('.', ',')
@@ -87,7 +85,13 @@ const addNumber = (num) => {
 }
 
 const showPendingZeros = () => {
-  let text = lastNumberWrited + '.'
+  let text
+
+  if (addDecimal) {
+    text = lastNumberWrited + '.'
+  } else {
+    text = lastNumberWrited
+  }
 
   for (let index = 0; index < pendingZeros; index++) {
     text += '0'
@@ -97,15 +101,14 @@ const showPendingZeros = () => {
 }
 
 const addPendingZeros = (num) => {
-  let text = lastNumberWrited + '.'
+  pendingZeros = 0
 
-  for (let index = 0; index < pendingZeros; index++) {
-    text += '0'
+  if (num !== null) {
+    return Number(getDisplay() + num)
   }
-
-  text += num
-
-  return Number(text)
+  else {
+    return Number(getDisplay())
+  }
 }
 
 const addNumberAndDisplay = (num) => {
@@ -130,7 +133,7 @@ const maxLenght = (num) => {
   string = string.replace('-', '')
   string = string.replace('.', '')
 
-  if (string.length >= MAX_DIGITS_IN_DISPLAY) {
+  if ((string.length + pendingZeros) >= MAX_DIGITS_IN_DISPLAY) {
     return true
   } else {
     return false
@@ -138,6 +141,8 @@ const maxLenght = (num) => {
 }
 
 const addPoint = () => {
+  lastNumberWrited = addPendingZeros(null)
+
   if (!isPoint && !maxLenght(lastNumberWrited)) {
     isPoint = true
     addDecimal = true
@@ -190,7 +195,6 @@ const operate = (num1, operation, num2) => {
   isEqualsPressed = true
 
   if (!negateNumberWhenEquals) {
-
     if (num1 !== null || num2 !== null) {
       switch (operation) {
         case '+':
@@ -253,6 +257,8 @@ const opertionWithoutTwoNumbers = () => {
 }
 
 const prepareAndOperateIfSecondOperation = (op) => {
+  lastNumberWrited = addPendingZeros(null)
+
   if (doMultipleOperations && !isEqualsPressed) {
     lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
 
@@ -393,6 +399,8 @@ const addButtons = () => {
   })
 
   document.getElementsByName('negate')[0].addEventListener('click', () => {
+    lastNumberWrited = addPendingZeros(null)
+
     const text = negateActualNumber(lastNumberWrited.toString())
 
     setDisplay(text)
@@ -403,10 +411,6 @@ const addButtons = () => {
   })
 
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
-    if (lastNumberWrited === null && !doOperation) {
-      negateNumberWhenEquals = true
-    }
-
     prepareAndOperateIfSecondOperation('-')
   })
 
@@ -419,6 +423,9 @@ const addButtons = () => {
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
+    if (lastNumberWrited !== null) {
+      lastNumberWrited = addPendingZeros(null)
+    }
     operateAndDisplay()
   })
 }
