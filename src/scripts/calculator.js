@@ -26,6 +26,8 @@ const totalReset = () => {
   firstOperand = undefined
   result = undefined
   setDisplay(currentValue)
+  changeButtonState(true, 'zero')
+  changeButtonState(true, 'negate')
 }
 
 const appendNumber = (value) => {
@@ -42,6 +44,7 @@ const appendNumber = (value) => {
   }
 
   changeButtonState(false, 'negate')
+  changeButtonState(false, 'zero')
   return currentValue
 }
 
