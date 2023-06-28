@@ -4,9 +4,11 @@ const DIGITO_COMA = ',';
 
 const display = document.querySelector('div[name="display"] span')
 
-let firstOperator = null;
+let result = 0;
+let firstOperator = null
 let isRecentlyPutAOperator = false
-let isTheOperationFinisehd = false;
+let isTheOperationFinisehd = false
+let isNumberMemory = false
 
 let operator = null;
 
@@ -84,9 +86,10 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   toOperate()
+  //isNumberMemory = true
 })
 
-document.addEventListener('keydown', () => {
+document.addEventListener('keydown', (event) => {
   if (event.key === "Escape" || event.keyCode === 27) reset()
   else if (event.ctrlKey) invertNumberDisplay()
   else if (event.key === "0") addToDisplay(0)
@@ -187,20 +190,23 @@ const seleccionarOperador = (op) => {
   console.log('Pre-Funcion Memoria: ' + firstOperator)
   if (isRecentlyPutAOperator === false){
     if (firstOperator !== null) {
+      if (result !== null) {
+        firstOperator = result;
+      }
       toOperate();
     }
 
     operator = op;
 
-    firstOperator = display.innerHTML;
-    firstOperator = firstOperator.replace(DIGITO_COMA, '.')
-    firstOperator = parseFloat(firstOperator)
+    addInDisplayFirstOperator()
 
-    reset();
+    reset() 
+    
   }
-  else operator = op;
-  isRecentlyPutAOperator = true
+  else operator = op
 
+  isRecentlyPutAOperator = true
+  isNumberMemory = true
   console.log('Post-Funcion Memoria: ' + firstOperator)
 }
 
@@ -211,7 +217,6 @@ const toOperate = () => {
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
 
-  let result = 0;
   if (firstOperator === 9999999999 || secondOperator === 9999999999) {
     isAnError()
 
@@ -247,7 +252,6 @@ const toOperate = () => {
     operator = null;
   }
   
-
 }
 
 const roundToDecimalPlaces = (value, decimalPlaces) => {
@@ -274,6 +278,14 @@ const numberBeforeComma = (value) => {
 const isAnError = () => {
 
 setDisplay('ERROR');
+
+}
+
+const addInDisplayFirstOperator = () => {
+
+  firstOperator = display.innerHTML;
+  firstOperator = firstOperator.replace(DIGITO_COMA, '.')
+  firstOperator = parseFloat(firstOperator)
 
 }
 
