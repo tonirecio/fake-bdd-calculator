@@ -505,7 +505,7 @@ Examples:
 |      * |       , |      0 |         0,000 |
 |      * |       0 |      0 |             0 |
 
-@wip
+@done
 Scenario Outline: Writing numbers with loads of zeros
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -521,3 +521,18 @@ Examples:
 |    10,0001010 |      2 |   10,00010102 |
 |   90,03045102 |     +- |  -90,03045102 |
 |  -76,06017031 |     +- |   76,06017031 |
+
+@wip
+Scenario Outline: Doing operations with buttons and pressing the key "Enter" to operate
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<key>" key
+And the user presses the "<value>" button
+When the user presses the "Enter" key                             
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | key | value | displayResult |
+|            24 |   + |     6 |            30 |
+|          24,2 |   - |     4 |          20,2 |
+|           -10 |   * |     6 |           -60 |
+|            10 |   / |     2 |             5 |

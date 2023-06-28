@@ -299,6 +299,7 @@ const operateAndDisplay = () => {
       disableAllButtons()
     }
   }
+
   setDisplay(text)
 }
 
@@ -426,23 +427,30 @@ const addButtons = () => {
     if (lastNumberWrited !== null) {
       lastNumberWrited = addPendingZeros(null)
     }
+
     operateAndDisplay()
   })
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.key >= 0 && event.key <= 9) {
+  event.preventDefault()
+
+  if (event.key >= 0 && event.key <= 9 && event.key !== " ") {
     addNumberAndDisplay(event.key)
   } else if (event.key === ',') {
     const text = addPoint()
 
     setDisplay(text)
+  } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
+    prepareAndOperateIfSecondOperation(event.key)
   } else if (event.key === 'Control') {
     const text = negateActualNumber(lastNumberWrited.toString())
 
     setDisplay(text)
   } else if (event.key === 'Escape') {
     reset()
+  } else if (event.key === 'Enter') {
+    document.getElementsByName('equal')[0].click()
   }
 })
 
