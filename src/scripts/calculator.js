@@ -3,7 +3,7 @@ const COMMA_SYMBOL = ','
 const display = document.querySelector('div[name="display"] span')
 let currentOperation = null
 let previousOperand = 0
-let number = null
+let currentNumber = null
 let numberHasComma = false
 let overrideDisplay = true
 let pendingZeros = 0
@@ -18,7 +18,7 @@ const reset = () => {
   previousOperand = 0
   currentOperation = null
   numberHasComma = false
-  number = null
+  currentNumber = null
   pendingZeros = 0
   handleButtonEnablingWhenReset()
   setDisplay(0)
@@ -67,11 +67,11 @@ const addEventsToKeyboard = () => {
 }
 
 const handleNegateClick = () => {
-  number = negateNumber(number)
-  if (parseInt(number) === number && numberHasComma) {
+  currentNumber = negateNumber(currentNumber)
+  if (parseInt(currentNumber) === currentNumber && numberHasComma) {
     writeComma()
   }
-  setDisplay(formatNumberToDisplay(number))
+  setDisplay(formatNumberToDisplay(currentNumber))
 }
 
 const handleCommaClick = () => {
@@ -82,8 +82,8 @@ const handleCommaClick = () => {
 const handleOperationClick = (operation) => {
   if (!overrideDisplay && currentOperation !== null) {
     previousOperand = performOperation()
-  } else if (previousOperand === 0 && number !== null) {
-    previousOperand = number
+  } else if (previousOperand === 0 && currentNumber !== null) {
+    previousOperand = currentNumber
   }
   numberHasComma = false
   currentOperation = operation
@@ -95,8 +95,9 @@ const handleEqualsClick = () => {
   previousOperand = performOperation()
   overrideDisplay = true
   currentOperation = null
-  number = null
+  currentNumber = null
   setAllButtonDisabledStatus(false)
+  console.log(previousOperand)
   setDisplay(formatNumberToDisplay(previousOperand))
 }
 
@@ -129,76 +130,87 @@ const getDigitNumber = (number) => {
 }
 
 const writeNewNumber = (newNumber) => {
-  if (overrideDisplay || number === null) {
+  if (overrideDisplay || currentNumber === null) {
     overrideDisplay = false
     numberHasComma = false
-    number = newNumber
+    currentNumber = newNumber
     setAllButtonDisabledStatus(false)
-  } else if (getDigitNumber(number) < MAX_DIGITS_IN_DISPLAY) {
-    if (Number.isInteger(number) && !numberHasComma) {
-      number = parseFloat(number + newNumber.toString())
+  } else if (getDigitNumber(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+    if (Number.isInteger(currentNumber) && !numberHasComma) {
+      currentNumber = parseFloat(currentNumber + newNumber.toString())
     } else {
       if (newNumber === 0) {
         pendingZeros++
-      } else if (Number.isInteger(number)) {
-        number += newNumber / (Math.pow(10, pendingZeros + 1))
+      } else if (Number.isInteger(currentNumber)) {
+        currentNumber += newNumber / (Math.pow(10, pendingZeros + 1))
         pendingZeros = 0
       } else {
         let zeroString = ''
         for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
           zeroString += '0'
         }
-        number = parseFloat(number + zeroString + newNumber.toString())
+        currentNumber = parseFloat(currentNumber + zeroString + newNumber.toString())
         pendingZeros = 0
       }
     }
   }
-  setDisplay(formatNumberToDisplay(number))
+  setDisplay(formatNumberToDisplay(currentNumber))
 }
 
 const writeComma = () => {
-  if (number === null) {
-    number = 0
+  if (currentNumber === null) {
+    currentNumber = 0
   }
-  if (!numberHasComma && getDigitNumber(number) < MAX_DIGITS_IN_DISPLAY) {
+  if (!numberHasComma && getDigitNumber(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     numberHasComma = true
     overrideDisplay = false
-    setDisplay(number)
+    setDisplay(currentNumber)
   }
 }
 
 const performOperation = () => {
-  let result = number === null ? 0 : number
+  let result = currentNumber === null ? 0 : currentNumber
   if (overrideDisplay && previousOperand !== 0) {
     result = NaN
   } else {
     if (currentOperation === 'sum') {
-      result = previousOperand + number
+      result = previousOperand + currentNumber
     } else if (currentOperation === 'subtract') {
-      result = previousOperand - number
+      result = previousOperand - currentNumber
     } else if (currentOperation === 'multiply') {
-      result = previousOperand * number
+      result = previousOperand * currentNumber
     } else if (currentOperation === 'divide') {
-      result = previousOperand / number
-    } else if (currentOperation === null && Number.isInteger(number)) {
+      result = previousOperand / currentNumber
+    } else if (currentOperation === null && Number.isInteger(currentNumber)) {
       numberHasComma = false
     }
   }
   return result
 }
 
-const formatNumberToDisplay = (result) => {
-  if (Math.abs(result) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(result)) {
-    result = 'ERROR'
+const formatNumberToDisplay = (number) => {
+  if (Math.abs(number) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(number)) {
+    number = 'ERROR'
   }
-  if (result !== 'ERROR') {
-    if (getDigitNumber(result) > MAX_DIGITS_IN_DISPLAY) {
-      const integerPartDigits = parseInt(Math.abs(result)).toString().length
+  if (number !== 'ERROR') {
+    if (Math.abs(number) > 0 && Math.abs(number) < 1 / Math.pow(10, MAX_DIGITS_IN_DISPLAY - 1)) {
+      number = 'ERROR'
+    } else {
+      const integerPartDigits = parseInt(Math.abs(number)).toString().length
       // Round by using toFixed() and remove trailing zeros by using parseFloat()
-      result = parseFloat(result.toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits))
+      number = number.toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits)
+      if (parseFloat(number).toString().includes('e')) {
+        const numberArray = number.toString().split('')
+        while (numberArray[numberArray.length - 1] === '0') {
+          numberArray.pop()
+        }
+        return numberArray.join('')
+      } else {
+        number = parseFloat(number)
+      }
     }
   }
-  return result
+  return number
 }
 
 // Functions for button enabling/disabling
@@ -249,4 +261,3 @@ const handleButtonEnablingWhenError = () => {
 }
 
 init()
-// TODO: arreglar previousOperand = number
