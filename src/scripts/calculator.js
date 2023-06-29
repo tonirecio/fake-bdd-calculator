@@ -1,56 +1,80 @@
 let currentNumber = 0
-let addingComma = false
+let operator = ''
+let hasComma = false
+let previousNumber = 0
 
 const display = document.querySelector('[data-testid="display"]')
-
 const MAX_DIGITS_IN_DISPLAY = 10
 
 const addNumber = (number) => {
-  if (addingComma) {
+  if (hasComma) {
     currentNumber = parseFloat(currentNumber.toString() + '.' + number.toString())
-    addingComma = false
-    setDisplay()
+    hasComma = false
   } else {
     currentNumber = parseFloat(currentNumber.toString() + number.toString())
-    setDisplay()
   }
+  setDisplay()
 }
 
+// elimina los caracteres no numericos de "number" y devuelve su longitud
 const getNumberLength = (number) => {
-  number = number.toString()
-  number = number.replace('.', '')
-  number = number.replace('-', '')
-  const length = number.length
-  return length
+  return number.toString().replace(/[^0-9]/g, '').length
 }
 
 const setDisplay = () => {
-  let displayValue
-  if (addingComma) {
-    displayValue = currentNumber.toString() + ','
-  } else {
-    displayValue = currentNumber.toString().replace('.', ',')
-  }
-  display.textContent = displayValue
+  const integerDigits = Math.floor(Math.abs(currentNumber))
+  const decimalDigits = Math.max(MAX_DIGITS_IN_DISPLAY - integerDigits.toString().length, 0)
+
+  const formattedNumber = currentNumber.toLocaleString(undefined, {
+    maximumFractionDigits: decimalDigits
+  })
+
+  display.textContent = hasComma ? formattedNumber + ',' : formattedNumber
 }
 
 const clean = () => {
   currentNumber = 0
   operator = ''
-  operand1 = null
-  operand2 = null
-  addingComma = false
+  hasComma = false
+  previousNumber = 0
   setDisplay()
 }
 
 const negate = () => {
-  currentNumber = currentNumber * -1
+  currentNumber = -currentNumber
   setDisplay()
 }
 
 const handleComma = () => {
-  if (Number.isInteger(currentNumber)) { addingComma = true }
+  if (Number.isInteger(currentNumber)) {
+    hasComma = true
+  }
   setDisplay()
+}
+
+const performOperation = () => {
+  if (operator && currentNumber !== null) {
+    let result
+    switch (operator) {
+      case '+':
+        result = previousNumber + currentNumber
+        break
+      case '-':
+        result = previousNumber - currentNumber
+        break
+      case '*':
+        result = previousNumber * currentNumber
+        break
+      case '/':
+        result = previousNumber / currentNumber
+        break
+    }
+    currentNumber = result
+    operator = ''
+    previousNumber = 0
+    setDisplay()
+    return result
+  }
 }
 
 const handleButtonPress = (button) => {
@@ -70,12 +94,19 @@ const handleButtonPress = (button) => {
     case '-':
     case '*':
     case '/':
+      if (currentNumber !== null) {
+        operator = button
+        previousNumber = currentNumber
+        currentNumber = 0
+      }
+      break
     case '=':
+      performOperation()
+      break
     default:
       if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
         addNumber(Number(button))
       }
-      console.log(getNumberLength(currentNumber))
       break
   }
 }
@@ -83,9 +114,6 @@ const handleButtonPress = (button) => {
 const handleKeyPress = (event) => {
   const key = event.key
   switch (key) {
-    case 'Escape':
-      clean()
-      break
     case 'Control':
       negate()
       break
@@ -99,9 +127,12 @@ const handleKeyPress = (event) => {
     case '*':
     case '/':
     case '=':
+      handleButtonPress(key)
+      break
     default:
-      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
-        addNumber(Number(key))
+      // si la tecla presionada es un numero
+      if (!isNaN(parseInt(key))) {
+        handleButtonPress(key)
       }
       break
   }
@@ -111,68 +142,36 @@ document.getElementsByName('clean')[0].addEventListener('click', clean)
 
 document.getElementsByName('negate')[0].addEventListener('click', negate)
 
-document.getElementsByName('zero')[0].addEventListener('click', () => {
-  handleButtonPress('0')
-})
+document.getElementsByName('zero')[0].addEventListener('click', () => handleButtonPress('0'))
 
-document.getElementsByName('one')[0].addEventListener('click', () => {
-  handleButtonPress('1')
-})
+document.getElementsByName('one')[0].addEventListener('click', () => handleButtonPress('1'))
 
-document.getElementsByName('two')[0].addEventListener('click', () => {
-  handleButtonPress('2')
-})
+document.getElementsByName('two')[0].addEventListener('click', () => handleButtonPress('2'))
 
-document.getElementsByName('three')[0].addEventListener('click', () => {
-  handleButtonPress('3')
-})
+document.getElementsByName('three')[0].addEventListener('click', () => handleButtonPress('3'))
 
-document.getElementsByName('four')[0].addEventListener('click', () => {
-  handleButtonPress('4')
-})
+document.getElementsByName('four')[0].addEventListener('click', () => handleButtonPress('4'))
 
-document.getElementsByName('five')[0].addEventListener('click', () => {
-  handleButtonPress('5')
-})
+document.getElementsByName('five')[0].addEventListener('click', () => handleButtonPress('5'))
 
-document.getElementsByName('six')[0].addEventListener('click', () => {
-  handleButtonPress('6')
-})
+document.getElementsByName('six')[0].addEventListener('click', () => handleButtonPress('6'))
 
-document.getElementsByName('seven')[0].addEventListener('click', () => {
-  handleButtonPress('7')
-})
+document.getElementsByName('seven')[0].addEventListener('click', () => handleButtonPress('7'))
 
-document.getElementsByName('eight')[0].addEventListener('click', () => {
-  handleButtonPress('8')
-})
+document.getElementsByName('eight')[0].addEventListener('click', () => handleButtonPress('8'))
 
-document.getElementsByName('nine')[0].addEventListener('click', () => {
-  handleButtonPress('9')
-})
+document.getElementsByName('nine')[0].addEventListener('click', () => handleButtonPress('9'))
 
-document.getElementsByName('divide')[0].addEventListener('click', () => {
-  handleButtonPress('/')
-})
+document.getElementsByName('divide')[0].addEventListener('click', () => handleButtonPress('/'))
 
-document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  handleButtonPress('*')
-})
+document.getElementsByName('multiply')[0].addEventListener('click', () => handleButtonPress('*'))
 
-document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  handleButtonPress('-')
-})
+document.getElementsByName('subtract')[0].addEventListener('click', () => handleButtonPress('-'))
 
-document.getElementsByName('sum')[0].addEventListener('click', () => {
-  handleButtonPress('+')
-})
+document.getElementsByName('sum')[0].addEventListener('click', () => handleButtonPress('+'))
 
-document.getElementsByName('point')[0].addEventListener('click', () => {
-  handleButtonPress(',')
-})
+document.getElementsByName('point')[0].addEventListener('click', () => handleButtonPress(','))
 
-document.getElementsByName('equal')[0].addEventListener('click', () => {
-  handleButtonPress('=')
-})
+document.getElementsByName('equal')[0].addEventListener('click', () => handleButtonPress('='))
 
 document.addEventListener('keydown', handleKeyPress)
