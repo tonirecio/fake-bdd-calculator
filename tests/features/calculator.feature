@@ -153,7 +153,7 @@ Scenario: Clicking the C button
 Given the user writes the following value: "123"
 When the user presses the "C" button
 Then the display should show the following value: "0"
-
+@test10
 Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key

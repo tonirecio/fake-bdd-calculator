@@ -15,7 +15,6 @@ const addNumber = (number) => {
   }
   setDisplay()
 }
-
 // elimina los caracteres no numericos de "number" y devuelve su longitud
 const getNumberLength = (number) => {
   return number.toString().replace(/[^0-9]/g, '').length
@@ -69,6 +68,14 @@ const performOperation = () => {
         result = previousNumber / currentNumber
         break
     }
+
+    const resultDigits = getNumberLength(result) // Verificar el número de dígitos
+    if (resultDigits > MAX_DIGITS_IN_DISPLAY) {
+      currentNumber = null // Establecer el número actual como nulo para mostrar "ERROR"
+      display.textContent = 'ERROR'
+      return 'ERROR'
+    }
+
     currentNumber = result
     operator = ''
     previousNumber = 0
@@ -126,13 +133,19 @@ const handleKeyPress = (event) => {
     case '-':
     case '*':
     case '/':
-    case '=':
-      handleButtonPress(key)
+      if (currentNumber !== null) {
+        operator = key
+        previousNumber = currentNumber
+        currentNumber = 0
+      }
       break
-    default:
-      // si la tecla presionada es un numero
-      if (!isNaN(parseInt(key))) {
-        handleButtonPress(key)
+    case 'Enter':
+      performOperation()
+      break
+    case '0-8':
+    case '9':
+      if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
+        addNumber(Number(key))
       }
       break
   }
