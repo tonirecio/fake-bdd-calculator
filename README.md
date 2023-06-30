@@ -31,7 +31,6 @@ ______________________________________
 
 //Writing numbers of more than 10 digit
 
-
 const addNumber = (number) => {
   if (addingComma) {
     currentNumber = parseFloat(currentNumber.toString() + '.' + number.toString())
@@ -45,6 +44,34 @@ const addNumber = (number) => {
 
 Si los dos casos acaban en setDisplay() solo es necesario ponerlo una vez al final.
 
+______________________________________
+
+//Before clicking the equal button 
+
+  return number.toString().replace(/[^0-9]/g, '').length  Es dificil de entender. No estoy seguro de si es la manera mas facil.
+  
+  const clean = () => {
+  currentNumber = 0
+  operator = ''
+  hasComma = false
+  previousNumber = 0
+  setDisplay()
+}
+
+Pon previous y current juntos para limpiarlos ( cuestíon de estetica visual)
+
+
+const negate = () => {
+  currentNumber = -currentNumber
+  setDisplay()
+}
+
+Mejor multiplicar por -1, no estoy seguro de que esto vaya a funcionar siempre.
+
+
+let hasComma = false
+
+Esta variable puede ser confusa, yo la llamaria "addingComma"
 
 ______________________________________
 
