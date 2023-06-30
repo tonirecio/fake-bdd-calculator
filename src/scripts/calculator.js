@@ -1,17 +1,17 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
 const setDisplay = (value) => {
-  //  display.innerHTML = value.toString().replace('.',',')
   display.innerHTML = replaceComma(value)
 }
 
 let currentValue = 0
-let currentValueToString = 0
-let nextValue
+let currentValueToString = "0"
+let lastValue = 0
+let operationResult = 0
 let countDigit = 0
 let isDecimal = false
 let isCurrentValueUsingPoint = false
-//  let operator
+let operator
 //  isdisplaytobecleaned
 
 const display = document.querySelector('div[name="display"] span')
@@ -58,30 +58,40 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
   }
 })
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-
+  operandButtons("divide")
 })
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-
+  operandButtons("multiply")
 })
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-
+  operandButtons("sum")
 })
 document.getElementsByName('subtract')[0].addEventListener('click', () => { 
+  operandButtons("subtract")
 })
 const buttonPointName = document.getElementsByName('point')[0].addEventListener('click', () => {
   showPointButton('point')
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  
+  equalButton()
 })
 
 const reset = () => {
   currentValue = 0
-  nextValue = 0
-  currentValueToString = 0
+  lastValue = 0
+  operationResult = 0
+  currentValueToString = "0"
   isDecimal = false
+  isCurrentValueUsingPoint = false
   countDigit = 0
+  operator = ''
   setDisplay(0)
+}
+
+const resetCurrentValue = () =>{
+  currentValue = 0
+  isDecimal = false
+  isCurrentValueUsingPoint = false
 }
 
 const addNumberButtons = (number) => {
@@ -118,10 +128,8 @@ const appendDecimalNumbers = (value) => {
   if (countDigit < MAX_DIGITS_IN_DISPLAY) {
     if (isDecimal) {
       currentValueToString = currentValue + "," + value
-      console.log(typeof currentValueToString)
     }
     countDigit++
-    isCurrentValueUsingPoint = false
   } else {
     window.alert("You can't add more values")
   }
@@ -131,7 +139,6 @@ const appendDecimalNumbers = (value) => {
 const negateButton = (displayValue) => {
   displayValue = displayValue * -1
   currentValue = displayValue
-  console.log(typeof displayValue)
   setDisplay(displayValue)
 }
 
@@ -143,6 +150,44 @@ const showPointButton = (buttonPointName) => {
       isCurrentValueUsingPoint = true
     }
   }
+}
+
+const saveCurrentValue = () => {
+  if(currentValue != 0) {
+    lastValue = currentValue
+    resetCurrentValue()
+  }
+}
+
+const operandButtons = (buttonOperandName) => {
+  saveCurrentValue()
+  operator = buttonOperandName
+}
+
+const performOperation = () => {
+  switch(operator) {
+    case "sum":
+      operationResult = lastValue + currentValue
+      break
+    case "subtract":
+      operationResult = lastValue - currentValue
+      break
+    case "multiply":
+      operationResult = lastValue * currentValue
+      break
+    case "divide":
+      operationResult = lastValue / currentValue
+      break
+    default:
+      window.alert("error")
+    break
+  }
+  return operationResult
+}
+
+const equalButton = () => {
+  let result = performOperation()
+  setDisplay(result)
 }
 
 /*keydown numbers, escape, control and comma*/

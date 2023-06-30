@@ -52,7 +52,7 @@ Examples:
 |             1 |     Escape |             0 |
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
-@wip4
+@done4
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -127,6 +127,7 @@ Examples:
 |           -10 |      / |          2 |            -5 |
 |           -10 |      / |         -2 |             5 |
 
+@wip7
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button

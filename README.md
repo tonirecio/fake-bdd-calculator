@@ -26,3 +26,4 @@ Comentarios:
 -Linea 83/86/114/130: El console.log() no tendría que estar ahí
 -Linea 116/117: El else llega a ser innecesario porque ya se comprueb acon anteriroidad la variable "isDecimal"
 -Linea 145...: Pese a no estar contemplado, seria bueno controlar los digitos que entran por teclado (OPCIONAL) 
+
