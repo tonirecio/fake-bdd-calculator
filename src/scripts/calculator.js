@@ -1,21 +1,23 @@
 let currentNumber = 0
 let operator = ''
+let lastOperator = ''
 let hasComma = false
 let previousNumber = 0
 
 const display = document.querySelector('[data-testid="display"]')
+
 const MAX_DIGITS_IN_DISPLAY = 10
 
 const addNumber = (number) => {
   if (hasComma) {
-    currentNumber = parseFloat(currentNumber.toString() + '.' + number.toString())
+    currentNumber = parseFloat(`${currentNumber}.${number}`)
     hasComma = false
   } else {
-    currentNumber = parseFloat(currentNumber.toString() + number.toString())
+    currentNumber = parseFloat(`${currentNumber}${number}`)
   }
   setDisplay()
 }
-// elimina los caracteres no numericos de "number" y devuelve su longitud
+
 const getNumberLength = (number) => {
   return number.toString().replace(/[^0-9]/g, '').length
 }
@@ -28,12 +30,13 @@ const setDisplay = () => {
     maximumFractionDigits: decimalDigits
   })
 
-  display.textContent = hasComma ? formattedNumber + ',' : formattedNumber
+  display.textContent = hasComma ? `${formattedNumber},` : formattedNumber
 }
 
 const clean = () => {
   currentNumber = 0
   operator = ''
+  lastOperator = ''
   hasComma = false
   previousNumber = 0
   setDisplay()
@@ -52,9 +55,9 @@ const handleComma = () => {
 }
 
 const performOperation = () => {
-  if (operator && currentNumber !== null) {
+  if (lastOperator && currentNumber !== null) {
     let result
-    switch (operator) {
+    switch (lastOperator) {
       case '+':
         result = previousNumber + currentNumber
         break
@@ -68,16 +71,15 @@ const performOperation = () => {
         result = previousNumber / currentNumber
         break
     }
-
-    const resultDigits = getNumberLength(result) // Verificar el número de dígitos
+    const resultDigits = getNumberLength(result)
     if (resultDigits > MAX_DIGITS_IN_DISPLAY) {
-      currentNumber = null // Establecer el número actual como nulo para mostrar "ERROR"
+      currentNumber = null
       display.textContent = 'ERROR'
       return 'ERROR'
     }
 
     currentNumber = result
-    operator = ''
+    lastOperator = operator
     previousNumber = 0
     setDisplay()
     return result
@@ -102,7 +104,13 @@ const handleButtonPress = (button) => {
     case '*':
     case '/':
       if (currentNumber !== null) {
+        if (lastOperator !== '') {
+          operator = button
+          lastOperator = operator
+          return
+        }
         operator = button
+        lastOperator = operator
         previousNumber = currentNumber
         currentNumber = 0
       }
@@ -134,7 +142,13 @@ const handleKeyPress = (event) => {
     case '*':
     case '/':
       if (currentNumber !== null) {
+        if (lastOperator !== '') {
+          operator = key
+          lastOperator = operator
+          return
+        }
         operator = key
+        lastOperator = operator
         previousNumber = currentNumber
         currentNumber = 0
       }
@@ -142,8 +156,10 @@ const handleKeyPress = (event) => {
     case 'Enter':
       performOperation()
       break
-    case '0-8':
-    case '9':
+    case 'Escape':
+      clean()
+      break
+    case '0-9':
       if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
         addNumber(Number(key))
       }
@@ -152,39 +168,22 @@ const handleKeyPress = (event) => {
 }
 
 document.getElementsByName('clean')[0].addEventListener('click', clean)
-
 document.getElementsByName('negate')[0].addEventListener('click', negate)
-
 document.getElementsByName('zero')[0].addEventListener('click', () => handleButtonPress('0'))
-
 document.getElementsByName('one')[0].addEventListener('click', () => handleButtonPress('1'))
-
 document.getElementsByName('two')[0].addEventListener('click', () => handleButtonPress('2'))
-
 document.getElementsByName('three')[0].addEventListener('click', () => handleButtonPress('3'))
-
 document.getElementsByName('four')[0].addEventListener('click', () => handleButtonPress('4'))
-
 document.getElementsByName('five')[0].addEventListener('click', () => handleButtonPress('5'))
-
 document.getElementsByName('six')[0].addEventListener('click', () => handleButtonPress('6'))
-
 document.getElementsByName('seven')[0].addEventListener('click', () => handleButtonPress('7'))
-
 document.getElementsByName('eight')[0].addEventListener('click', () => handleButtonPress('8'))
-
 document.getElementsByName('nine')[0].addEventListener('click', () => handleButtonPress('9'))
-
 document.getElementsByName('divide')[0].addEventListener('click', () => handleButtonPress('/'))
-
 document.getElementsByName('multiply')[0].addEventListener('click', () => handleButtonPress('*'))
-
 document.getElementsByName('subtract')[0].addEventListener('click', () => handleButtonPress('-'))
-
 document.getElementsByName('sum')[0].addEventListener('click', () => handleButtonPress('+'))
-
 document.getElementsByName('point')[0].addEventListener('click', () => handleButtonPress(','))
-
 document.getElementsByName('equal')[0].addEventListener('click', () => handleButtonPress('='))
 
 document.addEventListener('keydown', handleKeyPress)

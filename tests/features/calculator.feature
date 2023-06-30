@@ -158,7 +158,7 @@ Scenario: Pressing the escape key
 Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
-
+@test11
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -172,7 +172,7 @@ Examples:
 |            12 |      + |       / |          6 |             2 |
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
-
+@test12
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -185,7 +185,7 @@ Examples:
 | displayNumber | button | userNumber | displayResult | secondUserNumber |
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
-
+@test13
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -201,7 +201,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@test14
 Scenario Outline: Using the previous result in a new operation easier
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -216,7 +216,7 @@ Examples:
 |          12,2 |           + |            6 |            + |          13 |          31,2 |
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
-
+@test15
 Scenario Outline: Division with 0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "/" button
@@ -229,19 +229,19 @@ Examples:
 |             1 |
 |            -1 |
 |             0 |
-
+@test16
 Scenario: Doing an operation without a second number
 Given the user writes the following value: "23"
 And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
-
+@test17
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
-
+@test18
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -253,7 +253,7 @@ Examples:
 |         -17,2 |      - |
 |        3,1415 |      * |
 |         -2718 |      / |
-
+@test19
 Scenario Outline: Using the Equals button without operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -264,7 +264,7 @@ Examples:
 |             0 |             0 |
 |            10 |            10 |
 |          -10, |           -10 |
-
+@test20
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
@@ -291,7 +291,7 @@ Examples:
 |   -  |
 |   *  |
 |   /  |
-
+@test21
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button
@@ -311,7 +311,7 @@ And the "+" button should be enabled
 And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
-
+@test22
 Scenario: Reenabling buttons with no error using = button
 Given the user writes the following value: "1234567890"
 When the user presses the "=" button
@@ -331,7 +331,7 @@ And the "+" button should be enabled
 And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
-
+@test23
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled
@@ -352,11 +352,11 @@ Examples:
 |   -1234567890 |
 |   123456789,5 |
 |  -123456789,5 |
-
+@test24
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
-
+@test25
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -380,7 +380,7 @@ And the "/" button should be disabled
 And the "+-" button should be disabled
 And the "=" button should be disabled
 And the "C" button should be enabled
-
+@test26
 Scenario: Reenabling buttons with error
 Given the user writes the following value: "1"
 And the user presses the "/" button
