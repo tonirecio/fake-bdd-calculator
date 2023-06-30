@@ -86,7 +86,6 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   toOperate()
-  //isNumberMemory = true
 })
 
 document.addEventListener('keydown', (event) => {
@@ -218,9 +217,10 @@ const toOperate = () => {
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
 
-  if (firstOperator === 9999999999 || secondOperator === 9999999999) {
+  if (firstOperator === 9999999999 || secondOperator === 9999999999 || secondOperator === 0) {
+    
     isAnError()
-
+    
   } else {
     if (operator === '+') {
       result = firstOperator + secondOperator;
@@ -234,6 +234,10 @@ const toOperate = () => {
     } else if (operator === '/') {
       result = firstOperator / secondOperator;
 
+    }
+
+    if (secondOperator === 0 && operator === '/') {
+      isAnError()
     }
 
     var numTotalBeforeComma = numberBeforeComma(result);
