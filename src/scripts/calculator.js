@@ -258,6 +258,17 @@ const completeOperation = () => {
   clearDisplay = true
 }
 
+const buttonOperation = (buttonName) => {
+  if (pendingOperation) {
+    completeOperation()
+    setDisplay(currentNumberToDisplayableString())
+  }
+  disableButtonLogic('operator')
+  currentOperation = buttonName
+  previousNumber = currentNumber
+  clearDisplay = true
+}
+
 const addNumericalButtonClickEvent = (buttonName, number) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
     pressNumber(number)
@@ -280,7 +291,7 @@ const addOperationButtonClickEvent = (buttonName) => {
 
 const init = () => {
   // KEYBOARD EVENT LISTENER
-  document.addEventListener('keyup', (event) => {
+  document.addEventListener('keypress', (event) => {
     const keyName = event.key
     switch (keyName) {
       case '0':
@@ -307,20 +318,40 @@ const init = () => {
       case '/':
         buttonOperation('divide')
         break
+      case POINT_LOCALE:
+        floatCurrentNum()
+        break
+      case 'Enter':
+        // handled by both keyup and keypress event
+        resolve()
+        event.preventDefault()
+        break
+      default:
+        console.warn('[WARNING] ' + keyName + ' keypress event not planned')
+    }
+    setDisplay(currentNumberToDisplayableString())
+  })
+  // special keys that interact with the keyup event
+  document.addEventListener('keyup', (event) => {
+    const keyName = event.key
+    switch (keyName) {
+      case ' ':
+      case 'Enter':
+        resolve()
+        event.preventDefault()
+        break
       case 'Escape':
         reset()
         break
       case 'Control':
         negateCurrentNum()
         break
-      case POINT_LOCALE:
-        floatCurrentNum()
-        break
       default:
-        console.warn('[WARNING] ' + keyName + ' keyboard event has not been implemented yet.')
+        break
     }
     setDisplay(currentNumberToDisplayableString())
   })
+
   // ON-SCREEN BUTTON EVENTS
   addNumericalButtonClickEvent('one', 1)
   addNumericalButtonClickEvent('two', 2)
@@ -349,14 +380,3 @@ const init = () => {
 // INITIALIZATION
 init()
 reset()
-function buttonOperation(buttonName) {
-  if (pendingOperation) {
-    completeOperation()
-    setDisplay(currentNumberToDisplayableString())
-  }
-  disableButtonLogic('operator')
-  currentOperation = buttonName
-  previousNumber = currentNumber
-  clearDisplay = true
-}
-

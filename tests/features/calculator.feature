@@ -519,3 +519,17 @@ Examples:
 |            24 |      - |          6 |            18 |
 |            10 |      * |          8 |            80 |
 |            10 |      / |          2 |             5 |
+
+@ex_SpaceIntroButton
+Scenario: Clicking the Space and Intro button
+Given the user writes the following value: "1230"
+And the user presses the "+" key
+And the user writes the number: "4,5"
+When the user presses the "<key>" key
+Then the display should show the following value: "1234,5"
+
+Examples:
+| key |
+|Enter|
+|Space|
+
