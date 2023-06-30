@@ -43,6 +43,7 @@ const reset = () => {
 
 const addNumber = (num) => {
   let toDisplay
+  let text = ''
 
   enableAllButtonsLessPoint()
 
@@ -81,6 +82,15 @@ const addNumber = (num) => {
       addDecimal = false
     }
   }
+
+  text = '' + lastNumberWrited
+
+  if (text.includes('e')) {
+    lastNumberWrited = numberWithExponential(text)
+
+    toDisplay = lastNumberWrited
+  }
+
   toDisplay = toDisplay.replace('.', ',')
 
   return toDisplay
@@ -121,6 +131,26 @@ const addNumberAndDisplay = (num) => {
   }
 
   setDisplay(text)
+}
+
+const numberWithExponential = (text) => {
+  const zeros = text.split('e')
+  let num = '0.'
+  let numbers
+
+  for (let x = zeros[1]; x < -1; x++) {
+    num = num + '0'
+  }
+
+  if (zeros[0].includes('.')) {
+    numbers = zeros[0].split('.')
+
+    num = '' + num + numbers[0] + numbers[1]
+  } else {
+    num = '' + num + zeros[0]
+  }
+
+  return num
 }
 
 const maxLenght = (num) => {

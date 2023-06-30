@@ -522,7 +522,7 @@ Examples:
 |   90,03045102 |     +- |  -90,03045102 |
 |  -76,06017031 |     +- |   76,06017031 |
 
-@wip
+@done
 Scenario Outline: Doing operations with buttons and pressing the key "Enter" to operate
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<key>" key
