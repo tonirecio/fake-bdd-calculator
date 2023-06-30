@@ -29,6 +29,23 @@ Mismo problemas de los botones pero ahora con teclas. Te recomiendo lo mismo. Mu
 
 ______________________________________
 
+//Writing numbers of more than 10 digit
 
+
+const addNumber = (number) => {
+  if (addingComma) {
+    currentNumber = parseFloat(currentNumber.toString() + '.' + number.toString())
+    addingComma = false
+    setDisplay()
+  } else {
+    currentNumber = parseFloat(currentNumber.toString() + number.toString())
+    setDisplay()
+  }
+}
+
+Si los dos casos acaban en setDisplay() solo es necesario ponerlo una vez al final.
+
+
+______________________________________
 
 
