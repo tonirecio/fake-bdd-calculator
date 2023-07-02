@@ -1,184 +1,155 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
+const display = document.querySelector('div[name="display"] span')
+
 let currentNumber = 0
 let previousNumber = 0
 let operation = ''
-const numberStack = []
-
-const display = document.querySelector('div[name="display"] span')
+let decimalMultiplier = 0.1
+let isDecimal = false
+let isNewOperation = false
 
 const setDisplay = value => {
-  display.innerHTML = value
+  let newValue = value.toString().replace('.', ',')
+  if (isDecimal && !newValue.includes(',') && newValue.length < 10) {
+    newValue += ','
+  }
+  if (Math.abs(value).toString().replace('.', '').length > 10) {
+    newValue = 'ERROR'
+  }
+  display.innerHTML = newValue
 }
 
-const reset = () => {
-  numberStack.length = 0
-  numberStack.push(0)
+const canAddMoreDigits = (originalNumber, maxDigits) => {
+  const numberDigitCount = Math.abs(originalNumber)
+    .toString()
+    .replace('.', '').length
+  return numberDigitCount < maxDigits
+}
+
+const appendDigit = (originalNumber, numberToAdd) => {
+  let updatedNumber = originalNumber
+  if (isDecimal) {
+    updatedNumber += numberToAdd * decimalMultiplier
+    updatedNumber = Number(updatedNumber.toFixed(MAX_DIGITS_IN_DISPLAY))
+    decimalMultiplier *= 0.1
+  } else {
+    updatedNumber = originalNumber * 10 + numberToAdd
+  }
+
+  return updatedNumber
+}
+
+const resetCalculatorState = () => {
   currentNumber = 0
   previousNumber = 0
-  setDisplay(stackToNumber(numberStack))
+  operation = ''
+  decimalMultiplier = 0.1
+  isDecimal = false
+  isNewOperation = false
 }
 
-const stackToNumber = stack => {
-  let result = 0
-  let number = 0
-  let decimal = 0
-  let decimalMultiplier = 1
-  let isNegative = false
+const resetCalculatorStateAndClearDisplay = () => {
+  resetCalculatorState()
+  setDisplay(currentNumber)
+}
 
-  const stackCopy = [...stack]
+const negateNumber = number => {
+  return -number
+}
 
-  if (stackCopy[0] < 0) {
-    isNegative = true
-    stackCopy.shift()
+const handleNumberClick = number => {
+  if (isNewOperation) {
+    currentNumber = previousNumber = 0
+    isNewOperation = false
   }
 
-  stackCopy.forEach(element => {
-    if (element === null) {
-      decimalMultiplier = 0.1
-    } else if (decimalMultiplier === 1) {
-      number = number * 10 + element
-    } else {
-      decimal += element * decimalMultiplier
-      decimalMultiplier *= 0.1
+  if (operation === '') {
+    if (canAddMoreDigits(currentNumber, MAX_DIGITS_IN_DISPLAY)) {
+      currentNumber = appendDigit(currentNumber, number)
+      setDisplay(currentNumber)
     }
-  })
-
-  result = number + decimal
-  if (isNegative) {
-    result *= -1
-  }
-
-  return result
-}
-
-const negateNumberStack = stack => {
-  if (stack[0] === -1) {
-    stack.shift()
   } else {
-    stack.unshift(-1)
-  }
-}
-
-const stackToString = stack => {
-  let result = ''
-
-  stack.forEach((element, index) => {
-    if (index === 0 && element === -1) {
-      result += '-'
-    } else if (element === null) {
-      result += ','
-    } else {
-      result += element.toString()
+    if (canAddMoreDigits(previousNumber, MAX_DIGITS_IN_DISPLAY)) {
+      previousNumber = appendDigit(previousNumber, number)
+      setDisplay(previousNumber)
     }
-  })
-
-  return result
+  }
 }
 
-const canPushToNumberStack = stack => {
-  let result = false
-  let lengthLimit = MAX_DIGITS_IN_DISPLAY
-
-  if (stack.includes(null)) {
-    lengthLimit++
+const handlePointClick = () => {
+  isDecimal = true
+  if (operation === '') {
+    setDisplay(currentNumber)
+  } else {
+    setDisplay(previousNumber)
   }
-  if (stack[0] === -1) {
-    lengthLimit++
-  }
-
-  result = stack.length < lengthLimit
-
-  return result
 }
 
-const pushToNumberStack = (stack, number) => {
-  if (stack.length === 1 && stack[0] === 0) {
-    stack.shift()
+const handleNegateClick = () => {
+  if (operation === '') {
+    currentNumber = negateNumber(currentNumber)
+    setDisplay(currentNumber)
+  } else {
+    previousNumber = negateNumber(previousNumber)
+    setDisplay(previousNumber)
   }
-  stack.push(number)
 }
 
-const updateOperation = operationType => {
-  if (previousNumber === 0) {
-    previousNumber = stackToNumber(numberStack)
-    numberStack.length = 0
-    numberStack.push(0)
+const handleOperationClick = newOperation => {
+  if (operation !== '') {
+    if (
+      (operation === 'multiply' || operation === 'divide') &&
+      previousNumber === 0
+    ) {
+      previousNumber = 1
+    }
+    currentNumber = performOperation(currentNumber, previousNumber, operation)
+    currentNumber = parseFloat(currentNumber.toPrecision(MAX_DIGITS_IN_DISPLAY))
+
+    previousNumber = 0
+    operation = ''
+    isNewOperation = true
   }
-  operation = operationType
+
+  operation = newOperation
+  isDecimal = false
+  decimalMultiplier = 0.1
+  isNewOperation = false
 }
 
-const executeOperation = operationType => {
-  const firstOperand = parseFloat(previousNumber)
-  const secondOperand = parseFloat(currentNumber)
-  let result = 0
-  let digitCount = 0
-  let resultOutput = ''
-
-  switch (operationType) {
+const performOperation = (operand1, operand2, operation) => {
+  let result
+  switch (operation) {
     case 'sum':
-      result = firstOperand + secondOperand
+      result = operand1 + operand2
       break
     case 'subtract':
-      result = firstOperand - secondOperand
+      result = operand1 - operand2
       break
     case 'multiply':
-      result = firstOperand * secondOperand
+      result = operand1 * operand2
       break
     case 'divide':
-      result = firstOperand / secondOperand
+      result = operand1 / operand2
       break
     default:
       break
   }
-
-  result = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
-  digitCount = result.toString().replace('.', '').length
-
-  if (digitCount <= MAX_DIGITS_IN_DISPLAY) {
-    resultOutput = result.toString().replace('.', ',')
-  } else {
-    resultOutput = 'ERROR'
-  }
-
-  previousNumber = result
-  currentNumber = 0
-  numberStack.length = 0
-  numberStack.push(0)
-  return resultOutput
-}
-
-const handleNumberClick = number => {
-  if (canPushToNumberStack(numberStack)) {
-    pushToNumberStack(numberStack, number)
-  }
-  setDisplay(stackToString(numberStack))
-}
-
-const handlePointClick = () => {
-  if (!numberStack.includes(null) && canPushToNumberStack(numberStack)) {
-    numberStack.push(null)
-  }
-  setDisplay(stackToString(numberStack))
-}
-
-const handleNegateClick = () => {
-  if (stackToNumber(numberStack) !== 0) {
-    negateNumberStack(numberStack)
-  }
-  setDisplay(stackToString(numberStack))
-}
-
-const handleSubtractClick = () => {
-  if (numberStack.length === 0) {
-    numberStack.push(-1)
-  }
-  updateOperation('subtract')
+  return result
 }
 
 const handleEqualClick = () => {
-  currentNumber = stackToNumber(numberStack)
-  setDisplay(executeOperation(operation))
+  if (operation !== '') {
+    currentNumber = performOperation(currentNumber, previousNumber, operation)
+    currentNumber = parseFloat(currentNumber.toPrecision(MAX_DIGITS_IN_DISPLAY))
+
+    previousNumber = 0
+    operation = ''
+    isNewOperation = true
+
+    setDisplay(currentNumber)
+  }
 }
 
 document
@@ -214,22 +185,24 @@ document
 document
   .getElementsByName('point')[0]
   .addEventListener('click', handlePointClick)
-document.getElementsByName('clean')[0].addEventListener('click', reset)
+document
+  .getElementsByName('clean')[0]
+  .addEventListener('click', resetCalculatorStateAndClearDisplay)
 document
   .getElementsByName('negate')[0]
   .addEventListener('click', handleNegateClick)
 document
   .getElementsByName('sum')[0]
-  .addEventListener('click', () => updateOperation('sum'))
+  .addEventListener('click', () => handleOperationClick('sum'))
 document
   .getElementsByName('subtract')[0]
-  .addEventListener('click', handleSubtractClick)
+  .addEventListener('click', () => handleOperationClick('subtract'))
 document
   .getElementsByName('multiply')[0]
-  .addEventListener('click', () => updateOperation('multiply'))
+  .addEventListener('click', () => handleOperationClick('multiply'))
 document
   .getElementsByName('divide')[0]
-  .addEventListener('click', () => updateOperation('divide'))
+  .addEventListener('click', () => handleOperationClick('divide'))
 document
   .getElementsByName('equal')[0]
   .addEventListener('click', handleEqualClick)
@@ -246,22 +219,22 @@ document.body.addEventListener('keydown', event => {
         handlePointClick()
         break
       case 'Escape':
-        reset()
+        resetCalculatorStateAndClearDisplay()
         break
       case 'Control':
         handleNegateClick()
         break
       case '+':
-        updateOperation('sum')
+        handleOperationClick('sum')
         break
       case '-':
-        handleSubtractClick()
+        handleOperationClick('subtract')
         break
       case '*':
-        updateOperation('multiply')
+        handleOperationClick('multiply')
         break
       case '/':
-        updateOperation('divide')
+        handleOperationClick('divide')
         break
       case 'Enter':
         handleEqualClick()
@@ -272,4 +245,4 @@ document.body.addEventListener('keydown', event => {
   }
 })
 
-reset()
+resetCalculatorStateAndClearDisplay()
