@@ -164,6 +164,7 @@ const pressedNegate = () => {
 }
 
 const pressedEqual = () => {
+  unHighlightAllButtons()
   if (waitingForNewNumber) {
     displayError()
   } else {
@@ -260,6 +261,7 @@ const cleanSavedNumbers = () => {
 }
 
 const cleanEverything = () => {
+  unHighlightAllButtons()
   cleanDisplay()
   cleanSavedNumbers()
   enableAllButtons()
