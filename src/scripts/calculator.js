@@ -43,10 +43,10 @@ const appendNumber = (value) => {
     currentValue += value.toString()
   }
 
-  if (digitCount == MAX_DIGITS_IN_DISPLAY -1) {
+  if (digitCount == MAX_DIGITS_IN_DISPLAY - 1) {
     disableNumbersAndPointButton()
   } else {
-  changeButtonState(false, 'zero')
+    changeButtonState(false, 'zero')
   }
   changeButtonState(false, 'negate')
 
@@ -80,22 +80,21 @@ const setNegation = () => {
 }
 
 const changeButtonState = (state, name) => {
-  document.getElementsByName(name)[0].disabled = state;
-  return
+  document.getElementsByName(name)[0].disabled = state
 }
 
 const changeStateAllButtons = (state) => {
   const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
   arrButtons.forEach(button => {
-    document.getElementsByName(button)[0].disabled = state;
-  });
+    document.getElementsByName(button)[0].disabled = state
+  })
 }
 
 const disableNumbersAndPointButton = () => {
   const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
   arrButtons.forEach(button => {
-    document.getElementsByName(button)[0].disabled = true;
-  });
+    document.getElementsByName(button)[0].disabled = true
+  })
 }
 
 // NUMBER BUTTONS
@@ -213,7 +212,6 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
   changeButtonState(true, 'negate')
 })
 
-
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
 
@@ -225,6 +223,8 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   }
   if (secondOperand === '0' || secondOperand === undefined) {
     setDisplay('ERROR')
+    changeStateAllButtons(true)
+    changeButtonState(false, 'clean')
     return
   }
   if (result != undefined) {
@@ -236,10 +236,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   reset()
   setDisplay(result)
   isOperandEntered = false
-
-
 })
-
 
 const handleOperand = () => {
   if (firstOperand == undefined || firstOperand == 0 || isResultUsed) {
@@ -263,7 +260,6 @@ const handleOperation = () => {
   changeStateAllButtons(false)
   currentValue = '0'
 }
-
 
 const calculate = (firstOperand, secondOperand, operator) => {
   let resultLength
