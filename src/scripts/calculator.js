@@ -25,12 +25,16 @@ const pressKeys = () => {
       addPointTocurrentNumber()
       displaycurrentNumber()
     } else if (keyPressed === '+') {
+      highLightButton('sum')
       pressedOperator('+')
     } else if (keyPressed === '-') {
+      highLightButton('subtract')
       pressedOperator('-')
     } else if (keyPressed === '*') {
+      highLightButton('multiply')
       pressedOperator('*')
     } else if (keyPressed === '/') {
+      highLightButton('divide')
       pressedOperator('/')
     } else if (keyPressed === '=') {
       pressedEqual()
