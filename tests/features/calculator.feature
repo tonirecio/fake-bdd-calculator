@@ -445,3 +445,35 @@ Examples:
 |         -2,03 |         -2,03 |
 |         -0,00 |             0 |
 |       3,00102 |       3,00102 |
+|     0,0000001 |     0,0000001 |
+
+@OtherOneTest @done
+Scenario Outline: Small decimal results
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<secondNumber>"
+When the user presses the "=" button                             
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | button | secondNumber | displayResult |
+|          0,01 |      / |      1000000 |    0,00000001 |
+|        0,0001 |      / |      1000000 |         ERROR |
+|        0,0001 |      * |       0,0001 |    0,00000001 |
+|       -0,0001 |      * |       0,0001 |   -0,00000001 |
+
+# @OtherOneTest @wip
+# Scenario Outline: Doing operations with complex float number
+# Given the user writes the following value: "<displayNumber>"
+# And the user presses the "<button>" button
+# And the user writes the number: "<userNumber>"
+# When the user presses the "=" button
+# Then the display should show the following value: "<displayResult>"
+
+# Examples:
+# | displayNumber | button |  userNumber | displayResult |
+# |   0,000000010 |      + | 0,000000011 |   0,000000021 |
+# |            10 |      + | 0,000000068 |   10,00000007 |
+# |      0,010203 |      - |  123,020043 |    -123,00984 |
+# |          1234 |      * | 0,001203040 |    1,48455136 |
+# |          1234 |      / | 0,010203045 |   120944,2867 |

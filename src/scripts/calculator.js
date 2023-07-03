@@ -1,32 +1,83 @@
-const lenNumber = (number) => {
+const getNameOperator = (operatorSymbol) => {
+  let operatorName = null
+  switch (operatorSymbol) {
+    case '+':
+      operatorName = 'sum'
+      break
+    case '-':
+      operatorName = 'subtract'
+      break
+    case '*':
+      operatorName = 'multiply'
+      break
+    case '/':
+      operatorName = 'divide'
+      break
+  }
+  return (operatorName)
+}
+
+const exponentialToString = (exponentialString) => {
+  let stringResultant = ''
+  const positionOfE = exponentialString.indexOf('e')
+  let significand = exponentialString.substring(0, positionOfE)
+  const orderOfMagnitude = exponentialString.substring(positionOfE + 1)
+  console.log('N: ' + exponentialString + 'pE: ' + positionOfE + ' S: ' + significand + '   OM: ' + orderOfMagnitude)
+  if (significand < 0) {
+    stringResultant = stringResultant.concat('-')
+    significand *= -1
+  }
+  if (orderOfMagnitude < 0) {
+    stringResultant = stringResultant.concat('0,')
+    for (let i = -1; i > orderOfMagnitude; i--) {
+      stringResultant = stringResultant.concat('0')
+    }
+    stringResultant = stringResultant.concat(significand)
+  } else {
+    stringResultant = stringResultant.concat(significand)
+    for (let i = 0; i < orderOfMagnitude; i++) {
+      stringResultant = stringResultant.concat('0')
+    }
+  }
+  return (stringResultant)
+}
+
+const lenNumber = (number, pendingZeroDecimals) => {
   let stringNumber = String(number)
+  if (stringNumber.includes('e')) {
+    stringNumber = exponentialToString(stringNumber)
+  }
   stringNumber = stringNumber.replace('-', '')
   stringNumber = stringNumber.replace('.', '')
-  return (stringNumber.length)
+  return (stringNumber.length + pendingZeroDecimals)
 }
 
 const roundNumber = (number) => {
-  const maxDecimals = MAX_DIGITS_IN_DISPLAY - lenNumber(Math.round(number))
-  number = number.toFixed(maxDecimals)
-  number = parseFloat(number)
-  return (number)
+  const maxDecimals = MAX_DIGITS_IN_DISPLAY - lenNumber(Math.round(number), 0)
+  let roundedNumber = number.toFixed(maxDecimals)
+  roundedNumber = parseFloat(roundedNumber)
+  if (roundedNumber === 0 && number !== roundedNumber) {
+    roundedNumber = 'ERROR'
+  }
+  return (roundedNumber)
 }
 
-const resetActualNumber = () => {
-  actualNumberisNull = true
-  actualNumber = 0
+const resetCurrentNumber = () => {
+  currentNumberisNull = true
+  currentNumber = 0
   pendingZeros = 0
-  actualNumberHasPoint = false
+  currentNumberHasPoint = false
 }
 
 const reset = () => {
   operator = null
   accumulatedNumber = null
-  resetActualNumber()
+  resetCurrentNumber()
   setDisplay(0)
   changeDisableAllButtons(buttons, false)
   changeDisableOneButton(document.getElementsByName('zero')[0], true)
   changeDisableOneButton(document.getElementsByName('negate')[0], true)
+  unhighlightAllButtons(buttons)
 }
 
 const setDisplay = (value) => {
@@ -35,7 +86,9 @@ const setDisplay = (value) => {
     displayValue = value
   } else {
     displayValue = String(value).replace('.', ',')
-    if (actualNumberHasPoint) {
+    if (displayValue.includes('e')) {
+      displayValue = exponentialToString(displayValue)
+    } else if (currentNumberHasPoint) {
       if (!displayValue.includes(',')) {
         displayValue = displayValue.concat(',')
       }
@@ -54,15 +107,17 @@ const negateNum = (number) => {
 
 const appendNumber = (number, numberToAppend, hasPoint, pendingZeroDecimals) => {
   let result
-  if (lenNumber(number) < MAX_DIGITS_IN_DISPLAY) {
+  if (lenNumber(number, pendingZeros) < MAX_DIGITS_IN_DISPLAY) {
     if (hasPoint) {
-      const numDecimals = lenNumber(number) - lenNumber(Math.round(number)) + 1 + pendingZeroDecimals
-      result = number + (numberToAppend * Math.pow(0.1, numDecimals))
+      console.log('lenFloat: ' + lenNumber(number, 0) + ' lenInt: ' + lenNumber(Math.round(number)))
+      const numDecimals = lenNumber(number, 0) - lenNumber(Math.round(number), 0) + 1 + pendingZeroDecimals
+      result = number + ((numberToAppend * Math.pow(0.1, numDecimals)))
+      console.log('NumDec: ' + numDecimals + ' append: ' + result)
     } else {
       result = number * 10 + numberToAppend
     }
   } else {
-    result = actualNumber
+    result = currentNumber
   }
   return (roundNumber(result))
 }
@@ -87,7 +142,7 @@ const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
       }
       break
   }
-  if (result === 'ERROR' || lenNumber(Math.round(result)) > maxDigits) {
+  if (result === 'ERROR' || lenNumber(Math.round(result), 0) > maxDigits) {
     result = 'ERROR'
   } else {
     result = roundNumber(result)
@@ -96,45 +151,49 @@ const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
 }
 
 const pressingNumber = (newNumber) => {
-  if ((actualNumber === 0 && !actualNumberHasPoint) || actualNumberisNull) {
-    actualNumber = newNumber
-  } else if (newNumber === 0 && actualNumberHasPoint) {
+  if ((currentNumber === 0 && !currentNumberHasPoint) || currentNumberisNull) {
+    currentNumber = newNumber
+  } else if (newNumber === 0 && currentNumberHasPoint) {
     pendingZeros++
   } else {
-    actualNumber = appendNumber(actualNumber, newNumber, actualNumberHasPoint, pendingZeros)
+    currentNumber = appendNumber(currentNumber, newNumber, currentNumberHasPoint, pendingZeros)
     pendingZeros = 0
   }
-  actualNumberisNull = false
-  setDisplay(actualNumber)
-  changeDisableAllButtons(buttons, false)
-  if (actualNumberHasPoint) {
-    changeDisableOneButton(document.getElementsByName('point')[0], true)
-  }
-  if (lenNumber(actualNumber) >= MAX_DIGITS_IN_DISPLAY) {
-    changeDisableNumberButtons(true)
-    changeDisableOneButton(document.getElementsByName('point')[0], true)
+  currentNumberisNull = false
+  setDisplay(currentNumber)
+  if (currentNumber === 'ERROR') {
+    changeDisableWhenError()
+  } else {
+    changeDisableAllButtons(buttons, false)
+    if (currentNumberHasPoint) {
+      changeDisableOneButton(document.getElementsByName('point')[0], true)
+    }
+    if (lenNumber(currentNumber, pendingZeros) >= MAX_DIGITS_IN_DISPLAY) {
+      changeDisableNumberButtons(true)
+      changeDisableOneButton(document.getElementsByName('point')[0], true)
+    }
   }
 }
 
 const pressingNegate = () => {
-  actualNumber = negateNum(actualNumber)
-  setDisplay(actualNumber)
+  currentNumber = negateNum(currentNumber)
+  setDisplay(currentNumber)
 }
 
 const pressingPoint = () => {
-  if (!actualNumberHasPoint && lenNumber(actualNumber) < MAX_DIGITS_IN_DISPLAY) {
-    actualNumberHasPoint = true
+  if (!currentNumberHasPoint && lenNumber(currentNumber, pendingZeros) < MAX_DIGITS_IN_DISPLAY) {
+    currentNumberHasPoint = true
   }
-  setDisplay(actualNumber)
-  actualNumberisNull = false
+  setDisplay(currentNumber)
+  currentNumberisNull = false
   changeDisableAllButtons(buttons, false)
   changeDisableOneButton(document.getElementsByName('point')[0], true)
 }
 
 const pressingOperator = (newOperator) => {
-  if (operator !== null && !actualNumberisNull) {
-    accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
-    actualNumberHasPoint = false
+  if (operator !== null && !currentNumberisNull) {
+    accumulatedNumber = operate(accumulatedNumber, currentNumber, operator, MAX_DIGITS_IN_DISPLAY)
+    currentNumberHasPoint = false
     setDisplay(accumulatedNumber)
     if (accumulatedNumber === 'ERROR') {
       changeDisableWhenError()
@@ -142,27 +201,32 @@ const pressingOperator = (newOperator) => {
       changeDisableAllButtons(buttons, false)
     }
   } else if (operator === null && accumulatedNumber === null) {
-    accumulatedNumber = actualNumber
+    accumulatedNumber = currentNumber
     changeDisableAllButtons(buttons, false)
     changeDisableOneButton(document.getElementsByName('negate')[0], true)
   }
   operator = newOperator
-  resetActualNumber()
+  unhighlightAllButtons(buttons)
+  const nameOperator = getNameOperator(operator)
+  if (nameOperator !== null) {
+    highlightOneButton(document.getElementsByName(nameOperator)[0])
+  }
+  resetCurrentNumber()
 }
 
 const pressingEqual = () => {
   let displayValue
-  if (actualNumberisNull && operator !== null) {
+  if (currentNumberisNull && operator !== null) {
     displayValue = 'ERROR'
     changeDisableWhenError()
   } else {
     if (operator === null) {
-      accumulatedNumber = actualNumber
+      accumulatedNumber = currentNumber
     } else {
-      accumulatedNumber = operate(accumulatedNumber, actualNumber, operator, MAX_DIGITS_IN_DISPLAY)
+      accumulatedNumber = operate(accumulatedNumber, currentNumber, operator, MAX_DIGITS_IN_DISPLAY)
       operator = null
     }
-    resetActualNumber()
+    resetCurrentNumber()
     displayValue = accumulatedNumber
     if (displayValue === 'ERROR') {
       changeDisableWhenError()
@@ -170,7 +234,22 @@ const pressingEqual = () => {
       changeDisableAllButtons(buttons, false)
     }
   }
+  unhighlightAllButtons(buttons)
   setDisplay(displayValue)
+}
+
+const highlightOneButton = (button) => {
+  button.classList.add('highlighted')
+}
+
+const unhighlightOneButton = (button) => {
+  button.classList.remove('highlighted')
+}
+
+const unhighlightAllButtons = (buttonsList) => {
+  for (const button of buttonsList) {
+    unhighlightOneButton(button)
+  }
 }
 
 const changeDisableOneButton = (button, disabled) => {
@@ -224,7 +303,7 @@ const getEventsListenersButtons = () => {
 
 const getEventsListenersKeyboard = () => {
   document.addEventListener('keyup', (key) => {
-    if (!isNaN(key.key)) {
+    if ((key.key <= 9 && key.key > 0) || key.key === '0') {
       pressingNumber(Number(key.key))
     } else {
       switch (key.key) {
@@ -262,9 +341,9 @@ const display = document.querySelector('div[name="display"] span')
 const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
 let operator
 let accumulatedNumber
-let actualNumberisNull
-let actualNumber
-let actualNumberHasPoint
+let currentNumberisNull
+let currentNumber
+let currentNumberHasPoint
 let pendingZeros
 
 reset()
