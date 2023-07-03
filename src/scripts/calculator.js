@@ -22,8 +22,8 @@ const reset = () => {
 const totalReset = () => {
   currentValue = '0'
   previousValue = '0'
-  firstOperand = undefined
-  result = undefined
+  firstOperand = null
+  result = null
   setDisplay(currentValue)
   changeStateAllButtons(false)
   changeButtonState(true, 'zero')
@@ -57,6 +57,7 @@ const appendPoint = () => {
   if (!currentValue.includes('.') && (currentValue.length < MAX_DIGITS_IN_DISPLAY)) {
     currentValue += '.'
     changeButtonState(true, 'point')
+    changeButtonState(false, 'zero')
     return currentValue
   }
 }
@@ -216,18 +217,19 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   const secondOperand = currentValue
 
   changeStateAllButtons(false)
-  if (operator == undefined) {
+
+  if (operator == null) {
     currentValue = currentValue.replace('.', '')
     setDisplay(currentValue)
     return
   }
-  if (secondOperand === '0' || secondOperand === undefined) {
+  if (secondOperand === '0' || secondOperand === null) {
     setDisplay('ERROR')
     changeStateAllButtons(true)
     changeButtonState(false, 'clean')
     return
   }
-  if (result != undefined) {
+  if (result != null) {
     firstOperand = result
     isResultUsed = true
   }
@@ -239,7 +241,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
 })
 
 const handleOperand = () => {
-  if (firstOperand == undefined || firstOperand == 0 || isResultUsed) {
+  if (firstOperand == null || firstOperand == 0 || isResultUsed) {
     firstOperand = currentValue
     isResultUsed = false
   }
