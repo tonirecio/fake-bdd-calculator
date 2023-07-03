@@ -174,7 +174,16 @@ const maxLenght = (num) => {
 const addPoint = () => {
   lastNumberWrited = addPendingZerosAndNum(null)
 
-  if (!isPoint && !maxLenght(lastNumberWrited)) {
+  if (doOperation) {
+    lastNumberWrited = 0
+
+    doOperation = false
+    doMultipleOperations = true
+
+    addDecimal = true
+
+    return 0 + ','
+  } else if (!isPoint && !maxLenght(lastNumberWrited)) {
     isPoint = true
     addDecimal = true
 
@@ -285,6 +294,13 @@ const checkLimits = (num) => {
 }
 
 const prepareAndOperateIfSecondOperation = (op) => {
+  if (Number(lastNumberWrited) === 0) {
+    pendingZeros = 0
+
+    lastNumberWrited = 0
+    setDisplay(0)
+  }
+
   lastNumberWrited = addPendingZerosAndNum(null)
 
   if (doMultipleOperations && !isEqualsPressed) {
