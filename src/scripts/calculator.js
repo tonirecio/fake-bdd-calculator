@@ -80,15 +80,19 @@ const pressButtons = () => {
     cleanEverything()
   })
   document.getElementsByName('sum')[0].addEventListener('click', () => {
+    highLightButton('sum')
     pressedOperator('+')
   })
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
+    highLightButton('subtract')
     pressedOperator('-')
   })
   document.getElementsByName('multiply')[0].addEventListener('click', () => {
+    highLightButton('multiply')
     pressedOperator('*')
   })
   document.getElementsByName('divide')[0].addEventListener('click', () => {
+    highLightButton('divide')
     pressedOperator('/')
   })
   document.getElementsByName('equal')[0].addEventListener('click', () => {
@@ -164,6 +168,18 @@ const pressedEqual = () => {
     chainingOperations = false
     waitingForNewNumber = false
   }
+}
+
+const highLightButton = (button) => {
+  unHighlightAllButtons()
+  const highlightedButton = document.getElementsByName(button)[0]
+  highlightedButton.classList.add('highlighted')
+}
+const unHighlightAllButtons = () => {
+  const allButtons = document.querySelectorAll('button')
+  allButtons.forEach((button) => {
+    button.classList.remove('highlighted');
+  })
 }
 
 const pressedOperator = (operatorPressed) => {
