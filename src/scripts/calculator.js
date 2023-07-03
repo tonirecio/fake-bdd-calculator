@@ -85,7 +85,11 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
   seleccionarOperador('+')
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  toOperate()
+  if (isRecentlyPutAOperator === false) {
+      toOperate()
+    } else {
+      setDisplay('ERROR')
+    }
 })
 
 document.addEventListener('keydown', (event) => {
@@ -171,7 +175,7 @@ const invertNumberDisplay = () => {
 
   let currentValue = display.innerHTML;
 
-  if (currentValue !== '0' && currentValue !== '0,'  ) {
+  if (currentValue !== '0' && currentValue !== '0,') {
     if (currentValue.startsWith('-')) {
       currentValue = currentValue.slice(1);
 
@@ -217,44 +221,49 @@ const toOperate = () => {
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
 
-  if (firstOperator === 9999999999 || secondOperator === 9999999999 || secondOperator === 0) {
-    
+   if (isNaN(secondOperator) || secondOperator === null) {
     isAnError()
-    
+    return
+
   } else {
-    if (operator === '+') {
-      result = firstOperator + secondOperator;
-
-    } else if (operator === '-') {
-      result = firstOperator - secondOperator;
-
-    } else if (operator === '*') {
-      result = firstOperator * secondOperator;
-
-    } else if (operator === '/') {
-      result = firstOperator / secondOperator;
-
-    }
-
-    if (secondOperator === 0 && operator === '/') {
+    if (firstOperator === 9999999999 || secondOperator === 9999999999 || secondOperator === 0) {
       isAnError()
-    }
-
-    var numTotalBeforeComma = numberBeforeComma(result);
-
-    if (result < 0) {
-      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
-
+    
     } else {
-      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+      if (operator === '+') {
+        result = firstOperator + secondOperator;
 
+      } else if (operator === '-') {
+        result = firstOperator - secondOperator;
+
+      } else if (operator === '*') {
+        result = firstOperator * secondOperator;
+
+      } else if (operator === '/') {
+        result = firstOperator / secondOperator;
+
+      }
+
+      if (secondOperator === 0 && operator === '/' || secondOperator === 0) {
+        isAnError()
+      }
+
+      var numTotalBeforeComma = numberBeforeComma(result);
+
+      if (result < 0) {
+        result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
+
+      } else {
+        result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+
+      }
+      console.log('Memoria: '+firstOperator + " + Display: " + secondOperator + " = " + result)
+      setDisplay(result);
+
+      firstOperator = result;
+      isTheOperationFinisehd = true;
+      operator = null;
     }
-    console.log('Memoria: '+firstOperator + " + Display: " + secondOperator + " = " + result)
-    setDisplay(result);
-
-    firstOperator = result;
-    isTheOperationFinisehd = true;
-    operator = null;
   }
   
 }
