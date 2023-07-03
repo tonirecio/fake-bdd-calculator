@@ -17,11 +17,11 @@ const concatInputsNumbers = (value) => {
     setDisplay(inputValue)
     return
   } else {  
-      valueDisplay = inputValue
-      valueDisplay = valueDisplay.toString() + value
-      inputValue = parseFloat(valueDisplay)
-      setDisplay(valueDisplay)
-      return
+    valueDisplay = inputValue
+    valueDisplay = valueDisplay.toString() + value
+    inputValue = parseFloat(valueDisplay)
+    setDisplay(valueDisplay)
+    return
   } 
 }
   
@@ -35,7 +35,6 @@ const putZerosAndConcatNumbers = (value) => {
     valueDisplay = valueDisplay.toString()
     inputValue = parseFloat(valueDisplay.replace(",", "."))
   }
-  
   setDisplay(valueDisplay)
   pendingZeros = false
   return
@@ -79,23 +78,23 @@ const setInputValue = (input) => {
       concatInputsNumbers(input)
       result = null
     } else if(valueDisplay.slice(-1) === ","){
-        putCommaAndConcatNumbers(input)
-        return
+      putCommaAndConcatNumbers(input)
+      return
     } else if(input === 0 && tryingNegateNumber === false){
-        valueDisplay = valueDisplay + input
-        inputValue = parseFloat(valueDisplay.replace(",", "."))
+      valueDisplay = valueDisplay + input
+      inputValue = parseFloat(valueDisplay.replace(",", "."))
+      setDisplay(valueDisplay)
+      return
+    } else if(pendingZeros === true){
+      putZerosAndConcatNumbers(input)
+    } else {
+      if(handleExponentialNumbers(inputValue, input) === true){
         setDisplay(valueDisplay)
         return
-    } else if(pendingZeros === true){
-        putZerosAndConcatNumbers(input)
-    } else {
-        if(handleExponentialNumbers(inputValue, input) === true){
-          setDisplay(valueDisplay)
-          return
-        } else {
-          concatInputsNumbers(input)
-        }
-        return
+      } else {
+        concatInputsNumbers(input)
+      }
+      return
     } 
   }
 }
@@ -103,14 +102,14 @@ const setInputValue = (input) => {
 const setDisplay = (value) => {
   valueDisplay = value.toString().replace(".", ",")
   if(valueDisplay.includes("e-")){
-      handleExponentialNumbers(valueDisplay, null)
-    }
+    handleExponentialNumbers(valueDisplay, null)
+  }
 
   if(isSecondNumber === false){
     display.innerHTML = valueDisplay
   } else {
-      secondNumber = inputValue
-      display.innerHTML = valueDisplay.replace(".", ",")
+    secondNumber = inputValue
+    display.innerHTML = valueDisplay.replace(".", ",")
   }
 }
 
@@ -209,10 +208,8 @@ const handleOperation = () => {
   tryingNegateNumber = false
   valueDisplay = result
   valueDisplay = valueDisplay.toString()  
-
   controlDecimalsResult()
   setDisplay(result)
-
   firstNumber = null
   operator = null
   secondNumber = null 
@@ -229,8 +226,6 @@ const controlDecimalsResult = () => {
         lengthOfResult = 10
     }    
     result = result.toPrecision(lengthOfResult) * 1
-    
-
     return
   } else if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
     showMessageError()
@@ -268,7 +263,7 @@ const changeStateAllButtons = (state) => {
 const disableNumericAndPointButtons = () => {
   const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
   arrButtons.forEach(button => {
-    document.getElementsByName(button)[0].disabled = true;
+  document.getElementsByName(button)[0].disabled = true;
   });
 }
 
@@ -285,7 +280,6 @@ const divideNumbers = (firstNumber, secondNumber) => {
   if(secondNumber != 0 && firstNumber != 0){
     return firstNumber / secondNumber
   } else {
-    
     changeStateAllButtons(true)
     changeButtonState(false ,'clean')
     return "ERROR"
@@ -376,13 +370,12 @@ const createALlButtonsFunctions = () => {
         if(num != ','){
           setInputValue(num)
         } else {
-           setInputValue('.')
+          setInputValue('.')
         }
       }
     });
   });
 }
-
 createALlButtonsFunctions();
 resetDisplay()
 
