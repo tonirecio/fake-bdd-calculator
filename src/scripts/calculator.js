@@ -9,8 +9,7 @@ let secondNumber = null
 let result = null
 let isSecondNumber = false
 let tryingNegateNumber = false
-let pointDisabled = false
-let countZeros = 0
+let pendingZeros = false
 
 const concatInputsNumbers = (value) => {
   if(tryingNegateNumber === true){
@@ -38,7 +37,7 @@ const putZerosAndConcatNumbers = (value) => {
   }
   
   setDisplay(valueDisplay)
-  countZeros = 0
+  pendingZeros = false
   return
 }
 
@@ -66,14 +65,9 @@ const setInputValue = (input) => {
     disableNumericAndPointButtons()
   } else {
     changeStateAllButtons(false)
-    if(pointDisabled === true){
-      changeButtonState(true, 'point')
-    }
   }
 
   if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
-    return
-  } else if(input === "." && valueDisplay.includes(",")){
     return
   } else if(inputValue === 0 && input != "." && !valueDisplay.includes(",")){
     inputValue = input;
@@ -87,14 +81,14 @@ const setInputValue = (input) => {
     } else if(valueDisplay.slice(-1) === ","){
         putCommaAndConcatNumbers(input)
         return
-    } else if(input === 0 && tryingNegateNumber != true){
+    } else if(input === 0 && tryingNegateNumber === false){
         valueDisplay = valueDisplay + input
         inputValue = parseFloat(valueDisplay.replace(",", "."))
         setDisplay(valueDisplay)
         return
-    }else if(countZeros > 0 ){
+    } else if(pendingZeros === true){
         putZerosAndConcatNumbers(input)
-    }else {
+    } else {
         if(handleExponentialNumbers(inputValue, input) === true){
           setDisplay(valueDisplay)
           return
@@ -159,8 +153,7 @@ const resetDisplay = () => {
   result = null
   isSecondNumber = false
   tryingNegateNumber = false
-  pointDisabled = false
-  countZeros = 0
+  pendingZeros = false
   display.innerHTML = valueDisplay
 }
 
@@ -177,7 +170,6 @@ const handleOperator = (operation) => {
   valueDisplay = firstNumber
   setDisplay(valueDisplay)
   isSecondNumber = true
-  pointDisabled = false
   inputValue = 0
   valueDisplay = '0'
 }
@@ -236,7 +228,6 @@ const controlDecimalsResult = () => {
     if(lengthOfResult > 10){
         lengthOfResult = 10
     }    
-    console.log(result);  
     result = result.toPrecision(lengthOfResult) * 1
     
 
@@ -269,6 +260,9 @@ const changeStateAllButtons = (state) => {
   arrButtons.forEach(button => {
     document.getElementsByName(button)[0].disabled = state;
   });
+  if(valueDisplay.includes(',')){
+    changeButtonState(true, 'point')
+  }
 }
 
 const disableNumericAndPointButtons = () => {
@@ -329,18 +323,17 @@ const createALlButtonsFunctions = () => {
   })
   document.getElementsByName('zero')[0].addEventListener('click', () => {
     setInputValue(0)
-    countZeros += 1
+    pendingZeros = true
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     resetDisplay()
     changeStateAllButtons(false)
-    pointDisabled = false
     changeButtonState(true, 'negate')
     changeButtonState(true, 'zero')
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
-    pointDisabled = true
     setInputValue('.')
+    changeButtonState(true, 'point')
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
     negateInputValue(inputValue)
@@ -377,7 +370,7 @@ const createALlButtonsFunctions = () => {
     arrKeys.forEach(num => {
       if(event.key == num){
         if(num === 0){
-          countZeros += 1
+          pendingZeros = true
         }
 
         if(num != ','){
