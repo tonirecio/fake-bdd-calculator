@@ -4,7 +4,7 @@ const display = document.querySelector('div[name="display"] span')
 
 let currentNumber = 0
 let previousNumber = 0
-let operationType = ''
+let currentOperationSymbol = ''
 let storedZeros = ''
 let isNextNumberDecimal = false
 let chainingOperations = false
@@ -16,14 +16,13 @@ const pressKeys = () => {
     const keyPressed = event.key
 
     if (keyPressed >= '0' && keyPressed <= '9') {
-      addNumberTocurrentNumber(parseInt(keyPressed))
+      addNumberTocurrentNumber(keyPressed)
     } else if (keyPressed === 'Escape') {
       cleanEverything()
     } else if (keyPressed === 'Control') {
       pressedNegate()
     } else if (keyPressed === ',') {
       addPointTocurrentNumber()
-      displaycurrentNumber()
     } else if (keyPressed === '+') {
       highLightButton('sum')
       pressedOperator('+')
@@ -75,7 +74,6 @@ const pressButtons = () => {
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
     addPointTocurrentNumber()
-    displaycurrentNumber()
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
     pressedNegate()
@@ -146,13 +144,13 @@ const saveToPreviousNumber = (number) => {
 }
 
 const performOperation = () => {
-  if (operationType === '+') {
+  if (currentOperationSymbol === '+') {
     currentNumber = previousNumber + currentNumber
-  } else if (operationType === '-') {
+  } else if (currentOperationSymbol === '-') {
     currentNumber = previousNumber - currentNumber
-  } else if (operationType === '*') {
+  } else if (currentOperationSymbol === '*') {
     currentNumber = previousNumber * currentNumber
-  } else if (operationType === '/') {
+  } else if (currentOperationSymbol === '/') {
     currentNumber = previousNumber / currentNumber
   }
   displayResultNumber()
@@ -183,7 +181,7 @@ const highLightButton = (button) => {
 const unHighlightAllButtons = () => {
   const allButtons = document.querySelectorAll('button')
   allButtons.forEach((button) => {
-    button.classList.remove('highlighted');
+    button.classList.remove('highlighted')
   })
 }
 
@@ -199,7 +197,7 @@ const pressedOperator = (operatorPressed) => {
     disableButton('negate')
   }
   waitingForNewNumber = true
-  operationType = operatorPressed
+  currentOperationSymbol = operatorPressed
 }
 
 const addNumberTocurrentNumber = (newNumber) => {
@@ -247,7 +245,7 @@ const addPointTocurrentNumber = () => {
       isNextNumberDecimal = true
     }
   }
-  setDisplay(currentNumber)
+  displaycurrentNumber()
 }
 
 const cleanDisplay = () => {
