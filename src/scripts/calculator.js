@@ -99,6 +99,24 @@ const disableButton = (buttonName, boolStatus) => {
   document.getElementsByName(buttonName)[0].disabled = boolStatus
 }
 
+const highlightButtonLogic = (operationTrigger) => {
+    highlightButton('sum', false)
+    highlightButton('subtract', false)
+    highlightButton('multiply', false)
+    highlightButton('divide', false)
+  if (operationTrigger !== 'clean' && operationTrigger !== 'equal'){
+    highlightButton(operationTrigger, true)
+  } 
+}
+
+const highlightButton = (buttonName, boolStatus) => {
+  if(boolStatus){
+    document.getElementsByName(buttonName)[0].classList.add('highlighted')
+  } else {
+    document.getElementsByName(buttonName)[0].classList.remove('highlighted')
+  }
+}
+
 const currentNumberToDisplayableString = () => {
   let displayValue
   if (isFinite(currentNumber)) {
@@ -276,6 +294,14 @@ const addNumericalButtonClickEvent = (buttonName, number) => {
   })
 }
 
+const addFunctionButtonClickEventWithHighlightLogic = (buttonName, assignedFunction) => {
+  document.getElementsByName(buttonName)[0].addEventListener('click', () => {
+    assignedFunction()
+    setDisplay(currentNumberToDisplayableString())
+    highlightButtonLogic(buttonName)
+  })
+}
+
 const addFunctionButtonClickEvent = (buttonName, assignedFunction) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
     assignedFunction()
@@ -286,6 +312,7 @@ const addFunctionButtonClickEvent = (buttonName, assignedFunction) => {
 const addOperationButtonClickEvent = (buttonName) => {
   document.getElementsByName(buttonName)[0].addEventListener('click', () => {
     buttonOperation(buttonName)
+    highlightButtonLogic(buttonName)
   })
 }
 
@@ -308,15 +335,19 @@ const init = () => {
         break
       case '+':
         buttonOperation('sum')
+        highlightButtonLogic('sum')
         break
       case '-':
         buttonOperation('subtract')
+        highlightButtonLogic('subtract')
         break
       case '*':
         buttonOperation('multiply')
+        highlightButtonLogic('multiply')        
         break
       case '/':
         buttonOperation('divide')
+        highlightButtonLogic('divide')
         break
       case POINT_LOCALE:
         floatCurrentNum()
@@ -324,6 +355,7 @@ const init = () => {
       case 'Enter':
         // handled by both keyup and keypress event
         resolve()
+        highlightButtonLogic('equal')
         event.preventDefault()
         break
       default:
@@ -338,10 +370,12 @@ const init = () => {
       case ' ':
       case 'Enter':
         resolve()
+        highlightButtonLogic('equal')
         event.preventDefault()
         break
       case 'Escape':
         reset()
+        highlightButtonLogic('clean')
         break
       case 'Control':
         negateCurrentNum()
@@ -364,10 +398,10 @@ const init = () => {
   addNumericalButtonClickEvent('nine', 9)
   addNumericalButtonClickEvent('zero', 0)
 
-  addFunctionButtonClickEvent('clean', clear)
+  addFunctionButtonClickEventWithHighlightLogic('clean', clear)
+  addFunctionButtonClickEventWithHighlightLogic('equal', resolve)
   addFunctionButtonClickEvent('negate', negateCurrentNum)
   addFunctionButtonClickEvent('point', floatCurrentNum)
-  addFunctionButtonClickEvent('equal', resolve)
 
   addOperationButtonClickEvent('sum')
   addOperationButtonClickEvent('multiply')
