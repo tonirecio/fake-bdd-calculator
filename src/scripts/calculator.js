@@ -190,6 +190,7 @@ const equalButton = () => {
   setDisplay(result)
 }
 
+
 /*keydown numbers, escape, control and comma*/
 
 document.addEventListener("keydown", (event) => {
