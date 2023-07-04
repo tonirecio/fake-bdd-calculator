@@ -320,6 +320,8 @@ const calculate = (firstOperand, secondOperand, operator) => {
 
   if (operator == '/' && secondOperand == '0') {
     result = 'ERROR'
+    changeStateAllButtons(true)
+    changeButtonState(false, 'clean')
   }
 
   result = result.toString()
