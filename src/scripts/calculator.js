@@ -19,13 +19,19 @@ const setDisplay = value => {
   if (isDecimal && !newValue.includes(',') && newValue.length < 10) {
     newValue += ','
   }
-  if (Math.abs(value).toString().replace('.', '').length > 10) {
+  if (countDigitsOfNumber(value) > MAX_DIGITS_IN_DISPLAY) {
     disableAllButtons()
     enableButton('clean')
 
     newValue = 'ERROR'
   }
   display.innerHTML = newValue
+}
+
+const countDigitsOfNumber = number => {
+  const absoluteValue = Math.abs(number)
+  const digitCount = absoluteValue.toString().replace('.', '').length
+  return digitCount
 }
 
 const canAddMoreDigits = (originalNumber, maxDigits) => {
