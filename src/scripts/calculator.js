@@ -56,6 +56,7 @@ const resetCalculatorState = () => {
   isDecimal = false
   isNewOperation = false
   enableAllButtons()
+  unlighlightOperationButtons()
 }
 
 const resetCalculatorStateAndClearDisplay = () => {
@@ -146,6 +147,9 @@ const handleOperationClick = newOperation => {
   disableButton('negate')
   enableNumberButtons()
 
+  unlighlightOperationButtons()
+  highlightButton(newOperation)
+
   operation = newOperation
   isDecimal = false
   decimalMultiplier = 0.1
@@ -179,6 +183,8 @@ const handleEqualClick = () => {
     resetCalculatorState()
     disableAllButtons()
     enableButton('clean')
+
+    unlighlightOperationButtons()
     return
   }
 
@@ -197,6 +203,7 @@ const handleEqualClick = () => {
   }
 
   enableAllButtons()
+  unlighlightOperationButtons()
 }
 
 const numberButtons = [
@@ -258,6 +265,18 @@ const disableButton = buttonName => {
 
 const enableButton = buttonName => {
   document.getElementsByName(buttonName)[0].disabled = false
+}
+
+const highlightButton = buttonName => {
+  document.getElementsByName(buttonName)[0].classList.add('highlighted')
+}
+
+const unhighlightButton = buttonName => {
+  document.getElementsByName(buttonName)[0].classList.remove('highlighted')
+}
+
+const unlighlightOperationButtons = () => {
+  operationButtons.forEach(button => unhighlightButton(button))
 }
 
 document
