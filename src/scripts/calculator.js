@@ -29,7 +29,6 @@ const totalReset = () => {
   changeButtonState(true, 'negate')
 }
 
-const appendNumber = (value) => {
   let onlyDigits = currentValue.replace('.', '')
   onlyDigits = onlyDigits.replace('-', '')
 
@@ -52,7 +51,7 @@ const appendNumber = (value) => {
   return currentValue
 }
 
-const appendPoint = () => {
+const addPointToCurrentValue = () => {
   if (!currentValue.includes('.') && (currentValue.length < MAX_DIGITS_IN_DISPLAY)) {
     currentValue += '.'
     changeButtonState(true, 'point')
@@ -61,16 +60,12 @@ const appendPoint = () => {
   }
 }
 
-const setNegation = () => {
-  let hasPoint = false
-  const value = parseFloat(currentValue)
-
-  if (currentValue.endsWith('.')) {
-    hasPoint = true
-  }
+const negateCurrentValue = () => {
+  let hasPoint = currentValue.endsWith('.')
+  const valueToNumber = parseFloat(currentValue)
 
   if ((currentValue != 0)) {
-    currentValue = (value * -1).toString()
+    currentValue = (valueToNumber * -1).toString()
     if (hasPoint) {
       currentValue += '.'
     }
@@ -99,63 +94,63 @@ const disableNumbersAndPointButton = () => {
 
 // NUMBER BUTTONS
 document.getElementsByName('zero')[0].addEventListener('click', () => {
-  appendNumber(0)
+  addNumberToCurrentValue(0)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('one')[0].addEventListener('click', () => {
-  appendNumber(1)
+  addNumberToCurrentValue(1)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('two')[0].addEventListener('click', () => {
-  appendNumber(2)
+  addNumberToCurrentValue(2)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('three')[0].addEventListener('click', () => {
-  appendNumber(3)
+  addNumberToCurrentValue(3)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('four')[0].addEventListener('click', () => {
-  appendNumber(4)
+  addNumberToCurrentValue(4)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('five')[0].addEventListener('click', () => {
-  appendNumber(5)
+  addNumberToCurrentValue(5)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('six')[0].addEventListener('click', () => {
-  appendNumber(6)
+  addNumberToCurrentValue(6)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('seven')[0].addEventListener('click', () => {
-  appendNumber(7)
+  addNumberToCurrentValue(7)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('eight')[0].addEventListener('click', () => {
-  appendNumber(8)
+  addNumberToCurrentValue(8)
   setDisplay(currentValue)
 })
 
 document.getElementsByName('nine')[0].addEventListener('click', () => {
-  appendNumber(9)
+  addNumberToCurrentValue(9)
   setDisplay(currentValue)
 })
 
 // OTHER BUTTONS
 document.getElementsByName('point')[0].addEventListener('click', () => {
-  appendPoint()
+  addPointToCurrentValue()
   setDisplay(currentValue)
 })
 
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  setNegation()
+  negateCurrentValue()
   setDisplay(currentValue)
 })
 
@@ -169,23 +164,23 @@ document.addEventListener('keydown', (event) => {
 
   console.log(key)
   if (/[0-9]/.test(key)) {
-    appendNumber(Number(key))
+    addNumberToCurrentValue(Number(key))
     setDisplay(currentValue)
   }
   if (key === ',') {
-    appendPoint()
+    addPointToCurrentValue()
     setDisplay(currentValue)
   }
   if (key === 'Escape') {
     totalReset()
   }
   if (key === 'Control') {
-    setNegation()
+    negateCurrentValue()
     setDisplay(currentValue)
   }
 })
 
-const toggleButtons = (value) => {
+const highlightOperationButtons = (value) => {
   const currentButton = document.getElementsByName(value)[0]
   const arrButtons = ['sum', 'multiply', 'divide', 'subtract']
 
@@ -202,22 +197,22 @@ const toggleButtons = (value) => {
 // Highlighting buttons
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   const value = 'sum'
-  toggleButtons(value)
+  highlightOperationButtons(value)
 })
 
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
   const value = 'subtract'
-  toggleButtons(value)
+  highlightOperationButtons(value)
 })
 
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   const value = 'multiply'
-  toggleButtons(value)
+  highlightOperationButtons(value)
 })
 
 document.getElementsByName('divide')[0].addEventListener('click', () => {
   const value = 'divide'
-  toggleButtons(value)
+  highlightOperationButtons(value)
 })
 
 
@@ -228,7 +223,7 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
   handleOperation()
   operator = '+'
   changeButtonState(true, 'negate')
-  toggleButtons('sum')
+  highlightOperationButtons('sum')
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
@@ -294,9 +289,6 @@ const handleOperation = () => {
   } else {
     handleOperand()
     isOperatorClicked = true
-    if (operator == '+') {
-
-    }
   }
 
   changeStateAllButtons(false)
