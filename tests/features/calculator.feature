@@ -430,7 +430,7 @@ And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@testE1
+@testE1 @testE
 Scenario Outline: Writing numbers with loads of zeros
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
@@ -447,7 +447,7 @@ Examples:
 |   90,03045102 |     +- |  -90,03045102 |
 |  -76,06017031 |     +- |   76,06017031 |
 
-@testE2
+@testE2 @testE
 Scenario Outline: Clicking two different operation buttons after using C button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -466,7 +466,7 @@ Examples:
 |          1234 |      + |         31 |          502 |       / |          50 |         10,04 |
 |          9,26 |      * |       2,15 |          139 |       + |           2 |           141 |
 
-@testE3
+@testE3 @testE
 Scenario Outline: Doing two operations one after clicking = button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -484,7 +484,7 @@ Examples:
 |            42 |      + |         87 |           10 |       / |           2 |             5 |
 |          9,26 |      * |       2,15 |          123 |       + |         234 |           357 |
 
-@testE4
+@testE4 @testE
 Scenario Outline: Doing an operation without a second number 2.0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -497,7 +497,7 @@ Examples:
 |          9283 |      - |
 |         1,234 |      * |
 
-@testE5
+@testE5 @testE
 Scenario Outline: Clicking the button 0 after operate
 When the user presses the "<button>" button
 And the user presses the "0" button
@@ -521,7 +521,7 @@ Examples:
 |      * |       0 |      0 |             0 |
 
 
-@testE6
+@testE6 @testE
 Scenario Outline: Handling the number 0 while writing integers
 Given the user writes the following value: "<userNumber>"
 And the user writes the following value: "<secondNumber>"
@@ -534,7 +534,7 @@ Examples:
 |            0     |               -1  |                   -1  |
 |            00    |               -1  |                   -1  |
 
-@testE7
+@testE7 @testE
 Scenario Outline: Handling the number 0 while writing decimals
 Given the user writes the number: "<userValue>"
 Then the user presses the ',' key
@@ -551,7 +551,7 @@ Examples:
 |             1  |          000      |         1           |        1,0001        |
 
 
-@testE8
+@testE8 @testE
 Scenario Outline: Writing a negative number with the '-' key
 Given the user presses the "-" key
 Given the user presses the "0" key
@@ -559,8 +559,22 @@ Given the user presses the "," key
 Given the user presses the "1" key
 Then the display should show the following value: "-0,1"
 
-@testE9
+@testE9 @testE
 Scenario Outline: Writing a negative number with the '-' key
 Given the user presses the "-" key
 Given the user presses the "1" key
 Then the display should show the following value: "-1"
+
+@testE10 @testE
+Scenario Outline: Writing numbers that have zeros in the decimals
+Given the user writes the following value: "<displayNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<displayResult>"
+
+Examples:
+| displayNumber | displayResult |
+|          1,00 |             1 | 
+|        1,0001 |        1,0001 |
+|         -2,03 |         -2,03 |
+|         -0,00 |             0 |
+|       3,00102 |       3,00102 |

@@ -41,7 +41,7 @@ const resetEnabledDisabledButtons = () => {
   ONE_BUTTON.enabled = true
   TWO_BUTTON.enabled = true
   THREE_BUTTON.enabled = true
-  FOUR_BUTTON.enabled= true
+  FOUR_BUTTON.enabled = true
   FIVE_BUTTON.enabled = true
   SIX_BUTTON.enabled = true
   SEVEN_BUTTON.enabled = true
@@ -56,7 +56,7 @@ const resetEnabledDisabledButtons = () => {
 }
 
 const fixComma = (numberToFix) => {
-  if (isADotOnThis(numberToFix)) {
+  if (checkADotOnThis(numberToFix)) {
     const valueLenght = numberToFix.length
 
     if (numberToFix[valueLenght - 1] === COMMA_CHARACTER) {
@@ -75,9 +75,9 @@ const getDisplayNumber = () => {
 }
 
 const invertNumberDisplay = () => {
-  if (isOnDisplayZero() === false && isOnDisplayZeroWithDot() === false) {
+  if (checkOnDisplayZero() === false && checkOnDisplayZeroWithDot() === false) {
     let displayNumber = display.innerHTML
-    if (isANegativeNumberDisplay()) displayNumber = displayNumber.slice(1)
+    if (checkANegativeNumberDisplay()) displayNumber = displayNumber.slice(1)
     else displayNumber = '-' + displayNumber
 
     setDisplay(displayNumber)
@@ -103,7 +103,7 @@ const disableOrEnableButtons = () => {
   DIVIDE_BUTTON.disabled = false
   EQUAL_BUTTON.disabled = false
 
-  if (!isAnErrorOnDisplay()) {
+  if (!checkAnErrorOnDisplay()) {
     if (isTheOperationFinished) {
 
       ZERO_BUTTON.disabled = false
@@ -134,8 +134,8 @@ const disableOrEnableButtons = () => {
       NINE_BUTTON.disabled = false
       COMMA_BUTTON.disabled = false
 
-    } else if (!isTheMaxLenght()) {
-      if (isOnDisplayZero()) {
+    } else if (!checkTheMaxLenght()) {
+      if (checkOnDisplayZero()) {
         ZERO_BUTTON.disabled = true
         NEGATE_BUTTON.disabled = true
       } else {
@@ -151,7 +151,7 @@ const disableOrEnableButtons = () => {
       SEVEN_BUTTON.disabled = false
       EIGHT_BUTTON.disabled = false
       NINE_BUTTON.disabled = false
-      if (!isADotOnDisplay()) COMMA_BUTTON.disabled = false
+      if (!checkADotOnDisplay()) COMMA_BUTTON.disabled = false
       else COMMA_BUTTON.disabled = true
     } else {
       ZERO_BUTTON.disabled = true
@@ -194,20 +194,20 @@ const addToTheDisplay = (value) => {
     isTheOperationFinished = false
   }
 
-  if (!isTheMaxLenght()) {
+  if (!checkTheMaxLenght()) {
     let actualDisplay = display.innerHTML
-    if (isOnDisplayZero()) {
+    if (checkOnDisplayZero()) {
       if (value === COMMA_CHARACTER) setDisplay('0' + COMMA_CHARACTER)
       else setDisplay(value)
-    } else if (isOnDisplayMinusZero()) {
+    } else if (checkOnDisplayMinusZero()) {
       if (value !== 0) {
         if (value === COMMA_CHARACTER) actualDisplay = '-0,'
         else actualDisplay = '-' + value
         setDisplay(actualDisplay)
       }
-    }else {
+    } else {
       if (value === COMMA_CHARACTER) {
-        if (isADotOnDisplay() === false) {
+        if (checkADotOnDisplay() === false) {
           actualDisplay += value
           setDisplay(actualDisplay)
         }
@@ -242,11 +242,11 @@ const showResults = (value) => {
   let result = value.toString()
 
   if (isRecentlyAddedAOperation) setDisplay('ERROR')
-  else if (isADotOnThis(value) === false) {
-    if (isOnRangeOfNotError(value)) setDisplay(result)
+  else if (checkADotOnThis(value) === false) {
+    if (checkOnRangeOfNotError(value)) setDisplay(result)
     else setDisplay('ERROR')
   } else {
-    if (isOnRangeOfNotError(value)) {
+    if (checkOnRangeOfNotError(value)) {
       const countOfNumberBeforeComma = numbersBeforeComma(value)
       if (value < 0) value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
       else value = roundNumber(value, MAX_DIGITS_IN_DISPLAY - countOfNumberBeforeComma)
@@ -282,7 +282,9 @@ const operatorSelect = (operator) => {
 
   disableOrEnableButtons()
 }
+
 const operate = () => {
+  
   if (savedOperator === '+') {
     doAddition()
     resetMemoryNumberAndOperator()
@@ -378,7 +380,7 @@ SUBSTRACT_BUTTON.addEventListener('click', () => {
 SUM_BUTTON.addEventListener('click', () => { operatorSelect('+') })
 EQUAL_BUTTON.addEventListener('click', () => { operate() })
 
-const isTheMaxLenght = () => {
+const checkTheMaxLenght = () => {
   const displayString = display.innerHTML
   let totalLenght = displayString.length
 
@@ -388,14 +390,14 @@ const isTheMaxLenght = () => {
   else return false
 }
 
-const isOnDisplayZero = () => {
+const checkOnDisplayZero = () => {
   const displayString = display.innerHTML
 
   if (displayString === '0') return true
   else return false
 }
 
-const isOnDisplayMinusZero = () => {
+const checkOnDisplayMinusZero = () => {
 
   const displayString = display.innerHTML
 
@@ -404,35 +406,35 @@ const isOnDisplayMinusZero = () => {
 
 }
 
-const isADotOnDisplay = () => {
+const checkADotOnDisplay = () => {
   const displayString = display.innerHTML
 
   if (displayString.includes(COMMA_CHARACTER)) return true
   else return false
 }
 
-const isADotOnThis = (value) => {
+const checkADotOnThis = (value) => {
   const displayString = value.toString()
 
   if (displayString.includes('.')) return true
   else return false
 }
 
-const isANegativeNumberDisplay = () => {
+const checkANegativeNumberDisplay = () => {
   const displayString = display.innerHTML
 
   if (displayString.includes('-')) return true
   else return false
 }
 
-const isOnDisplayZeroWithDot = () => {
+const checkOnDisplayZeroWithDot = () => {
   const displayString = display.innerHTML
 
   if (displayString === '0' + COMMA_CHARACTER) return true
   else return false
 }
 
-const isOnRangeOfNotError = (number) => {
+const checkOnRangeOfNotError = (number) => {
   let numeroLimite = ''
 
   for (let i = 0; i < MAX_DIGITS_IN_DISPLAY; i++) numeroLimite = numeroLimite + 9
@@ -443,8 +445,9 @@ const isOnRangeOfNotError = (number) => {
   else return false
 }
 
-const isAnErrorOnDisplay = () => {
+const checkAnErrorOnDisplay = () => {
   if (display.innerHTML === 'ERROR') return true
   else return false
 }
+
 reset()
