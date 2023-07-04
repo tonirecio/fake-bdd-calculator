@@ -163,7 +163,6 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
 document.addEventListener('keydown', (event) => {
   const key = event.key
 
-  console.log(key)
   if (/[0-9]/.test(key)) {
     addNumberToCurrentValue(Number(key))
     setDisplay(currentValue)
