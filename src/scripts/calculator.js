@@ -20,22 +20,25 @@ const reset = () => {
   numberHasComma = false
   currentNumber = null
   pendingZeros = 0
-  handleButtonEnablingWhenReset()
+  setAllButtonDisabledStatus(false)
+  document.querySelector('button[name="zero"]').disabled = true
+  document.querySelector('button[name="negate"]').disabled = true
+  setOperationButtonHighlighting(currentOperation)
   setDisplay(0)
 }
 
 const addEventsToButtons = () => {
   // Number buttons
-  document.querySelector('button[name="zero"]').addEventListener('click', () => writeNewNumber(0))
-  document.querySelector('button[name="one"]').addEventListener('click', () => writeNewNumber(1))
-  document.querySelector('button[name="two"]').addEventListener('click', () => writeNewNumber(2))
-  document.querySelector('button[name="three"]').addEventListener('click', () => writeNewNumber(3))
-  document.querySelector('button[name="four"]').addEventListener('click', () => writeNewNumber(4))
-  document.querySelector('button[name="five"]').addEventListener('click', () => writeNewNumber(5))
-  document.querySelector('button[name="six"]').addEventListener('click', () => writeNewNumber(6))
-  document.querySelector('button[name="seven"]').addEventListener('click', () => writeNewNumber(7))
-  document.querySelector('button[name="eight"]').addEventListener('click', () => writeNewNumber(8))
-  document.querySelector('button[name="nine"]').addEventListener('click', () => writeNewNumber(9))
+  document.querySelector('button[name="zero"]').addEventListener('click', () => writeNewNumberAndDisplay(0))
+  document.querySelector('button[name="one"]').addEventListener('click', () => writeNewNumberAndDisplay(1))
+  document.querySelector('button[name="two"]').addEventListener('click', () => writeNewNumberAndDisplay(2))
+  document.querySelector('button[name="three"]').addEventListener('click', () => writeNewNumberAndDisplay(3))
+  document.querySelector('button[name="four"]').addEventListener('click', () => writeNewNumberAndDisplay(4))
+  document.querySelector('button[name="five"]').addEventListener('click', () => writeNewNumberAndDisplay(5))
+  document.querySelector('button[name="six"]').addEventListener('click', () => writeNewNumberAndDisplay(6))
+  document.querySelector('button[name="seven"]').addEventListener('click', () => writeNewNumberAndDisplay(7))
+  document.querySelector('button[name="eight"]').addEventListener('click', () => writeNewNumberAndDisplay(8))
+  document.querySelector('button[name="nine"]').addEventListener('click', () => writeNewNumberAndDisplay(9))
   // Non operator buttons
   document.querySelector('button[name="point"]').addEventListener('click', handleCommaClick)
   document.querySelector('button[name="clean"]').addEventListener('click', reset)
@@ -53,7 +56,7 @@ const addEventsToKeyboard = () => {
   document.addEventListener('keydown', (event) => {
     const keyName = event.key
     if (!isNaN(keyName)) {
-      writeNewNumber(parseInt(keyName))
+      writeNewNumberAndDisplay(parseInt(keyName))
     } else {
       if (keyName === ',') {
         handleCommaClick()
@@ -61,6 +64,16 @@ const addEventsToKeyboard = () => {
         reset()
       } else if (keyName === 'Control') {
         handleNegateClick()
+      } else if (keyName === '+') {
+        handleOperationClick('sum')
+      } else if (keyName === '-') {
+        handleOperationClick('subtract')
+      } else if (keyName === '*') {
+        handleOperationClick('multiply')
+      } else if (keyName === '/') {
+        handleOperationClick('divide')
+      } else if (keyName === '=') {
+        handleEqualsClick()
       }
     }
   })
@@ -68,14 +81,15 @@ const addEventsToKeyboard = () => {
 
 const handleNegateClick = () => {
   currentNumber = negateNumber(currentNumber)
-  if (parseInt(currentNumber) === currentNumber && numberHasComma) {
+  if (Number.isInteger(currentNumber) && numberHasComma) {
     writeComma()
   }
   setDisplay(formatNumberToDisplay(currentNumber))
 }
 
 const handleCommaClick = () => {
-  handleButtonEnablingWhenClickingComma()
+  setAllButtonDisabledStatus(false)
+  document.querySelector('button[name="point"]').disabled = true
   writeComma()
 }
 
@@ -88,7 +102,10 @@ const handleOperationClick = (operation) => {
   numberHasComma = false
   currentOperation = operation
   overrideDisplay = true
-  handleButtonEnablingWhenClickingOperator()
+  pendingZeros = 0
+  setAllButtonDisabledStatus(false)
+  setOperationButtonHighlighting(currentOperation)
+  document.querySelector('button[name="negate"]').disabled = true
 }
 
 const handleEqualsClick = () => {
@@ -96,29 +113,14 @@ const handleEqualsClick = () => {
   overrideDisplay = true
   currentOperation = null
   currentNumber = null
+  pendingZeros = 0
   setAllButtonDisabledStatus(false)
-  console.log(previousOperand)
+  setOperationButtonHighlighting(currentOperation)
   setDisplay(formatNumberToDisplay(previousOperand))
 }
 
 const setDisplay = (value) => {
-  let displayValue = value.toString()
-  if (displayValue !== 'ERROR') {
-    displayValue = displayValue.replace('.', COMMA_SYMBOL)
-    if (numberHasComma && !displayValue.includes(COMMA_SYMBOL)) {
-      displayValue += COMMA_SYMBOL
-    }
-    for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
-      displayValue += '0'
-    }
-    if (getDigitNumber(value) >= MAX_DIGITS_IN_DISPLAY && !overrideDisplay) {
-      setAllButtonDisabledStatus(false)
-      setNonOperatorButtonDisabledStatus(true)
-    }
-  } else {
-    handleButtonEnablingWhenError()
-  }
-  display.innerHTML = displayValue
+  display.innerHTML = value
 }
 
 const negateNumber = (number) => {
@@ -129,7 +131,17 @@ const getDigitNumber = (number) => {
   return Math.abs(number).toString().replace('.', '').length + pendingZeros
 }
 
-const writeNewNumber = (newNumber) => {
+const parseExponentialToDecimal = (number) => {
+  const integerPartDigits = parseInt(Math.abs(number)).toString().length
+  number = parseFloat(number).toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits)
+  const numberArray = number.toString().split('')
+  while (numberArray[numberArray.length - 1] === '0') {
+    numberArray.pop()
+  }
+  return numberArray.join('')
+}
+
+const writeNewNumberAndDisplay = (newNumber) => {
   if (overrideDisplay || currentNumber === null) {
     overrideDisplay = false
     numberHasComma = false
@@ -149,10 +161,18 @@ const writeNewNumber = (newNumber) => {
         for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
           zeroString += '0'
         }
-        currentNumber = parseFloat(currentNumber + zeroString + newNumber.toString())
+        if (currentNumber.toString().includes('e')) {
+          currentNumber = parseFloat(parseExponentialToDecimal(currentNumber) + zeroString + newNumber.toString())
+        } else {
+          currentNumber = parseFloat(currentNumber + zeroString + newNumber.toString())
+        }
         pendingZeros = 0
       }
     }
+  }
+  if (getDigitNumber(currentNumber) >= MAX_DIGITS_IN_DISPLAY && !overrideDisplay) {
+    setAllButtonDisabledStatus(false)
+    setNonOperatorButtonDisabledStatus(true)
   }
   setDisplay(formatNumberToDisplay(currentNumber))
 }
@@ -164,7 +184,7 @@ const writeComma = () => {
   if (!numberHasComma && getDigitNumber(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     numberHasComma = true
     overrideDisplay = false
-    setDisplay(currentNumber)
+    setDisplay(formatNumberToDisplay(currentNumber))
   }
 }
 
@@ -189,28 +209,33 @@ const performOperation = () => {
 }
 
 const formatNumberToDisplay = (number) => {
-  if (Math.abs(number) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY) || !isFinite(number)) {
-    number = 'ERROR'
+  let displayValue = ''
+  const isNumberTooBig = Math.abs(number) >= Math.pow(10, MAX_DIGITS_IN_DISPLAY)
+  const isNumberTooSmall = (Math.abs(number) > 0 && Math.abs(number) < 1 / Math.pow(10, MAX_DIGITS_IN_DISPLAY - 1))
+  const isNumberNotFinite = !isFinite(number)
+  if (isNumberTooBig || isNumberTooSmall || isNumberNotFinite) {
+    displayValue = 'ERROR'
   }
-  if (number !== 'ERROR') {
-    if (Math.abs(number) > 0 && Math.abs(number) < 1 / Math.pow(10, MAX_DIGITS_IN_DISPLAY - 1)) {
-      number = 'ERROR'
-    } else {
-      const integerPartDigits = parseInt(Math.abs(number)).toString().length
-      // Round by using toFixed() and remove trailing zeros by using parseFloat()
-      number = number.toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits)
-      if (parseFloat(number).toString().includes('e')) {
-        const numberArray = number.toString().split('')
-        while (numberArray[numberArray.length - 1] === '0') {
-          numberArray.pop()
-        }
-        return numberArray.join('')
-      } else {
-        number = parseFloat(number)
-      }
+  if (displayValue !== 'ERROR') {
+    const integerPartDigits = parseInt(Math.abs(number)).toString().length
+    // Round by using toFixed() and remove trailing zeros by using parseFloat()
+    number = parseFloat(number.toFixed(MAX_DIGITS_IN_DISPLAY - integerPartDigits))
+    displayValue = number.toString()
+    if (displayValue.includes('e')) {
+      displayValue = parseExponentialToDecimal(displayValue)
     }
+    displayValue = displayValue.replace('.', COMMA_SYMBOL)
+    if (numberHasComma && !displayValue.includes(COMMA_SYMBOL)) {
+      displayValue += COMMA_SYMBOL
+    }
+    for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
+      displayValue += '0'
+    }
+  } else {
+    setAllButtonDisabledStatus(true)
+    document.querySelector('button[name="clean"]').disabled = false
   }
-  return number
+  return displayValue
 }
 
 // Functions for button enabling/disabling
@@ -239,25 +264,13 @@ const setNonOperatorButtonDisabledStatus = (disabled) => {
   document.querySelector('button[name="point"]').disabled = disabled
 }
 
-const handleButtonEnablingWhenClickingOperator = () => {
-  setAllButtonDisabledStatus(false)
-  document.querySelector('button[name="negate"]').disabled = true
+const setOperationButtonHighlighting = (selectedOperation) => {
+  document.querySelector('button[name="sum"]').classList.remove('highlighted')
+  document.querySelector('button[name="subtract"]').classList.remove('highlighted')
+  document.querySelector('button[name="multiply"]').classList.remove('highlighted')
+  document.querySelector('button[name="divide"]').classList.remove('highlighted')
+  if (selectedOperation !== null) document.getElementsByName(selectedOperation)[0].classList.add('highlighted')
 }
-
-const handleButtonEnablingWhenReset = () => {
-  setAllButtonDisabledStatus(false)
-  document.querySelector('button[name="zero"]').disabled = true
-  document.querySelector('button[name="negate"]').disabled = true
-}
-
-const handleButtonEnablingWhenClickingComma = () => {
-  setAllButtonDisabledStatus(false)
-  document.querySelector('button[name="point"]').disabled = true
-}
-
-const handleButtonEnablingWhenError = () => {
-  setAllButtonDisabledStatus(true)
-  document.querySelector('button[name="clean"]').disabled = false
-}
-
+// TODO: formatNumber no Error, Nan -> setDisplay Error i altres (separar mes funcions)
+// Separar funcio que arregla numero i funcio que arregla display string (retorns, setDisplay nomes una linia)
 init()
