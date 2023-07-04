@@ -1,347 +1,278 @@
 const display = document.querySelector('div[name="display"] span')
+const buttons = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
 const MAX_DIGITS_IN_DISPLAY = 10
 const MAX_NUMBER = 9999999999
 const MIN_NUMBER = -9999999999
 
-let isPoint = false
-let operator = null
-let lastNumberWrited = null
-let storedNumber = null
-let addDecimal = false
-let doOperation = false
-let isEqualsPressed = false
-let doMultipleOperations = false
-let negateNumberWhenEquals = false
+let operation = ''
+let storedNumber = 0
 let pendingZeros = 0
+let lastNumberWrited = 0
+let equalsPressed = false
+let isPendingPoint = false
+let operationPressed = false
+let changeOperator = false
 
 const setDisplay = (value) => {
-  display.innerHTML = value
-}
+  if (typeof (value) === 'string') {
+    value.replace('.', ',')
+  } else {
+    value = value.toString().replace('.', ',')
+  }
 
-const getDisplay = () => {
-  return display.innerHTML.replace(',', '.')
+  if (value === 'ERROR') {
+    disableAllButtons()
+    enableDissableButton('clean', false)
+  }
+
+  display.innerHTML = value
 }
 
 const reset = () => {
   setDisplay(0)
 
-  isPoint = false
-  operator = null
-  lastNumberWrited = null
-  storedNumber = null
-  addDecimal = false
-  doOperation = false
-  isEqualsPressed = false
-  doMultipleOperations = false
-  negateNumberWhenEquals = false
+  operation = ''
+  lastNumberWrited = 0
+  storedNumber = 0
   pendingZeros = 0
+  isPendingPoint = false
+  equalsPressed = false
 
-  enableAllButtonsLessPoint()
+  enableAllButtons()
   enableDissableButton('negate', true)
   enableDissableButton('point', false)
+  enableDissableButton('zero', true)
 }
 
-const addNumber = (num) => {
-  let toDisplay
-  let text = ''
+const addNumber = (pressedNumber) => {
+  if (equalsPressed) {
+    equalsPressed = false
 
-  enableAllButtonsLessPoint()
-
-  if (!doOperation && isEqualsPressed) {
-    reset()
-  }
-
-  if (doOperation) {
-    lastNumberWrited = null
-
-    doOperation = false
-    doMultipleOperations = true
-  }
-
-  if ((lastNumberWrited === null || lastNumberWrited === 0 || isEqualsPressed) && !addDecimal) {
-    toDisplay = num.toString()
-    lastNumberWrited = num
-
-    isEqualsPressed = false
-  } else if (maxLenght(lastNumberWrited)) {
-    toDisplay = '' + lastNumberWrited
-  } else {
-    if (lastNumberWrited === null) {
-      lastNumberWrited = 0
+    lastNumberWrited = pressedNumber
+  } else if (checkMaxLenght(lastNumberWrited)) {
+    if (operationPressed) {
+      operationPressed = false
     }
 
-    if (num === 0) {
+    if (isPendingPoint && pressedNumber !== 0 && pendingZeros === 0) {
+      isPendingPoint = false
+
+      lastNumberWrited = lastNumberWrited + (pressedNumber / 10)
+    } else if (isPendingPoint && pressedNumber === 0) {
+      pendingZeros++
+      lastNumberWrited += ',0'
+      isPendingPoint = false
+    } else if (pressedNumber === 0 && lastNumberWrited % 1 !== 0) {
       pendingZeros++
 
-      toDisplay = showPendingZeros()
+      lastNumberWrited += '0'
+    } else if (!numberWithDecimals(lastNumberWrited)) {
+      lastNumberWrited = (lastNumberWrited * 10) + pressedNumber
     } else {
-      lastNumberWrited = addPendingZerosAndNum(num)
+      isPendingPoint = false
 
-      toDisplay = '' + lastNumberWrited
-
-      addDecimal = false
+      lastNumberWrited = '' + lastNumberWrited + pressedNumber
+      lastNumberWrited = lastNumberWrited.replace(',', '.')
+      lastNumberWrited = Number(lastNumberWrited)
     }
+  } else {
+    disableAllButtons()
+    enableDissableButton('clean', false)
   }
 
-  text = '' + lastNumberWrited
-
-  if (text.includes('e')) {
-    lastNumberWrited = numberWithExponential(text)
-
-    toDisplay = lastNumberWrited
+  if (lastNumberWrited.toString().includes('e')) {
+    lastNumberWrited = getNumberFromENumberInString(lastNumberWrited.toString())
   }
 
-  toDisplay = toDisplay.replace('.', ',')
+  if (!checkMaxLenght(lastNumberWrited)) {
+    disableAllButtons()
+    enableDissableButton('clean', false)
+    enableDissableButton('sum', false)
+    enableDissableButton('subtract', false)
+    enableDissableButton('multiply', false)
+    enableDissableButton('divide', false)
+    enableDissableButton('equal', false)
+  } else {
+    enableDissableButton('zero', false)
+  }
 
-  return toDisplay
+  return lastNumberWrited
 }
 
-const showPendingZeros = () => {
-  let text
+const addNumberAndSetDisplay = (pressedNumber) => {
+  const newNumber = addNumber(pressedNumber).toString().replace('.', ',')
 
-  if (addDecimal) {
-    text = lastNumberWrited + '.'
-  } else {
-    text = lastNumberWrited
-  }
-
-  for (let x = 0; x < pendingZeros; x++) {
-    text += '0'
-  }
-
-  return text
+  setDisplay(newNumber)
 }
 
-const addPendingZerosAndNum = (num) => {
-  pendingZeros = 0
+const checkMaxLenght = (numberToCheck) => {
+  let actualNumberInString = numberToCheck.toString()
 
-  if (num !== null) {
-    return Number(getDisplay() + num)
-  } else {
-    return Number(getDisplay())
-  }
-}
+  actualNumberInString = actualNumberInString.replace(',', '')
+  actualNumberInString = actualNumberInString.replace('.', '')
+  actualNumberInString = actualNumberInString.replace('-', '')
 
-const addNumberAndDisplay = (num) => {
-  const text = addNumber(num)
-
-  if (maxLenght(lastNumberWrited)) {
-    disableNumberButtons()
-    enableDissableButton('point', true)
-  }
-
-  setDisplay(text)
-}
-
-const numberWithExponential = (text) => {
-  const zeros = text.split('e')
-  let num = '0.'
-  let numbers
-
-  for (let x = zeros[1]; x < -1; x++) {
-    num = num + '0'
-  }
-
-  if (zeros[0].includes('.')) {
-    numbers = zeros[0].split('.')
-
-    num = '' + num + numbers[0] + numbers[1]
-  } else {
-    num = '' + num + zeros[0]
-  }
-
-  return num
-}
-
-const maxLenght = (num) => {
-  let string
-
-  if (num != null) {
-    string = num.toString()
-  } else {
-    string = '0'
-  }
-  string = string.replace('-', '')
-  string = string.replace('.', '')
-
-  if ((string.length + pendingZeros) >= MAX_DIGITS_IN_DISPLAY) {
-    return true
-  } else {
-    return false
-  }
+  return ((actualNumberInString.length) < MAX_DIGITS_IN_DISPLAY)
 }
 
 const addPoint = () => {
-  lastNumberWrited = addPendingZerosAndNum(null)
+  if (lastNumberWrited % 1 === 0) {
+    isPendingPoint = true
 
-  if (doOperation) {
+    setDisplay(lastNumberWrited + ',')
+  } else {
+    setDisplay(lastNumberWrited)
+  }
+}
+
+const getNumberFromENumberInString = (numberWithE) => {
+  const numberAndPowerOf10 = numberWithE.split('e')
+  const numberBeforeE = numberAndPowerOf10[0]
+  const powerOf10 = numberAndPowerOf10[1]
+
+  let numberZeroWithDecimals = '0,'
+
+  for (let x = 0; x < (powerOf10 * -1) - 1; x++) {
+    numberZeroWithDecimals += '0'
+  }
+
+  if (numberWithDecimals(numberBeforeE)) {
+    const enterAndDecimalNumber = numberBeforeE.split('.')
+    const enterNumber = enterAndDecimalNumber[0]
+    const decimalNumber = enterAndDecimalNumber[1]
+
+    return '' + numberZeroWithDecimals + enterNumber + decimalNumber
+  } else {
+    return '' + numberZeroWithDecimals + numberBeforeE
+  }
+}
+
+const numberWithDecimals = (numberToCheck) => {
+  return (numberToCheck % 1 !== 0)
+}
+
+const negateNumber = (actualNumber) => {
+  return actualNumber * -1
+}
+
+const negateActualNumberAndDisplay = (actualNumber) => {
+  lastNumberWrited = negateNumber(actualNumber)
+
+  if (isPendingPoint) {
+    setDisplay(lastNumberWrited + ',')
+  } else {
+    setDisplay(lastNumberWrited)
+  }
+}
+
+const prepareForOperation = (operator) => {
+  if (!changeOperator) {
+    storedNumber = Number(lastNumberWrited.toString().replace(',', '.'))
     lastNumberWrited = 0
-
-    doOperation = false
-    doMultipleOperations = true
-
-    addDecimal = true
-
-    return 0 + ','
-  } else if (!isPoint && !maxLenght(lastNumberWrited)) {
-    isPoint = true
-    addDecimal = true
-
-    if (lastNumberWrited !== null) {
-      return lastNumberWrited + ','
-    } else {
-      return 0 + ','
-    }
-  } else {
-    return lastNumberWrited.toString().replace('.', ',')
-  }
-}
-
-const negateNumber = (num) => {
-  let toDisplay = num
-
-  if (!num.includes('-')) {
-    if (num !== '0') {
-      toDisplay = '-' + num
-
-      lastNumberWrited = num * -1
-    }
-  } else {
-    toDisplay = num.replace('-', '')
-
-    lastNumberWrited = num * -1
-  }
-
-  if (addDecimal) {
-    toDisplay += '.'
-  }
-
-  return toDisplay.replace('.', ',')
-}
-
-const prepareForOperation = () => {
-  doOperation = true
-  isPoint = false
-  storedNumber = lastNumberWrited
-  lastNumberWrited = null
-}
-
-const operate = (num1, operation, num2) => {
-  const numberToOperate1 = Number(num1)
-  const numberToOperate2 = Number(num2)
-
-  let toDisplay
-
-  isEqualsPressed = true
-
-  if (!negateNumberWhenEquals) {
-    if (num1 !== null || num2 !== null) {
-      switch (operation) {
-        case '+':
-          lastNumberWrited = numberToOperate1 + numberToOperate2
-          break
-        case '-':
-          lastNumberWrited = numberToOperate1 - numberToOperate2
-          break
-        case '*':
-          lastNumberWrited = numberToOperate1 * numberToOperate2
-          break
-        case '/':
-          if (numberToOperate1 === 0 || numberToOperate2 === 0) {
-            return 'ERROR'
-          } else {
-            lastNumberWrited = numberToOperate1 / numberToOperate2
-          }
-          break
-      }
-
-      if (maxLenght(lastNumberWrited)) {
-        if (checkLimits(lastNumberWrited)) {
-          return 'ERROR'
-        } else {
-          const decimals = MAX_DIGITS_IN_DISPLAY - getEnterNum(lastNumberWrited)
-          toDisplay = '' + (lastNumberWrited.toFixed(decimals) * 1)
-
-          lastNumberWrited = Number(toDisplay)
-        }
-      } else {
-        toDisplay = '' + lastNumberWrited
-      }
-    } else {
-      toDisplay = 'ERROR'
-    }
-  }
-
-  return toDisplay
-}
-
-const getEnterNum = (num) => {
-  let string = num.toString()
-
-  string = string.split('.')
-
-  return string[0].length
-}
-
-const checkLimits = (num) => {
-  if (num > MAX_NUMBER) {
-    return true
-  } else if (num < MIN_NUMBER) {
-    return true
-  } else {
-    return false
-  }
-}
-
-const prepareAndOperateIfSecondOperation = (op) => {
-  if (Number(lastNumberWrited) === 0) {
+    isPendingPoint = false
     pendingZeros = 0
-
-    lastNumberWrited = 0
-    setDisplay(0)
   }
 
-  lastNumberWrited = addPendingZerosAndNum(null)
+  operation = operator
+}
 
-  if (doMultipleOperations && !isEqualsPressed) {
-    lastNumberWrited = operate(storedNumber, operator, lastNumberWrited)
+const operate = (firstNumber, operator, secondNumber) => {
+  let result
 
-    doMultipleOperations = false
+  switch (operator) {
+    case '+':
+      result = firstNumber + secondNumber
+      break
+    case '-':
+      result = firstNumber - secondNumber
+      break
+    case '*':
+      result = firstNumber * secondNumber
+      break
+    case '/':
+      if (firstNumber === 0 || secondNumber === 0) {
+        result = 'ERROR'
+      } else {
+        result = firstNumber / secondNumber
+      }
+      break
   }
 
-  if (!doOperation) {
-    prepareForOperation()
-  }
-  operator = op
+  return result
+}
 
-  enableAllButtonsLessPoint()
-  enableDissableButton('negate', true)
-  enableDissableButton('point', false)
+const operateIfDoConsecutiveOperations = (firstNumber, operator, secondNumber) => {
+  let result
+
+  if (operator !== '' && !changeOperator) {
+    result = operate(firstNumber, operator, secondNumber)
+  } else {
+    result = secondNumber
+  }
+
+  return result
 }
 
 const operateAndDisplay = () => {
-  let text
+  if (storedNumber === 0 && lastNumberWrited.toString().lastIndexOf(1) === '.') {
+    lastNumberWrited = lastNumberWrited.toString().replace('.', '')
+  }
 
-  if (negateNumberWhenEquals) {
-    text = negateNumber(lastNumberWrited.toString())
-  } else if (operator === null) {
-    if (lastNumberWrited === null) {
-      lastNumberWrited = 0
-    }
-    text = lastNumberWrited.toString().replace('.', ',')
-
-    enableAllButtonsLessPoint()
-    enableDissableButton('point', false)
-  } else if (lastNumberWrited === null) {
-    text = 'ERROR'
+  if (operationPressed) {
+    setDisplay('ERROR')
   } else {
-    text = operate(storedNumber, operator, lastNumberWrited).replace('.', ',')
+    lastNumberWrited = Number(lastNumberWrited.toString().replace(',', '.'))
 
-    if (text === 'ERROR') {
-      disableAllButtonsLessClean()
+    if (operation !== '') {
+      lastNumberWrited = operate(storedNumber, operation, lastNumberWrited)
+    }
+
+    if (lastNumberWrited === 'ERROR') {
+      setDisplay('ERROR')
+    } else {
+      operation = ''
+      equalsPressed = true
+
+      if (lastNumberWrited > MAX_NUMBER || lastNumberWrited < MIN_NUMBER) {
+        setDisplay('ERROR')
+      } else {
+        lastNumberWrited = castTo10Digits(lastNumberWrited)
+        lastNumberWrited = Number(lastNumberWrited) * 1
+        setDisplay(lastNumberWrited.toString().replace('.', ','))
+      }
     }
   }
-  setDisplay(text)
+}
+
+const castTo10Digits = (numberToCast) => {
+  const enterNumbers = getEntersFrom(numberToCast).toString().length
+
+  if (!checkMaxLenght(numberToCast)) {
+    return numberToCast.toFixed(MAX_DIGITS_IN_DISPLAY - enterNumbers)
+  } else {
+    return numberToCast
+  }
+}
+
+const getEntersFrom = (numberToCast) => {
+  return Math.trunc(numberToCast)
+}
+
+const enableButtonsAndPrepareOperation = (operator) => {
+  if (operationPressed) {
+    changeOperator = true
+  }
+
+  lastNumberWrited = operateIfDoConsecutiveOperations(storedNumber, operation, lastNumberWrited)
+
+  if (lastNumberWrited === 'ERROR') {
+    setDisplay('ERROR')
+  } else {
+    operationPressed = true
+    prepareForOperation(operator)
+    enableAllButtons()
+    enableDissableButton('negate', true)
+  }
 }
 
 const enableDissableButton = (name, value) => {
@@ -349,82 +280,69 @@ const enableDissableButton = (name, value) => {
   element.disabled = value
 }
 
-const enableAllButtonsLessPoint = () => {
-  const array = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
-
-  for (let x = 0; x < array.length; x++) {
-    const element = array[x]
-
-    if (element.name !== 'point') {
-      element.disabled = false
-    }
+const enableAllButtons = () => {
+  for (let x = 0; x < buttons.length; x++) {
+    const element = buttons[x]
+    element.disabled = false
   }
 }
 
-const disableAllButtonsLessClean = () => {
-  const array = document.querySelector('div[name="keypad"]').getElementsByTagName('button')
-
-  for (let x = 0; x < array.length; x++) {
-    const element = array[x]
-
-    if (element.name !== 'clean') {
-      element.disabled = true
-    }
+const disableAllButtons = () => {
+  for (let x = 0; x < buttons.length; x++) {
+    const element = buttons[x]
+    element.disabled = true
   }
-}
-
-const disableNumberButtons = () => {
-  enableDissableButton('one', true)
-  enableDissableButton('two', true)
-  enableDissableButton('three', true)
-  enableDissableButton('four', true)
-  enableDissableButton('five', true)
-  enableDissableButton('six', true)
-  enableDissableButton('seven', true)
-  enableDissableButton('eight', true)
-  enableDissableButton('nine', true)
-  enableDissableButton('zero', true)
 }
 
 const addButtons = () => {
   document.getElementsByName('one')[0].addEventListener('click', () => {
-    addNumberAndDisplay(1)
+    addNumberAndSetDisplay(1)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('two')[0].addEventListener('click', () => {
-    addNumberAndDisplay(2)
+    addNumberAndSetDisplay(2)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('three')[0].addEventListener('click', () => {
-    addNumberAndDisplay(3)
+    addNumberAndSetDisplay(3)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('four')[0].addEventListener('click', () => {
-    addNumberAndDisplay(4)
+    addNumberAndSetDisplay(4)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('five')[0].addEventListener('click', () => {
-    addNumberAndDisplay(5)
+    addNumberAndSetDisplay(5)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('six')[0].addEventListener('click', () => {
-    addNumberAndDisplay(6)
+    addNumberAndSetDisplay(6)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('seven')[0].addEventListener('click', () => {
-    addNumberAndDisplay(7)
+    addNumberAndSetDisplay(7)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('eight')[0].addEventListener('click', () => {
-    addNumberAndDisplay(8)
+    addNumberAndSetDisplay(8)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('nine')[0].addEventListener('click', () => {
-    addNumberAndDisplay(9)
+    addNumberAndSetDisplay(9)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('zero')[0].addEventListener('click', () => {
-    addNumberAndDisplay(0)
+    addNumberAndSetDisplay(0)
+    enableDissableButton('negate', false)
   })
 
   document.getElementsByName('clean')[0].addEventListener('click', () => {
@@ -433,43 +351,41 @@ const addButtons = () => {
   })
 
   document.getElementsByName('point')[0].addEventListener('click', () => {
-    const text = addPoint()
-
+    addPoint()
     enableDissableButton('point', true)
-
-    setDisplay(text)
+    enableDissableButton('zero', false)
   })
 
   document.getElementsByName('negate')[0].addEventListener('click', () => {
-    lastNumberWrited = addPendingZerosAndNum(null)
-
-    const text = negateNumber(lastNumberWrited.toString())
-
-    setDisplay(text)
+    negateActualNumberAndDisplay(lastNumberWrited)
   })
 
   document.getElementsByName('sum')[0].addEventListener('click', () => {
-    prepareAndOperateIfSecondOperation('+')
+    enableButtonsAndPrepareOperation('+')
   })
 
   document.getElementsByName('subtract')[0].addEventListener('click', () => {
-    prepareAndOperateIfSecondOperation('-')
+    enableButtonsAndPrepareOperation('-')
   })
 
   document.getElementsByName('multiply')[0].addEventListener('click', () => {
-    prepareAndOperateIfSecondOperation('*')
+    enableButtonsAndPrepareOperation('*')
   })
 
   document.getElementsByName('divide')[0].addEventListener('click', () => {
-    prepareAndOperateIfSecondOperation('/')
+    enableButtonsAndPrepareOperation('/')
   })
 
   document.getElementsByName('equal')[0].addEventListener('click', () => {
-    if (lastNumberWrited !== null) {
-      lastNumberWrited = addPendingZerosAndNum(null)
-    }
-
     operateAndDisplay()
+
+    console.log(lastNumberWrited)
+    if (lastNumberWrited === 'ERROR') {
+      disableAllButtons()
+      enableDissableButton('clean', false)
+    } else {
+      enableAllButtons()
+    }
   })
 }
 
@@ -478,23 +394,28 @@ const addKeys = () => {
     event.preventDefault()
 
     if (event.key >= 0 && event.key <= 9 && event.key !== ' ') {
-      addNumberAndDisplay(Number(event.key))
+      addNumberAndSetDisplay(Number(event.key))
+      enableDissableButton('negate', false)
     } else if (event.key === ',') {
-      const text = addPoint()
-
+      addPoint()
       enableDissableButton('point', true)
-
-      setDisplay(text)
+      enableDissableButton('zero', false)
     } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
-      prepareAndOperateIfSecondOperation(event.key)
+      enableButtonsAndPrepareOperation(event.key)
     } else if (event.key === 'Control') {
-      const text = negateNumber(lastNumberWrited.toString())
-
-      setDisplay(text)
+      negateActualNumberAndDisplay(lastNumberWrited)
     } else if (event.key === 'Escape') {
       reset()
+      enableDissableButton('zero', true)
     } else if (event.key === 'Enter') {
-      document.getElementsByName('equal')[0].click()
+      operateAndDisplay()
+
+      if (lastNumberWrited === 'ERROR') {
+        disableAllButtons()
+        enableDissableButton('clean', false)
+      } else {
+        enableAllButtons()
+      }
     }
   })
 }
