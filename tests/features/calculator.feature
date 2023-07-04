@@ -311,6 +311,7 @@ Examples:
 |   *  |
 |   /  |
 
+@sc17 @done
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button

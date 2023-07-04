@@ -40,6 +40,7 @@ const setDisplay = (value) => {
   }
 
   display.innerHTML = currentValue
+  negate.disabled = false;
 }
 
 const reset = document.querySelector('button[name="clean"]')
@@ -217,6 +218,9 @@ const handleOperation = (operation) => {
     currentValue = '0'
   }
   currentOperation = operation
+  if (firstValue !== null && currentValue === '0') {
+    negate.disabled = true;
+  }
 }
 
 const handleEqual = () => {
@@ -236,13 +240,7 @@ const handleEqual = () => {
     setDisplay(currentValue)
     return
   }
-/*
-  if (secondValue === null && currentOperation === null) {
-    currentValue = 'ERROR'
-    setDisplay(currentValue)
-    return
-  }
-*/
+
   secondValue = parseFloat(currentValue.replace(',', '.'))
   operate()
   firstValue = null
