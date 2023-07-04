@@ -9,12 +9,20 @@ let decimalMultiplier = 0.1
 let isDecimal = false
 let isNewOperation = false
 
+const add = (a, b) => a + b
+const subtract = (a, b) => a - b
+const multiply = (a, b) => a * b
+const divide = (a, b) => a / b
+
 const setDisplay = value => {
   let newValue = value.toString().replace('.', ',')
   if (isDecimal && !newValue.includes(',') && newValue.length < 10) {
     newValue += ','
   }
   if (Math.abs(value).toString().replace('.', '').length > 10) {
+    disableAllButtons()
+    enableButton('clean')
+
     newValue = 'ERROR'
   }
   display.innerHTML = newValue
@@ -47,10 +55,14 @@ const resetCalculatorState = () => {
   decimalMultiplier = 0.1
   isDecimal = false
   isNewOperation = false
+  enableAllButtons()
 }
 
 const resetCalculatorStateAndClearDisplay = () => {
   resetCalculatorState()
+  disableButton('negate')
+  disableButton('zero')
+
   setDisplay(currentNumber)
 }
 
@@ -69,16 +81,33 @@ const handleNumberClick = number => {
       currentNumber = appendDigit(currentNumber, number)
       setDisplay(currentNumber)
     }
+    if (currentNumber > 0) {
+      enableButton('negate')
+      enableButton('zero')
+    }
+    if (currentNumber.toString().length >= MAX_DIGITS_IN_DISPLAY) {
+      disableNumberButtons()
+      disableButton('point')
+    }
   } else {
     if (canAddMoreDigits(previousNumber, MAX_DIGITS_IN_DISPLAY)) {
       previousNumber = appendDigit(previousNumber, number)
       setDisplay(previousNumber)
+    }
+    if (previousNumber > 0) {
+      enableButton('negate')
+      enableButton('zero')
+    }
+    if (previousNumber.toString().length >= MAX_DIGITS_IN_DISPLAY) {
+      disableNumberButtons()
+      disableButton('point')
     }
   }
 }
 
 const handlePointClick = () => {
   isDecimal = true
+  disableButton('point')
   if (operation === '') {
     setDisplay(currentNumber)
   } else {
@@ -112,6 +141,11 @@ const handleOperationClick = newOperation => {
     isNewOperation = true
   }
 
+  enableButton('point')
+  enableButton('clean')
+  disableButton('negate')
+  enableNumberButtons()
+
   operation = newOperation
   isDecimal = false
   decimalMultiplier = 0.1
@@ -122,16 +156,16 @@ const performOperation = (operand1, operand2, operation) => {
   let result
   switch (operation) {
     case 'sum':
-      result = operand1 + operand2
+      result = add(operand1, operand2)
       break
     case 'subtract':
-      result = operand1 - operand2
+      result = subtract(operand1, operand2)
       break
     case 'multiply':
-      result = operand1 * operand2
+      result = multiply(operand1, operand2)
       break
     case 'divide':
-      result = operand1 / operand2
+      result = divide(operand1, operand2)
       break
     default:
       break
@@ -140,16 +174,90 @@ const performOperation = (operand1, operand2, operation) => {
 }
 
 const handleEqualClick = () => {
+  if (operation !== '' && previousNumber === 0) {
+    setDisplay('ERROR')
+    resetCalculatorState()
+    disableAllButtons()
+    enableButton('clean')
+    return
+  }
+
   if (operation !== '') {
-    currentNumber = performOperation(currentNumber, previousNumber, operation)
-    currentNumber = parseFloat(currentNumber.toPrecision(MAX_DIGITS_IN_DISPLAY))
+    const result = performOperation(currentNumber, previousNumber, operation)
+    currentNumber = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
 
     previousNumber = 0
     operation = ''
     isNewOperation = true
 
     setDisplay(currentNumber)
+  } else {
+    isDecimal = false
+    setDisplay(currentNumber)
   }
+
+  enableAllButtons()
+}
+
+const numberButtons = [
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'zero'
+]
+
+const operationButtons = ['sum', 'subtract', 'multiply', 'divide']
+
+const utilityButtons = ['negate', 'point', 'equal', 'clean']
+
+const enableNumberButtons = () => {
+  numberButtons.forEach(button => enableButton(button))
+}
+
+const disableNumberButtons = () => {
+  numberButtons.forEach(button => disableButton(button))
+}
+
+const enableOperationButtons = () => {
+  operationButtons.forEach(button => enableButton(button))
+}
+
+const disableOperationButtons = () => {
+  operationButtons.forEach(button => disableButton(button))
+}
+
+const enableUtilityButtons = () => {
+  utilityButtons.forEach(button => enableButton(button))
+}
+
+const disableUtilityButtons = () => {
+  utilityButtons.forEach(button => disableButton(button))
+}
+
+const enableAllButtons = () => {
+  enableNumberButtons()
+  enableOperationButtons()
+  enableUtilityButtons()
+}
+
+const disableAllButtons = () => {
+  disableNumberButtons()
+  disableOperationButtons()
+  disableUtilityButtons()
+}
+
+const disableButton = buttonName => {
+  document.getElementsByName(buttonName)[0].disabled = true
+}
+
+const enableButton = buttonName => {
+  document.getElementsByName(buttonName)[0].disabled = false
 }
 
 document
@@ -235,9 +343,6 @@ document.body.addEventListener('keydown', event => {
         break
       case '/':
         handleOperationClick('divide')
-        break
-      case 'Enter':
-        handleEqualClick()
         break
       default:
         break
