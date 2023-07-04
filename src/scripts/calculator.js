@@ -27,6 +27,7 @@ const totalReset = () => {
   changeStateAllButtons(false)
   changeButtonState(true, 'zero')
   changeButtonState(true, 'negate')
+  removeHighlightOperationButtons()
 }
 
 const addNumberToCurrentValue = (value) => {
@@ -75,6 +76,7 @@ const negateCurrentValue = () => {
   return currentValue
 }
 
+// ENABLE AND DISABLE BUTTONS
 const changeButtonState = (state, name) => {
   document.getElementsByName(name)[0].disabled = state
 }
@@ -92,6 +94,7 @@ const disableNumbersAndPointButton = () => {
     document.getElementsByName(button)[0].disabled = true
   })
 }
+
 
 // NUMBER BUTTONS
 document.getElementsByName('zero')[0].addEventListener('click', () => {
@@ -144,6 +147,7 @@ document.getElementsByName('nine')[0].addEventListener('click', () => {
   setDisplay(currentValue)
 })
 
+
 // OTHER BUTTONS
 document.getElementsByName('point')[0].addEventListener('click', () => {
   addPointToCurrentValue()
@@ -158,6 +162,7 @@ document.getElementsByName('negate')[0].addEventListener('click', () => {
 document.getElementsByName('clean')[0].addEventListener('click', () => {
   totalReset()
 })
+
 
 // BUTTONS IN KEYS
 document.addEventListener('keydown', (event) => {
@@ -180,43 +185,53 @@ document.addEventListener('keydown', (event) => {
   }
 })
 
+
+// HIGHLIGHT
 const highlightOperationButtons = (value) => {
   const currentButton = document.getElementsByName(value)[0]
+
+  currentButton.classList.add('highlighted')
+}
+
+const removeHighlightOperationButtons = () => {
   const arrButtons = ['sum', 'multiply', 'divide', 'subtract']
 
-  // Remove highlighted class from all buttons
+  // Remove highlighted class from all operation buttons
   arrButtons.forEach(buttonName => {
     const button = document.getElementsByName(buttonName)[0]
     button.classList.remove('highlighted')
   })
-
-  // Add highlighted class to clicked button
-  currentButton.classList.add('highlighted')
 }
 
-// Highlighting buttons
+// Highlighting operator buttons
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   const value = 'sum'
+  removeHighlightOperationButtons()
   highlightOperationButtons(value)
 })
 
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
   const value = 'subtract'
+  removeHighlightOperationButtons()
   highlightOperationButtons(value)
 })
 
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
   const value = 'multiply'
+  removeHighlightOperationButtons()
   highlightOperationButtons(value)
 })
 
 document.getElementsByName('divide')[0].addEventListener('click', () => {
   const value = 'divide'
+  removeHighlightOperationButtons()
   highlightOperationButtons(value)
 })
 
-let firstOperand, secondOperand, operator
+
 // OPERATIONS
+let firstOperand, secondOperand, operator
+
 // Sum
 document.getElementsByName('sum')[0].addEventListener('click', () => {
   handleOperation()
@@ -267,6 +282,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   reset()
   setDisplay(result)
   isOperandEntered = false
+  removeHighlightOperationButtons()
 })
 
 const handleOperation = () => {
