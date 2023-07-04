@@ -2,7 +2,6 @@ const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 
 let currentValue = '0'
-let previousValue
 let result
 let isResultUsed = false
 let isOperatorClicked = false
@@ -186,6 +185,42 @@ document.addEventListener('keydown', (event) => {
   }
 })
 
+const toggleButtons = (value) => {
+  const currentButton = document.getElementsByName(value)[0]
+  const arrButtons = ['sum', 'multiply', 'divide', 'subtract']
+
+  // Remove highlighted class from all buttons
+  arrButtons.forEach(buttonName => {
+    const button = document.getElementsByName(buttonName)[0]
+    button.classList.remove('highlighted')
+  })
+
+  // Add highlighted class to clicked button
+  currentButton.classList.add('highlighted')
+}
+
+// Highlighting buttons
+document.getElementsByName('sum')[0].addEventListener('click', () => {
+  const value = 'sum'
+  toggleButtons(value)
+})
+
+document.getElementsByName('subtract')[0].addEventListener('click', () => {
+  const value = 'subtract'
+  toggleButtons(value)
+})
+
+document.getElementsByName('multiply')[0].addEventListener('click', () => {
+  const value = 'multiply'
+  toggleButtons(value)
+})
+
+document.getElementsByName('divide')[0].addEventListener('click', () => {
+  const value = 'divide'
+  toggleButtons(value)
+})
+
+
 let firstOperand, secondOperand, operator
 // OPERATIONS
 // Sum
@@ -193,6 +228,7 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
   handleOperation()
   operator = '+'
   changeButtonState(true, 'negate')
+  toggleButtons('sum')
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
@@ -258,7 +294,11 @@ const handleOperation = () => {
   } else {
     handleOperand()
     isOperatorClicked = true
+    if (operator == '+') {
+
+    }
   }
+
   changeStateAllButtons(false)
   currentValue = '0'
 }
