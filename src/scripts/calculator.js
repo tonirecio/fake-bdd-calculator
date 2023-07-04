@@ -29,6 +29,7 @@ const totalReset = () => {
   changeButtonState(true, 'negate')
 }
 
+const addNumberToCurrentValue = (value) => {
   let onlyDigits = currentValue.replace('.', '')
   onlyDigits = onlyDigits.replace('-', '')
 
@@ -61,7 +62,7 @@ const addPointToCurrentValue = () => {
 }
 
 const negateCurrentValue = () => {
-  let hasPoint = currentValue.endsWith('.')
+  const hasPoint = currentValue.endsWith('.')
   const valueToNumber = parseFloat(currentValue)
 
   if ((currentValue != 0)) {
@@ -215,7 +216,6 @@ document.getElementsByName('divide')[0].addEventListener('click', () => {
   highlightOperationButtons(value)
 })
 
-
 let firstOperand, secondOperand, operator
 // OPERATIONS
 // Sum
@@ -223,7 +223,6 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
   handleOperation()
   operator = '+'
   changeButtonState(true, 'negate')
-  highlightOperationButtons('sum')
 })
 // Subtract
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
@@ -271,26 +270,23 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   isOperandEntered = false
 })
 
-const handleOperand = () => {
+const handleOperation = () => {
   if (firstOperand == null || firstOperand == 0 || isResultUsed) {
     firstOperand = currentValue
     isResultUsed = false
   }
-  isOperandEntered = true
-}
 
-const handleOperation = () => {
   if (isOperatorClicked && isOperandEntered && currentValue !== '0') {
     result = calculate(firstOperand, currentValue, operator)
+    firstOperand = result
     reset()
     setDisplay(result)
-    firstOperand = result
     isOperandEntered = false
   } else {
-    handleOperand()
-    isOperatorClicked = true
+    isOperandEntered = true
   }
 
+  isOperatorClicked = true
   changeStateAllButtons(false)
   currentValue = '0'
 }
