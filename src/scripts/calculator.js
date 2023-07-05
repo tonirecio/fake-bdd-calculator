@@ -328,6 +328,8 @@ const calculate = (firstOperand, secondOperand, operator) => {
 
   if ((resultLength > MAX_DIGITS_IN_DISPLAY)) {
     result = result.toPrecision(MAX_DIGITS_IN_DISPLAY)
+    changeStateAllButtons(true)
+    changeButtonState(false, 'clean') 
   }
 
   result = parseFloat(result.toString())
