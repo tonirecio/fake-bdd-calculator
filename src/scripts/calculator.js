@@ -9,12 +9,7 @@ let refreshDisplay = false
 
 const setDisplay = (value) => {
   const display = document.querySelector('div[name="display"] span')
-  let updatedValue = value
-  if (value.includes('-')) {
-    updatedValue = value.replace(',', '.')
-  } else {
-    updatedValue = value.replace('.', DecimalPoint)
-  }
+  const updatedValue = value.replace('.', DecimalPoint)
   display.innerHTML = updatedValue
 }
 
@@ -72,9 +67,11 @@ const floatCurrentValue = () => {
   }
   setDisplay(currentValue)
 }
-
 const concludeOperation = () => {
   if (currentValueOperator === null || currentValue === '0') {
+    if (currentValue.endsWith('.')) {
+      currentValue = currentValue.replace('.', '')
+    }
     setDisplay(currentValue)
     return
   }
@@ -101,8 +98,8 @@ const concludeOperation = () => {
     default:
       console.log(
         '[ERROR] ' +
-          currentValueOperator +
-          ' The implementation is still pending.'
+        currentValueOperator +
+        ' The implementation is still pending.'
       )
   }
 
@@ -130,14 +127,6 @@ const recordOperationButtonPress = (buttonIdentifier) => {
   document
     .getElementsByName(buttonIdentifier)[0]
     .addEventListener('click', () => {
-      if (
-        buttonIdentifier === 'equal' &&
-        (currentValueOperator === null || currentValue === '0')
-      ) {
-        setDisplay(currentValue)
-        return
-      }
-
       if (
         currentValueOperator !== null &&
         !refreshDisplay &&
