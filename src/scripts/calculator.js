@@ -7,34 +7,21 @@ let firstNumber = null
 let operator = null
 let secondNumber = null
 let result = null
-let isSecondNumber = false
-let tryingNegateNumber = false
 let pendingZeros = false
+let isEqualPressed = false
 
-const concatInputsNumbers = (value) => {
-  if(tryingNegateNumber === true){
-    inputValue = value
-    setDisplay(inputValue)
-    return
-  } else {  
-    valueDisplay = inputValue
-    valueDisplay = valueDisplay.toString() + value
-    inputValue = parseFloat(valueDisplay)
-    setDisplay(valueDisplay)
-    return
-  } 
+const concatInputsNumbers = (value) => { 
+  valueDisplay = inputValue
+  valueDisplay = valueDisplay.toString() + value
+  inputValue = parseFloat(valueDisplay)
+  setDisplay(valueDisplay)
+  return
 }
   
 const putZerosAndConcatNumbers = (value) => {
-  if(tryingNegateNumber === false){
-    valueDisplay = valueDisplay.toString()
-    valueDisplay = valueDisplay + value
-    inputValue = parseFloat(valueDisplay.replace(",", "."))
-  } else {
-    valueDisplay = value
-    valueDisplay = valueDisplay.toString()
-    inputValue = parseFloat(valueDisplay.replace(",", "."))
-  }
+  valueDisplay = valueDisplay.toString()
+  valueDisplay = valueDisplay + value
+  inputValue = parseFloat(valueDisplay.replace(",", "."))
   setDisplay(valueDisplay)
   pendingZeros = false
   return
@@ -43,44 +30,46 @@ const putZerosAndConcatNumbers = (value) => {
 const putCommaAndConcatNumbers = (value) => {
   valueDisplay = inputValue
   valueDisplay = valueDisplay.toString()
-  if(tryingNegateNumber == false){
-    valueDisplay = valueDisplay + "." + value
-  } else {
-    valueDisplay = valueDisplay + "."
-  }
+  valueDisplay = valueDisplay + "." + value
   inputValue = parseFloat(valueDisplay)
   setDisplay(valueDisplay)
 }
 
 const negateInputValue = (valueToNegate) => {
-  tryingNegateNumber = true
   inputValue = valueToNegate * -1
-  setInputValue(inputValue)
+  if(valueDisplay.slice(-1) === ','){
+    valueDisplay = inputValue
+    valueDisplay = valueDisplay + ','
+  } else {
+    valueDisplay = inputValue
+  }
+  setDisplay(valueDisplay)
   return
 }
 
 const setInputValue = (input) => {
-  if(valueDisplay.replace(",", "").length + 1 >= 10 && input != '.'){
+  if(valueDisplay.replace(",", "").length + 1 >= MAX_DIGITS_IN_DISPLAY && input != '.'){
     disableNumericAndPointButtons()
   } else {
     changeStateAllButtons(false)
   }
 
-  if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && tryingNegateNumber === false){
+  if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && input > 0){
     return
   } else if(inputValue === 0 && input != "." && !valueDisplay.includes(",")){
     inputValue = input;
+    isEqualPressed = false
     setDisplay(inputValue)
     return
   } else {
-    if(result != null && secondNumber === null){
-      inputValue = ''
-      concatInputsNumbers(input)
-      result = null
-    } else if(valueDisplay.slice(-1) === ","){
+    if(isEqualPressed === true){
+      inputValue = input
+      setDisplay(inputValue)
+      isEqualPressed = false
+    }else if(valueDisplay.slice(-1) === ","){
       putCommaAndConcatNumbers(input)
       return
-    } else if(input === 0 && tryingNegateNumber === false){
+    } else if(input === 0){
       valueDisplay = valueDisplay + input
       inputValue = parseFloat(valueDisplay.replace(",", "."))
       setDisplay(valueDisplay)
@@ -105,12 +94,7 @@ const setDisplay = (value) => {
     handleExponentialNumbers(valueDisplay, null)
   }
 
-  if(isSecondNumber === false){
-    display.innerHTML = valueDisplay
-  } else {
-    secondNumber = inputValue
-    display.innerHTML = valueDisplay.replace(".", ",")
-  }
+  display.innerHTML = valueDisplay
 }
 
 const handleExponentialNumbers = (value, valueToConcat) => {
@@ -150,8 +134,6 @@ const resetDisplay = () => {
   operator = null
   secondNumber = null
   result = null
-  isSecondNumber = false
-  tryingNegateNumber = false
   pendingZeros = false
   display.innerHTML = valueDisplay
 }
@@ -161,19 +143,24 @@ const handleOperator = (operation) => {
   changeButtonState(true, 'negate')
   if(operator === null){
     firstNumber = inputValue
-  } else if(secondNumber != null){
+  } else if(secondNumber != null && inputValue != 0){
     handleOperation()
     firstNumber = result
   }
   operator = operation
   valueDisplay = firstNumber
   setDisplay(valueDisplay)
-  isSecondNumber = true
   inputValue = 0
+  secondNumber = 0
   valueDisplay = '0'
 }
 
 const handleOperation = () => {
+
+  if(inputValue != 0){
+    secondNumber = inputValue
+  }
+
   changeStateAllButtons(false)
   switch (operator){
     case '+':
@@ -192,7 +179,7 @@ const handleOperation = () => {
       result = divideNumbers(firstNumber, secondNumber)
       break;
   } 
-  if(secondNumber === null && operator != null){
+  if(secondNumber === 0 && operator != null){
     showMessageError()
   } else if(operator === null){
     result = inputValue
@@ -200,19 +187,16 @@ const handleOperation = () => {
     if(operator === '-' && secondNumber > 0){
       negateInputValue(secondNumber)
     }
-    setDisplay(secondNumber)
     return
   } 
 
-  isSecondNumber = false
-  tryingNegateNumber = false
   valueDisplay = result
   valueDisplay = valueDisplay.toString()  
   controlDecimalsResult()
   setDisplay(result)
   firstNumber = null
   operator = null
-  secondNumber = null 
+  secondNumber = null
   inputValue = result
   valueDisplay = ''
   return
@@ -222,8 +206,8 @@ const controlDecimalsResult = () => {
   if(valueDisplay.includes(".")){
     valueDisplay.replace(".", "")
     lengthOfResult = valueDisplay.length 
-    if(lengthOfResult > 10){
-        lengthOfResult = 10
+    if(lengthOfResult > MAX_DIGITS_IN_DISPLAY){
+        lengthOfResult = MAX_DIGITS_IN_DISPLAY
     }    
     result = result.toPrecision(lengthOfResult) * 1
     return
@@ -235,8 +219,6 @@ const controlDecimalsResult = () => {
 
 const showMessageError = () => {
   inputValue = 0
-  isSecondNumber = false
-  tryingNegateNumber = false
   firstNumber = null
   operator = null
   secondNumber = null 
@@ -331,7 +313,6 @@ const createALlButtonsFunctions = () => {
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
     negateInputValue(inputValue)
-    tryingNegateNumber = false
   })
   document.getElementsByName('divide')[0].addEventListener('click', () => {
     handleOperator("/")
@@ -347,6 +328,7 @@ const createALlButtonsFunctions = () => {
   })
   document.getElementsByName('equal')[0].addEventListener('click', () => {
     handleOperation()
+    isEqualPressed = true
   })
 
   //Click key buttons
@@ -358,7 +340,6 @@ const createALlButtonsFunctions = () => {
       changeButtonState(true, 'zero')
     } else if (event.key === "Control") {
       negateInputValue(inputValue)
-      tryingNegateNumber = false
     }
     arrKeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ','];
     arrKeys.forEach(num => {
