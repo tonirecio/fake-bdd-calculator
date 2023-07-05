@@ -7,6 +7,7 @@ let firstOperator = null
 let isRecentlyPutAOperator = false
 let isTheOperationFinished = false
 let isNumberMemory = false
+let currentValue = ''
 
 let operator = null;
 
@@ -132,7 +133,7 @@ const addToDisplay = (value) => {
       setDisplay(0)
       isTheOperationFinished = false;
     } else currentValue = display.innerHTML;
-
+      
     if (!isSign && !isMaxLength()) {
 
       if (currentValue === '0') {
@@ -150,9 +151,9 @@ const addToDisplay = (value) => {
           } else {
             currentValue += value;
           }
-
+          
       }
-
+    
   }
   setDisplay(currentValue);
   isRecentlyPutAOperator = false;
@@ -184,7 +185,7 @@ const isMaxLength = () => {
 
 const invertNumberDisplay = () => {
 
-  let currentValue = display.innerHTML;
+  currentValue = display.innerHTML;
 
   if (currentValue !== '0' && currentValue !== '0,') {
     if (currentValue.startsWith('-')) {
@@ -330,6 +331,21 @@ const enableButtons = () => {
     document.getElementsByName('subtract')[0].disabled = false
     document.getElementsByName('sum')[0].disabled = false
     document.getElementsByName('negate')[0].disabled = true
+    document.getElementsByName('point')[0].disabled = false
+
+  } else if (isMaxLength()) {
+    document.getElementsByName('zero')[0].disabled = true
+    document.getElementsByName('one')[0].disabled = true
+    document.getElementsByName('two')[0].disabled = true
+    document.getElementsByName('three')[0].disabled = true
+    document.getElementsByName('four')[0].disabled = true
+    document.getElementsByName('five')[0].disabled = true
+    document.getElementsByName('six')[0].disabled = true
+    document.getElementsByName('seven')[0].disabled = true
+    document.getElementsByName('eight')[0].disabled = true
+    document.getElementsByName('nine')[0].disabled = true
+    document.getElementsByName('point')[0].disabled = true
+
   } else {
     document.getElementsByName('zero')[0].disabled = false
     document.getElementsByName('one')[0].disabled = false
