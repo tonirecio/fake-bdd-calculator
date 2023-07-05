@@ -12,11 +12,14 @@ const appendNumber = (number) => {
   }
   if (currentValue === '0' && number !== 0) {
     currentValue = number.toString()
+    const zeroButton = document.querySelector('button[name="zero"]')
+    zeroButton.disabled = false
   } else if (currentValue !== '0' && (currentValue.replace(',', '').length) < MAX_DIGITS_IN_DISPLAY) {
     currentValue += number.toString()
   }
   setDisplay(currentValue)
 }
+
 
 const appendDot = () => {
   if (resetDisplay) {
@@ -29,6 +32,22 @@ const appendDot = () => {
   setDisplay(currentValue)
 }
 
+const disableNumberButtons = () => {
+  const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
+  numberButtons.forEach((buttonName) => {
+    const button = document.getElementsByName(buttonName)[0]
+    button.disabled = true
+  })
+}
+
+const enableNumberButtons = () => {
+  const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
+  numberButtons.forEach((buttonName) => {
+    const button = document.getElementsByName(buttonName)[0]
+    button.disabled = false
+  })
+}
+
 const setDisplay = (value) => {
   if (value === ',' && currentValue.includes(',')) {
     return
@@ -39,15 +58,28 @@ const setDisplay = (value) => {
     currentValue += value
   }
 
+  // Disable number and comma buttons if the maximum number of digits has been reached
+  if ((currentValue.replace(',', '').length) >= MAX_DIGITS_IN_DISPLAY) {
+    disableNumberButtons()
+  }
+
   display.innerHTML = currentValue
   negate.disabled = false;
 }
+
 
 const reset = document.querySelector('button[name="clean"]')
 reset.addEventListener('click', () => {
   currentValue = '0'
   setDisplay(currentValue)
+  const zeroButton = document.querySelector('button[name="zero"]')
+  zeroButton.disabled = true
+  negate.disabled = true
+  enableNumberButtons()
+  zeroButton.disabled = true // Keep the zero button disabled
 })
+
+
 
 const negate = document.querySelector('button[name="negate"]')
 negate.addEventListener('click', () => {
@@ -212,10 +244,12 @@ const handleOperation = (operation) => {
   if (firstValue === null) {
     firstValue = parseFloat(currentValue.replace(',', '.'))
     currentValue = '0'
+    enableNumberButtons()
   } else if (currentValue !== '0') {
     secondValue = parseFloat(currentValue.replace(',', '.'))
     operate()
     currentValue = '0'
+    enableNumberButtons()
   }
   currentOperation = operation
   if (firstValue !== null && currentValue === '0') {
@@ -224,15 +258,9 @@ const handleOperation = (operation) => {
 }
 
 const handleEqual = () => {
-  /*console.log(`firstValue: ${firstValue}`)
-  console.log(`secondValue: ${secondValue}`)
-  console.log(`currentValue: ${currentValue}`)
-  console.log(`currentOperation: ${currentOperation}`)*/
-
   if (firstValue === null) {
     firstValue = parseFloat(currentValue.replace(',', '.'))
   }
-
   if (currentOperation === null) {
     if (currentValue.endsWith(',')) {
       currentValue = currentValue.slice(0, -1)
@@ -262,6 +290,5 @@ divideButton.addEventListener('click', () => handleOperation(divide))
 
 const equalButton = document.querySelector('button[name="equal"]')
 equalButton.addEventListener('click', handleEqual)
-
 
 const display = document.querySelector('div[name="display"] span')
