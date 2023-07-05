@@ -87,11 +87,11 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   if (isRecentlyPutAOperator === false) {
-      if (parseFloat(display.innerHTML) === 0) {
+      /*if (parseFloat(display.innerHTML) === 0) {
         setDisplay(0);
-      } else {
+      } else {*/
         toOperate();
-      }
+      //}
   } else {
       setDisplay('ERROR')
   }
@@ -345,6 +345,27 @@ const enableButtons = () => {
   } else if (isComma()) {
     document.getElementsByName('point')[0].disabled = true
 
+  } else if (display.innerHTML === 'ERROR') {
+    document.getElementsByName('zero')[0].disabled = true
+    document.getElementsByName('one')[0].disabled = true
+    document.getElementsByName('two')[0].disabled = true
+    document.getElementsByName('three')[0].disabled = true
+    document.getElementsByName('four')[0].disabled = true
+    document.getElementsByName('five')[0].disabled = true
+    document.getElementsByName('six')[0].disabled = true
+    document.getElementsByName('seven')[0].disabled = true
+    document.getElementsByName('eight')[0].disabled = true
+    document.getElementsByName('nine')[0].disabled = true
+
+    document.getElementsByName('divide')[0].disabled = true
+    document.getElementsByName('multiply')[0].disabled = true
+    document.getElementsByName('subtract')[0].disabled = true
+    document.getElementsByName('sum')[0].disabled = true
+    document.getElementsByName('negate')[0].disabled = true
+    document.getElementsByName('point')[0].disabled = true
+    document.getElementsByName('clean')[0].disabled = false
+    document.getElementsByName('equal')[0].disabled = true
+
   } else {
     document.getElementsByName('zero')[0].disabled = false
     document.getElementsByName('one')[0].disabled = false
@@ -362,6 +383,7 @@ const enableButtons = () => {
     document.getElementsByName('subtract')[0].disabled = false
     document.getElementsByName('sum')[0].disabled = false
     document.getElementsByName('negate')[0].disabled = false
+    document.getElementsByName('point')[0].disabled = false
   }
 
 }
