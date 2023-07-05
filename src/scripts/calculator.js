@@ -67,8 +67,9 @@ const floatCurrentValue = () => {
   }
   setDisplay(currentValue)
 }
+
 const concludeOperation = () => {
-  if (currentValueOperator === null || currentValue === '0') {
+  if (currentValueOperator === null) {
     if (currentValue.endsWith('.')) {
       currentValue = currentValue.replace('.', '')
     }
@@ -89,7 +90,7 @@ const concludeOperation = () => {
       outcome = firstOperator * secondOperator
       break
     case 'divide':
-      if (secondOperator === 0 || firstOperator === 0) {
+      if (secondOperator === 0) {
         displayError()
         return
       }
