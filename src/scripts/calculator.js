@@ -1,34 +1,21 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 
-let countDigits = 0
-// [Scenario] Writing numbers
-let decimalSymbolUsage = false
-/* --------------------------- */
 const display = document.querySelector('div[name="display"] span')
 
-let currentOperand = 0
-let pastOperand = 0
+let countDigits = 0
+let currentValue = 0
+let pastValue = 0
 let numberValue = 0
 let decimalPlacement = 1
 let isPointUsedWithoutDecimal = false
+let decimalSymbolUsage = false
 let operandSymbolInUse = ''
 let operationResult = 0
 let integerCount = 0
 
 const updateDisplay = (value) => {
-  let valueWithComas = ''
-  value = value.toString()
-  valueWithComas = value.replace('.', ',')
-  display.innerHTML = valueWithComas
-}
-
-const reset = () => {
-  updateDisplay(0)
-  countDigits = 0
-  currentOperand = ''
-  decimalSymbolUsage = false
-  decimalPlacement = 1
-  isPointUsedWithoutDecimal = false
+  value = value.toString().replace('.', ',')
+  display.innerHTML = value
 }
 
 const negate = (operand) => {
@@ -36,11 +23,53 @@ const negate = (operand) => {
   return operand
 }
 
-reset()
+const highlightButton = (buttonName) => {
+  document.getElementsByName(buttonName)[0].classList.add('highlighted')
+}
+
+const unhighlightButton = (buttonName) => {
+  document.getElementsByName(buttonName)[0].classList.remove('highlighted')
+}
+
+const highlightOperatorButton = (buttonName) => {
+  for (let i = 0; i < operatorButtons.length; i++) {
+    if (buttonName === operatorButtons[i]) {
+      highlightButton(buttonName)
+    } else {
+      unhighlightButton(operatorButtons[i])
+    }
+  }
+}
+
+const unhighlightOeratorButtons = () => {
+  for (let i = 0; i < operatorButtons.length; i++) {
+    unhighlightButton(operatorButtons[i])
+  }
+}
+
+const assignOperatorButtonToOperatorKey = (keyPressed, buttonName) => {
+  switch (keyPressed) {
+    case '/':
+      buttonName = 'divide'
+      break
+    case '*':
+      buttonName = 'multiply'
+      break
+    case '+':
+      buttonName = 'sum'
+      break
+    case '-':
+      buttonName = 'subtract'
+      break
+    default:
+      break
+  }
+  return buttonName
+}
 
 // [Scenario] Pressing non-operators screen buttons
-const getNumber = (buttonName) => {
-  let numberValue
+const getNumberValue = (buttonName) => {
+  let numberValue = 0
   switch (buttonName) {
     case 'zero':
       numberValue = 0
@@ -73,51 +102,63 @@ const getNumber = (buttonName) => {
       numberValue = 9
       break
     default:
-      window.alert('Not a usable number')
+      window.alert('ERROR')
       break
   }
-  
   return numberValue
 }
 
-const appendIntegerNumbers = (currentOperand, number) => {
-  currentOperand = currentOperand * 10 + number
-  return currentOperand
-}
-
-const appendDecimalNumbers = (currentOperand, number) => {
-  if (currentOperand < 0) {
-    currentOperand -= number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+const appendIntegerNumbers = (currentValue, numberValue) => {
+  if (currentValue < 0) {
+    currentValue = currentValue * 10 - numberValue
   } else {
-    currentOperand += number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+    currentValue = currentValue * 10 + numberValue
   }
-  currentOperand = parseFloat(currentOperand.toFixed(decimalPlacement))
-  decimalPlacement++
-  return currentOperand
+  return currentValue
 }
 
-const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
+const appendDecimalNumbers = (currentValue, number) => {
+  if (currentValue < 0) {
+    currentValue -= number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+  } else {
+    currentValue += number.toFixed(decimalPlacement) * (Math.pow(0.1, decimalPlacement)).toFixed(decimalPlacement)
+  }
+  currentValue = parseFloat(currentValue.toFixed(decimalPlacement))
+  decimalPlacement++
+  return currentValue
+}
+
+const reset = () => {
+  updateDisplay(0)
+  countDigits = 0
+  currentValue = 0
+  decimalPlacement = 1
+  decimalSymbolUsage = false
+  isPointUsedWithoutDecimal = false
+  operandSymbolInUse = ''
+}
+
+const nonOperatorNonNumberActions = (currentValue, buttonName) => {
   switch (buttonName) {
     case 'clean':
+      enablingAllButtonsExcept(['zero', 'negate'])
       reset()
+      unhighlightOeratorButtons()
       break
     case 'negate':
-      currentOperand = negate(currentOperand)
+      currentValue = negate(currentValue)
       if (isPointUsedWithoutDecimal) {
-        updateDisplay(currentOperand + ',')
+        updateDisplay(currentValue + ',')
       } else {
-        updateDisplay(currentOperand)
+        updateDisplay(currentValue)
       }
       break
     case 'point':
       if (countDigits < MAX_DIGITS_IN_DISPLAY) {
-        if (decimalSymbolUsage) {
-          window.alert('Cant use more than one point')
-        } else {
-          decimalSymbolUsage = true
-          isPointUsedWithoutDecimal = true
-          updateDisplay(currentOperand + ',')
-        }
+        decimalSymbolUsage = true
+        isPointUsedWithoutDecimal = true
+        updateDisplay(currentValue + ',')
+        disableButton('point')
       } else {
         window.alert('Maximum digit capacity reached')
       }
@@ -126,64 +167,90 @@ const nonOperatorNonNumberActions = (currentOperand, buttonName) => {
       window.alert('Uknown Button')
       break
   }
-  return currentOperand
+  return currentValue
 }
 
 const nonOperatorNonNumberButtons = ['clean', 'negate', 'point']
 const numberButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 const operatorButtons = ['divide', 'multiply', 'subtract', 'sum']
+const operatorKeys = ['/', '*', '-', '+']
 const resultErrors = ['Infinity', '-Infinity', 'NaN']
 const keypadButtons = document.querySelectorAll('div[name="keypad"] button')
 
+const enablingAllButtonsExcept = (exceptions) => {
+  keypadButtons.forEach(keypadButton => {
+    let buttonName = keypadButton.getAttribute('name')
+    if (exceptions.includes(buttonName)) {
+      keypadButton.disabled = true
+    } else {
+      keypadButton.disabled = false
+    }
+  })
+}
+
+const disableButton = (buttonName) => {
+  document.getElementsByName(buttonName)[0].disabled = true
+}
+
+const enableButton = (buttonName) => {
+  document.getElementsByName(buttonName)[0].disabled = false
+}
+
 keypadButtons.forEach(keypadButton => {
-  keypadButton.disabled = false
   keypadButton.addEventListener('click', () => {
     let buttonName = keypadButton.getAttribute('name')
     if (countDigits < MAX_DIGITS_IN_DISPLAY) {
       if (numberButtons.includes(buttonName) && !decimalSymbolUsage) {
-        numberValue = getNumber(buttonName)
-        currentOperand = appendIntegerNumbers(currentOperand, numberValue)
+        enableButton('negate')
+        enableButton('zero')
+        numberValue = getNumberValue(buttonName)
+        currentValue = appendIntegerNumbers(currentValue, numberValue)
         countDigits++
-        updateDisplay(currentOperand)
+        updateDisplay(currentValue)
       } else if (numberButtons.includes(buttonName) && decimalSymbolUsage) {
+        enableButton('negate')
         isPointUsedWithoutDecimal = false
-        numberValue = getNumber(buttonName)
-        currentOperand = appendDecimalNumbers(currentOperand, numberValue)
+        numberValue = getNumberValue(buttonName)
+        currentValue = appendDecimalNumbers(currentValue, numberValue)
         countDigits++
-        updateDisplay(currentOperand)
+        updateDisplay(currentValue)
+      }
+      if (countDigits === MAX_DIGITS_IN_DISPLAY) {
+        enablingAllButtonsExcept(numberButtons + ['point'])
       }
     } else {
       window.alert('Maximum digit capacity reached')
     }
 
     if (nonOperatorNonNumberButtons.includes(buttonName)) {
-      currentOperand = nonOperatorNonNumberActions(currentOperand, buttonName)
+      currentValue = nonOperatorNonNumberActions(currentValue, buttonName)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse === '') {
-      //console.log(document.getElementsByName('negate').textContent)
-      pastOperand = saveAndResetCurrentOperand(currentOperand)
+      enablingAllButtonsExcept('negate')
+      pastValue = saveAndResetcurrentValue(currentValue)
       operandSymbolInUse = operatorButtonPressed(buttonName)
-      updateDisplay(pastOperand)
+      updateDisplay(pastValue)
     } else if (operatorButtons.includes(buttonName) && operandSymbolInUse !== '') {
-      document.getElementsByName('negate')
-      if (currentOperand !== '') {
-        operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-        pastOperand = operationResult
+      enablingAllButtonsExcept('negate')
+      if (currentValue !== 0) {
+        operationResult = performOperation(pastValue, currentValue, operandSymbolInUse)
+        pastValue = operationResult
       }
       operandSymbolInUse = operatorButtonPressed(buttonName)
-    } else if (buttonName === 'equal' && operandSymbolInUse !== '' && currentOperand !== '') {
-      operationResult = performOperation(pastOperand, currentOperand, operandSymbolInUse)
-      if (isOperationResultOverLength(operationResult)) {
-        updateDisplay('ERROR')
-      } else if (resultErrors.includes(operationResult.toString())) {
+    } else if (buttonName === 'equal' && operandSymbolInUse !== '') {
+      operationResult = performOperation(pastValue, currentValue, operandSymbolInUse)
+      if (isOperationResultOverLength(operationResult) || resultErrors.includes(operationResult.toString()) || operationResult === pastValue) {
+        enablingAllButtonsExcept(operatorButtons + numberButtons + ['negate', 'point', 'equal'])
         updateDisplay('ERROR')
       } else {
         updateDisplay(operationResult)
-        pastOperand = operationResult
+        pastValue = operationResult
+        enablingAllButtonsExcept('')
       }
+      unhighlightOeratorButtons()
     } else if (buttonName === 'equal' && operandSymbolInUse === '') {
-      updateDisplay(currentOperand)
-    } else if (currentOperand === ''){
-      updateDisplay('ERROR')
+      updateDisplay(currentValue)
+      enablingAllButtonsExcept('')
+      unhighlightOeratorButtons()
     }
   })
 })
@@ -195,37 +262,40 @@ document.addEventListener('keydown', (event) => {
   if (countDigits < MAX_DIGITS_IN_DISPLAY || keyPressed === 'Control' || keyPressed === 'Escape') {
     if (keyPressed >= 0 && keyPressed <= 9 && !decimalSymbolUsage) {
       keyPressed = parseFloat(keyPressed)
-      currentOperand = appendIntegerNumbers(currentOperand, keyPressed)
+      currentValue = appendIntegerNumbers(currentValue, keyPressed)
       countDigits++
-      updateDisplay(currentOperand)
+      updateDisplay(currentValue)
     } else if (keyPressed >= 0 && keyPressed <= 9 && decimalSymbolUsage) {
       isPointUsedWithoutDecimal = false
       keyPressed = parseFloat(keyPressed)
-      currentOperand = appendDecimalNumbers(currentOperand, keyPressed)
+      currentValue = appendDecimalNumbers(currentValue, keyPressed)
       countDigits++
-      updateDisplay(currentOperand)
+      updateDisplay(currentValue)
     } else if (keyPressed === ',') {
       if (decimalSymbolUsage) {
         window.alert('Cant use more than one point')
       } else {
         decimalSymbolUsage = true
         isPointUsedWithoutDecimal = true
-        updateDisplay(currentOperand + ',')
+        updateDisplay(currentValue + ',')
       }
     } else if (keyPressed === 'Escape') {
       reset()
+      unhighlightOeratorButtons()
     } else if (keyPressed === 'Control') {
-      currentOperand = negate(currentOperand)
+      currentValue = negate(currentValue)
       if (isPointUsedWithoutDecimal) {
-        updateDisplay(currentOperand + ',')
+        updateDisplay(currentValue + ',')
       } else {
-        updateDisplay(currentOperand)
+        updateDisplay(currentValue)
       }
-    } else {
-      window.alert('Uknown Key')
     }
   } else {
     window.alert('Maximum digit capacity reached')
+  }
+
+  if (operatorKeys.includes(keyPressed)) {
+    operatorKeyPressed(keyPressed)
   }
 })
 
@@ -235,17 +305,20 @@ document.addEventListener('keydown', (event) => {
 
 // [Scenario] Writing number more than 10 digits
 
-// yarn lint (detector de errores*)
-
 // [Scenario] Performing two number operations
-const saveAndResetCurrentOperand = (currentOperand) => {
-  if (currentOperand !== '') {
-    pastOperand = currentOperand
+const saveAndResetcurrentValue = (currentValue) => {
+  if (currentValue !== 0) {
+    pastValue = currentValue
     reset()
   } else {
     reset()
   }
-  return pastOperand
+  return pastValue
+}
+
+const operatorKeyPressed = (keyPressed, buttonName) => {
+  buttonName = assignOperatorButtonToOperatorKey(keyPressed)
+  operatorButtonPressed(buttonName)
 }
 
 const operatorButtonPressed = (buttonName) => {
@@ -266,31 +339,8 @@ const operatorButtonPressed = (buttonName) => {
       window.alert('ERROR')
       break
   }
+  highlightOperatorButton(buttonName)
   return operandSymbolInUse
-}
-
-const performOperation = (pastOperand, currentOperand, operandSymbolInUse) => {
-  switch (operandSymbolInUse) {
-    case '/':
-      operationResult = pastOperand / currentOperand
-      break
-    case '*':
-      operationResult = pastOperand * currentOperand
-      break
-    case '+':
-      operationResult = pastOperand + currentOperand
-      break
-    case '-':
-      operationResult = pastOperand - currentOperand
-      break
-    default:
-      window.alert('ERROR')
-      break
-  }
-  integerCount = countIntegersFromNumber(operationResult, integerCount)
-  operationResult = roundNumber(operationResult, integerCount)
-  reset()
-  return operationResult
 }
 
 const countIntegersFromNumber = (number, integerCount) => {
@@ -305,10 +355,34 @@ const roundNumber = (number, integerCount) => {
   return number
 }
 
+const performOperation = (pastValue, currentValue, operandSymbolInUse) => {
+  switch (operandSymbolInUse) {
+    case '/':
+      operationResult = pastValue / currentValue
+      break
+    case '*':
+      operationResult = pastValue * currentValue
+      break
+    case '+':
+      operationResult = pastValue + currentValue
+      break
+    case '-':
+      operationResult = pastValue - currentValue
+      break
+    default:
+      window.alert('ERROR')
+      break
+  }
+  integerCount = countIntegersFromNumber(operationResult, integerCount)
+  operationResult = roundNumber(operationResult, integerCount)
+  reset()
+  return operationResult
+}
+
 // [Scenario] Performing two number operations with a result number with more than 10 nondecimal digits
 
 const isOperationResultOverLength = (operationResult) => {
-  resultString = operationResult.toString()
+  let resultString = operationResult.toString()
   if (resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY + 1) {
     return true
   } else if (!resultString.includes('.') && resultString.length > MAX_DIGITS_IN_DISPLAY) {

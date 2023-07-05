@@ -5,7 +5,7 @@ Then the "<button1>" button should be highlighted
 And the "<button2>" button should be unhighlighted
 And the "<button3>" button should be unhighlighted
 And the "<button4>" button should be unhighlighted
-
+ 
 Examples:
 | button1 | button2 | button3 | button4 |
 |       + |       - |       * |       / |
