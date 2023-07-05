@@ -43,7 +43,7 @@ const addNumberToCurrentValue = (value) => {
     currentValue += value.toString()
   }
 
-  if (digitCount == MAX_DIGITS_IN_DISPLAY - 1) {
+  if (digitCount >= MAX_DIGITS_IN_DISPLAY - 1) {
     disableNumbersAndPointButton()
   } else {
     changeButtonState(false, 'zero')
@@ -64,10 +64,10 @@ const addPointToCurrentValue = () => {
 
 const negateCurrentValue = () => {
   const hasPoint = currentValue.endsWith('.')
-  const valueToNumber = parseFloat(currentValue)
+  const currentValueToNumber = parseFloat(currentValue)
 
   if ((currentValue != 0)) {
-    currentValue = (valueToNumber * -1).toString()
+    currentValue = (currentValueToNumber * -1).toString()
     if (hasPoint) {
       currentValue += '.'
     }
@@ -262,8 +262,11 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
 
   changeStateAllButtons(false)
 
-  if (operator == null) {
+  if (operator == null && currentValue.endsWith('.')) {
     currentValue = currentValue.replace('.', '')
+    setDisplay(currentValue)
+    return
+  } else if (operator == null) {
     setDisplay(currentValue)
     return
   }
