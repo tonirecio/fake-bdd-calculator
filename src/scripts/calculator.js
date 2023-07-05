@@ -5,14 +5,13 @@ const display = document.querySelector('div[name="display"] span')
 let result = 0;
 let firstOperator = null
 let isRecentlyPutAOperator = false
-let isTheOperationFinisehd = false
+let isTheOperationFinished = false
 let isNumberMemory = false
 
 let operator = null;
 
 const setDisplay = (value) => {
 
-  console.log("hola v2")
   var formattedValue = value;
 
   if (formattedValue.length > MAX_DIGITS_IN_DISPLAY + 1) {
@@ -127,9 +126,9 @@ const addToDisplay = (value) => {
     
     console.log('valor Introducido: ' + value + ', valor en memoria: ' + firstOperator)
     
-    if (isTheOperationFinisehd  || isRecentlyPutAOperator) {
+    if (isTheOperationFinished  || isRecentlyPutAOperator) {
       setDisplay(0)
-      isTheOperationFinisehd = false;
+      isTheOperationFinished = false;
     } else currentValue = display.innerHTML;
 
     if (!isSign && !isMaxLength()) {
@@ -254,7 +253,6 @@ const toOperate = () => {
       isAnError()
     }
 
-console.log(firstOperator + " S:" + secondOperator + " R:" + result)
     var numTotalBeforeComma = numberBeforeComma(result);
 
     if (result < 0) {
@@ -268,8 +266,9 @@ console.log(firstOperator + " S:" + secondOperator + " R:" + result)
     setDisplay(result);
 
     firstOperator = result;
-    isTheOperationFinisehd = true;
+    isTheOperationFinished = true;
     operator = null;
+
   }
 }
 
@@ -288,7 +287,7 @@ const roundToDecimalPlaces = (value, decimalPlaces) => {
 };
 
 const numberBeforeComma = (value) => {
-   console.log(value)
+
   var numTotalBeforeComma = value.toString().split('.')[0]
   return numTotalBeforeComma.length
 
@@ -308,16 +307,63 @@ const addInDisplayFirstOperator = () => {
 
 }
 
-const removeCommaResult = (value) => {
+const enableButtons = () => {
+  document.getElementsByName('clean')[0].enabled = true
+  document.getElementsByName('zero')[0].enabled = true
+  document.getElementsByName('one')[0].enabled = true
+  document.getElementsByName('two')[0].enabled = true
+  document.getElementsByName('three')[0].enabled = true
+  document.getElementsByName('four')[0].enabled = true
+  document.getElementsByName('five')[0].enabled = true
+  document.getElementsByName('six')[0].enabled = true
+  document.getElementsByName('seven')[0].enabled = true
+  document.getElementsByName('eight')[0].enabled = true
+  document.getElementsByName('nine')[0].enabled = true
 
-  var removeComma
-  
-  if (isMaxLength === true) {
-    return removeComma = value.toString.split(',')[1]
-  } else {
-    return removeComma = value.toString
-  }
+  document.getElementsByName('divide')[0].enabled = true
+  document.getElementsByName('multiply')[0].enabled = true
+  document.getElementsByName('subtract')[0].enabled = true
+  document.getElementsByName('sum')[0].enabled = true
+  document.getElementsByName('negate')[0].enabled = true;
+
+  if (display.innerHTML == 0 ) {
+    document.getElementsByName('zero')[0].disabled = false
+    document.getElementsByName('one')[0].disabled = false
+    document.getElementsByName('two')[0].disabled = false
+    document.getElementsByName('three')[0].disabled = false
+    document.getElementsByName('four')[0].disabled = false
+    document.getElementsByName('five')[0].disabled = false
+    document.getElementsByName('six')[0].disabled = false
+    document.getElementsByName('seven')[0].disabled = false
+    document.getElementsByName('eight')[0].disabled = false
+    document.getElementsByName('nine')[0].disabled = false
+
+    document.getElementsByName('divide')[0].disabled = false
+    document.getElementsByName('multiply')[0].disabled = false
+    document.getElementsByName('subtract')[0].disabled = false
+    document.getElementsByName('sum')[0].disabled = false
+    document.getElementsByName('negate')[0].disabled = true
+  } /*else if () {
+    document.getElementsByName('zero')[0].disabled = true
+    document.getElementsByName('one')[0].disabled = false
+    document.getElementsByName('two')[0].disabled = false
+    document.getElementsByName('three')[0].disabled = false
+    document.getElementsByName('four')[0].disabled = false
+    document.getElementsByName('five')[0].disabled = false
+    document.getElementsByName('six')[0].disabled = false
+    document.getElementsByName('seven')[0].disabled = false
+    document.getElementsByName('eight')[0].disabled = false
+    document.getElementsByName('nine')[0].disabled = false
+
+    document.getElementsByName('divide')[0].disabled = false
+    document.getElementsByName('multiply')[0].disabled = false
+    document.getElementsByName('subtract')[0].disabled = false
+    document.getElementsByName('sum')[0].disabled = false
+    document.getElementsByName('negate')[0].disabled = true
+  }*/
 
 }
 
 reset()
+
+enableButtons()
