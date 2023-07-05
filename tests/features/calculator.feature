@@ -231,7 +231,7 @@ Examples:
 |           123 |           - |        -24,8 |            * |          12 |        1773,6 |
 |    1234567890 |           / |         -2,5 |            - |         147 |    -493827303 |
 
-@test15
+@Done
 Scenario Outline: Division with 0
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "/" button
@@ -293,7 +293,7 @@ And the "+-" button should be disabled
 And the "1" button should be enabled
 And the "2" button should be enabled
 And the "3" button should be enabled
-And the "4" button should be enabled
+And the "4" button should be enabled 
 And the "5" button should be enabled
 And the "6" button should be enabled
 And the "7" button should be enabled
