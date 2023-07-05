@@ -2,9 +2,9 @@ const MAX_DIGITS_IN_DISPLAY = 10
 
 const display = document.querySelector('div[name="display"] span')
 
-let currentNumber = 0
-let previousNumber = 0
-let operation = ''
+let firstOperand = 0
+let secondOperand = 0
+let currentOperation = ''
 let decimalMultiplier = 0.1
 let isDecimal = false
 let isNewOperation = false
@@ -19,7 +19,7 @@ const setDisplay = value => {
   if (isDecimal && !newValue.includes(',') && newValue.length < 10) {
     newValue += ','
   }
-  if (countDigitsOfNumber(value) > MAX_DIGITS_IN_DISPLAY) {
+  if (countDigits(value) > MAX_DIGITS_IN_DISPLAY) {
     disableAllButtons()
     enableButton('clean')
 
@@ -28,36 +28,32 @@ const setDisplay = value => {
   display.innerHTML = newValue
 }
 
-const countDigitsOfNumber = number => {
-  const absoluteValue = Math.abs(number)
-  const digitCount = absoluteValue.toString().replace('.', '').length
+const countDigits = number => {
+  const absoluteNumber = Math.abs(number)
+  const digitCount = String(absoluteNumber).replace('.', '').length
   return digitCount
 }
 
-const canAddMoreDigits = (originalNumber, maxDigits) => {
-  const numberDigitCount = Math.abs(originalNumber)
-    .toString()
-    .replace('.', '').length
-  return numberDigitCount < maxDigits
+const canAddMoreDigits = (number, numberDigitLimit) => {
+  return countDigits(number) < numberDigitLimit
 }
 
-const appendDigit = (originalNumber, numberToAdd) => {
-  let updatedNumber = originalNumber
+const appendDigit = (number, numberToAppend) => {
+  let updatedNumber = number
   if (isDecimal) {
-    updatedNumber += numberToAdd * decimalMultiplier
+    updatedNumber += numberToAppend * decimalMultiplier
     updatedNumber = Number(updatedNumber.toFixed(MAX_DIGITS_IN_DISPLAY))
     decimalMultiplier *= 0.1
   } else {
-    updatedNumber = originalNumber * 10 + numberToAdd
+    updatedNumber = number * 10 + numberToAppend
   }
-
   return updatedNumber
 }
 
 const resetCalculatorState = () => {
-  currentNumber = 0
-  previousNumber = 0
-  operation = ''
+  firstOperand = 0
+  secondOperand = 0
+  currentOperation = ''
   decimalMultiplier = 0.1
   isDecimal = false
   isNewOperation = false
@@ -69,82 +65,95 @@ const resetCalculatorStateAndClearDisplay = () => {
   resetCalculatorState()
   disableButton('negate')
   disableButton('zero')
-
-  setDisplay(currentNumber)
+  setDisplay(firstOperand)
 }
 
 const negateNumber = number => {
   return -number
 }
 
+const getCurrentOperand = currentOperation => {
+  let currentOperand = 0
+  if (currentOperation === '') {
+    currentOperand = firstOperand
+  } else {
+    currentOperand = secondOperand
+  }
+  return currentOperand
+}
+
+const resetOperands = () => {
+  firstOperand = 0
+  secondOperand = 0
+}
+
+const updateOperands = (currentOperand, currentOperation) => {
+  if (currentOperation === '') {
+    firstOperand = currentOperand
+  } else {
+    secondOperand = currentOperand
+  }
+}
+const updateButtonStates = currentOperand => {
+  if (currentOperand > 0) {
+    enableButton('negate')
+    enableButton('zero')
+  }
+
+  if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
+    disableNumberButtons()
+    disableButton('point')
+  }
+}
+
 const handleNumberClick = number => {
   if (isNewOperation) {
-    currentNumber = previousNumber = 0
+    resetOperands()
     isNewOperation = false
   }
 
-  if (operation === '') {
-    if (canAddMoreDigits(currentNumber, MAX_DIGITS_IN_DISPLAY)) {
-      currentNumber = appendDigit(currentNumber, number)
-      setDisplay(currentNumber)
-    }
-    if (currentNumber > 0) {
-      enableButton('negate')
-      enableButton('zero')
-    }
-    if (currentNumber.toString().length >= MAX_DIGITS_IN_DISPLAY) {
-      disableNumberButtons()
-      disableButton('point')
-    }
-  } else {
-    if (canAddMoreDigits(previousNumber, MAX_DIGITS_IN_DISPLAY)) {
-      previousNumber = appendDigit(previousNumber, number)
-      setDisplay(previousNumber)
-    }
-    if (previousNumber > 0) {
-      enableButton('negate')
-      enableButton('zero')
-    }
-    if (previousNumber.toString().length >= MAX_DIGITS_IN_DISPLAY) {
-      disableNumberButtons()
-      disableButton('point')
-    }
+  let currentOperand = getCurrentOperand(currentOperation)
+
+  if (canAddMoreDigits(currentOperand, MAX_DIGITS_IN_DISPLAY)) {
+    currentOperand = appendDigit(currentOperand, number)
   }
+
+  updateOperands(currentOperand, currentOperation)
+  updateButtonStates(currentOperand)
+  setDisplay(currentOperand)
 }
 
 const handlePointClick = () => {
+  const currentOperand = getCurrentOperand(currentOperation)
   isDecimal = true
   disableButton('point')
-  if (operation === '') {
-    setDisplay(currentNumber)
-  } else {
-    setDisplay(previousNumber)
-  }
+  setDisplay(currentOperand)
 }
 
 const handleNegateClick = () => {
-  if (operation === '') {
-    currentNumber = negateNumber(currentNumber)
-    setDisplay(currentNumber)
-  } else {
-    previousNumber = negateNumber(previousNumber)
-    setDisplay(previousNumber)
-  }
+  let currentOperand = getCurrentOperand(currentOperation)
+  currentOperand = negateNumber(currentOperand)
+  updateOperands(currentOperand, currentOperation)
+  setDisplay(currentOperand)
 }
 
 const handleOperationClick = newOperation => {
-  if (operation !== '') {
+  if (currentOperation !== '') {
     if (
-      (operation === 'multiply' || operation === 'divide') &&
-      previousNumber === 0
+      (currentOperation === 'multiply' || currentOperation === 'divide') &&
+      secondOperand === 0
     ) {
-      previousNumber = 1
+      secondOperand = 1
     }
-    currentNumber = performOperation(currentNumber, previousNumber, operation)
-    currentNumber = parseFloat(currentNumber.toPrecision(MAX_DIGITS_IN_DISPLAY))
+    firstOperand = performOperation(
+      firstOperand,
+      secondOperand,
+      currentOperation
+    )
+    firstOperand = parseFloat(firstOperand.toPrecision(MAX_DIGITS_IN_DISPLAY))
 
-    previousNumber = 0
-    operation = ''
+    secondOperand = 0
+    currentOperation = ''
     isNewOperation = true
   }
 
@@ -156,15 +165,15 @@ const handleOperationClick = newOperation => {
   unlighlightOperationButtons()
   highlightButton(newOperation)
 
-  operation = newOperation
+  currentOperation = newOperation
   isDecimal = false
   decimalMultiplier = 0.1
   isNewOperation = false
 }
 
-const performOperation = (operand1, operand2, operation) => {
+const performOperation = (operand1, operand2, currentOperation) => {
   let result
-  switch (operation) {
+  switch (currentOperation) {
     case 'sum':
       result = add(operand1, operand2)
       break
@@ -184,28 +193,32 @@ const performOperation = (operand1, operand2, operation) => {
 }
 
 const handleEqualClick = () => {
-  if (operation !== '' && previousNumber === 0) {
+  if (currentOperation !== '' && secondOperand === 0) {
     setDisplay('ERROR')
     resetCalculatorState()
+
     disableAllButtons()
     enableButton('clean')
-
     unlighlightOperationButtons()
     return
   }
 
-  if (operation !== '') {
-    const result = performOperation(currentNumber, previousNumber, operation)
-    currentNumber = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
+  if (currentOperation !== '') {
+    const result = performOperation(
+      firstOperand,
+      secondOperand,
+      currentOperation
+    )
+    firstOperand = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
 
-    previousNumber = 0
-    operation = ''
+    secondOperand = 0
+    currentOperation = ''
     isNewOperation = true
 
-    setDisplay(currentNumber)
+    setDisplay(firstOperand)
   } else {
     isDecimal = false
-    setDisplay(currentNumber)
+    setDisplay(firstOperand)
   }
 
   enableAllButtons()
