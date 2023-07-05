@@ -94,6 +94,7 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   } else {
       setDisplay('ERROR')
   }
+  enableButtons()
 
 })
 
@@ -311,23 +312,6 @@ const addInDisplayFirstOperator = () => {
 }
 
 const enableButtons = () => {
-  document.getElementsByName('clean')[0].enabled = true
-  document.getElementsByName('zero')[0].enabled = true
-  document.getElementsByName('one')[0].enabled = true
-  document.getElementsByName('two')[0].enabled = true
-  document.getElementsByName('three')[0].enabled = true
-  document.getElementsByName('four')[0].enabled = true
-  document.getElementsByName('five')[0].enabled = true
-  document.getElementsByName('six')[0].enabled = true
-  document.getElementsByName('seven')[0].enabled = true
-  document.getElementsByName('eight')[0].enabled = true
-  document.getElementsByName('nine')[0].enabled = true
-
-  document.getElementsByName('divide')[0].enabled = true
-  document.getElementsByName('multiply')[0].enabled = true
-  document.getElementsByName('subtract')[0].enabled = true
-  document.getElementsByName('sum')[0].enabled = true
-  document.getElementsByName('negate')[0].enabled = true;
 
   if (display.innerHTML == 0 ) {
     document.getElementsByName('zero')[0].disabled = true
@@ -346,6 +330,23 @@ const enableButtons = () => {
     document.getElementsByName('subtract')[0].disabled = false
     document.getElementsByName('sum')[0].disabled = false
     document.getElementsByName('negate')[0].disabled = true
+  } else {
+    document.getElementsByName('zero')[0].disabled = false
+    document.getElementsByName('one')[0].disabled = false
+    document.getElementsByName('two')[0].disabled = false
+    document.getElementsByName('three')[0].disabled = false
+    document.getElementsByName('four')[0].disabled = false
+    document.getElementsByName('five')[0].disabled = false
+    document.getElementsByName('six')[0].disabled = false
+    document.getElementsByName('seven')[0].disabled = false
+    document.getElementsByName('eight')[0].disabled = false
+    document.getElementsByName('nine')[0].disabled = false
+
+    document.getElementsByName('divide')[0].disabled = false
+    document.getElementsByName('multiply')[0].disabled = false
+    document.getElementsByName('subtract')[0].disabled = false
+    document.getElementsByName('sum')[0].disabled = false
+    document.getElementsByName('negate')[0].disabled = false
   }
 
 }
