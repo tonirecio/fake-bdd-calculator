@@ -124,9 +124,7 @@ document.addEventListener('keydown', (event) => {
 const addToDisplay = (value) => {
 
     let currentValue = '';
-
     const isSign = value === '-';
-    
     console.log('valor Introducido: ' + value + ', valor en memoria: ' + firstOperator)
     
     if (isTheOperationFinished  || isRecentlyPutAOperator) {
@@ -182,6 +180,19 @@ const isMaxLength = () => {
     if (MAX_DIGITS_IN_DISPLAY <= valueLength) return true
     else return false
 }
+
+const isComma = () => {
+
+  currentValue = display.innerHTML;
+  const comma = ',';
+
+  if (currentValue.includes(comma)) {
+    return true
+  } else {
+    return false
+  }
+
+};
 
 const invertNumberDisplay = () => {
 
@@ -316,22 +327,7 @@ const enableButtons = () => {
 
   if (display.innerHTML == 0 ) {
     document.getElementsByName('zero')[0].disabled = true
-    document.getElementsByName('one')[0].disabled = false
-    document.getElementsByName('two')[0].disabled = false
-    document.getElementsByName('three')[0].disabled = false
-    document.getElementsByName('four')[0].disabled = false
-    document.getElementsByName('five')[0].disabled = false
-    document.getElementsByName('six')[0].disabled = false
-    document.getElementsByName('seven')[0].disabled = false
-    document.getElementsByName('eight')[0].disabled = false
-    document.getElementsByName('nine')[0].disabled = false
-
-    document.getElementsByName('divide')[0].disabled = false
-    document.getElementsByName('multiply')[0].disabled = false
-    document.getElementsByName('subtract')[0].disabled = false
-    document.getElementsByName('sum')[0].disabled = false
     document.getElementsByName('negate')[0].disabled = true
-    document.getElementsByName('point')[0].disabled = false
 
   } else if (isMaxLength()) {
     document.getElementsByName('zero')[0].disabled = true
@@ -344,6 +340,9 @@ const enableButtons = () => {
     document.getElementsByName('seven')[0].disabled = true
     document.getElementsByName('eight')[0].disabled = true
     document.getElementsByName('nine')[0].disabled = true
+    document.getElementsByName('point')[0].disabled = true
+
+  } else if (isComma()) {
     document.getElementsByName('point')[0].disabled = true
 
   } else {
