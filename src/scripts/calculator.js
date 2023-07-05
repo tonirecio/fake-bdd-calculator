@@ -9,8 +9,17 @@ let refreshDisplay = false
 
 const setDisplay = (value) => {
   const display = document.querySelector('div[name="display"] span')
-  const updatedValue = value.replace('.', DecimalPoint)
+  let updatedValue = value
+  if (value.includes('-')) {
+    updatedValue = value.replace(',', '.')
+  } else {
+    updatedValue = value.replace('.', DecimalPoint)
+  }
   display.innerHTML = updatedValue
+}
+
+const displayError = () => {
+  setDisplay('ERROR')
 }
 
 const reset = () => {
@@ -28,7 +37,7 @@ const pressNumber = (buttonNumber) => {
   } else {
     if (
       currentValue.length < MAX_DIGITS_IN_DISPLAY ||
-      (currentValue.includes('.') && 
+      (currentValue.includes('.') &&
         currentValue.length <= MAX_DIGITS_IN_DISPLAY)
     ) {
       if (currentValue !== '0') {
@@ -65,7 +74,12 @@ const floatCurrentValue = () => {
 }
 
 const concludeOperation = () => {
-  const secondOperator = parseFloat(currentValue)
+  if (currentValueOperator === null || currentValue === '0') {
+    setDisplay(currentValue)
+    return
+  }
+
+  const secondOperator = parseFloat(currentValue.replace(',', '.'))
   let outcome = null
   switch (currentValueOperator) {
     case 'sum':
@@ -78,6 +92,10 @@ const concludeOperation = () => {
       outcome = firstOperator * secondOperator
       break
     case 'divide':
+      if (secondOperator === 0 || firstOperator === 0) {
+        displayError()
+        return
+      }
       outcome = firstOperator / secondOperator
       break
     default:
@@ -87,8 +105,17 @@ const concludeOperation = () => {
           ' The implementation is still pending.'
       )
   }
+
   outcome = parseFloat(outcome.toPrecision(MAX_DIGITS_IN_DISPLAY))
-  setDisplay(outcome.toString())
+
+  if (outcome.toString().replace('.', '').length > MAX_DIGITS_IN_DISPLAY) {
+    displayError()
+  } else {
+    setDisplay(outcome.toString())
+  }
+  firstOperator = outcome
+  currentValue = outcome.toString()
+  refreshDisplay = true
 }
 
 const recordFunctionButtonPress = (buttonIdentifier, assignedFunction) => {
@@ -97,16 +124,31 @@ const recordFunctionButtonPress = (buttonIdentifier, assignedFunction) => {
     .addEventListener('click', assignedFunction)
 }
 
+let lastButton = null
+
 const recordOperationButtonPress = (buttonIdentifier) => {
   document
     .getElementsByName(buttonIdentifier)[0]
     .addEventListener('click', () => {
-      if (currentValueOperator !== null) {
+      if (
+        buttonIdentifier === 'equal' &&
+        (currentValueOperator === null || currentValue === '0')
+      ) {
+        setDisplay(currentValue)
+        return
+      }
+
+      if (
+        currentValueOperator !== null &&
+        !refreshDisplay &&
+        lastButton !== 'equal'
+      ) {
         concludeOperation()
       }
       currentValueOperator = buttonIdentifier
       firstOperator = parseFloat(currentValue.replace(',', '.'))
       refreshDisplay = true
+      lastButton = buttonIdentifier
     })
 }
 
