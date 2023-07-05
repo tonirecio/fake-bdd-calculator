@@ -1,7 +1,5 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-
 const DIGITO_COMA = ',';
-
 const display = document.querySelector('div[name="display"] span')
 
 let result = 0;
@@ -14,12 +12,14 @@ let operator = null;
 
 const setDisplay = (value) => {
 
+  console.log("hola v2")
   var formattedValue = value;
 
   if (formattedValue.length > MAX_DIGITS_IN_DISPLAY + 1) {
     formattedValue = roundToDecimalPlaces(value, MAX_DIGITS_IN_DISPLAY - 1);
 
   }
+
   formattedValue = formattedValue.toString()  
   formattedValue = formattedValue.replace('.', DIGITO_COMA);
   display.innerHTML = formattedValue;
@@ -86,10 +86,15 @@ document.getElementsByName('sum')[0].addEventListener('click', () => {
 })
 document.getElementsByName('equal')[0].addEventListener('click', () => {
   if (isRecentlyPutAOperator === false) {
-      toOperate()
-    } else {
+      if (parseFloat(display.innerHTML) === 0) {
+        setDisplay(0);
+      } else {
+        toOperate();
+      }
+  } else {
       setDisplay('ERROR')
-    }
+  }
+
 })
 
 document.addEventListener('keydown', (event) => {
@@ -119,7 +124,9 @@ const addToDisplay = (value) => {
     let currentValue = '';
 
     const isSign = value === '-';
+    
     console.log('valor Introducido: ' + value + ', valor en memoria: ' + firstOperator)
+    
     if (isTheOperationFinisehd  || isRecentlyPutAOperator) {
       setDisplay(0)
       isTheOperationFinisehd = false;
@@ -156,6 +163,7 @@ const isMaxLength = () => {
 
     const hasComma = currentValue.includes(',')
     const hasMinus = currentValue.includes('-')
+    
     var valueLength = currentValue.length;
 
     if (hasMinus) {
@@ -217,55 +225,52 @@ const seleccionarOperador = (op) => {
 const toOperate = () => {
 
   console.log('Display: ' + display.innerHTML)
+  
   var secondOperator = display.innerHTML;
   secondOperator = secondOperator.replace(DIGITO_COMA, '.')
   secondOperator = parseFloat(secondOperator)
 
-   if (isNaN(secondOperator) || secondOperator === null) {
+  if (firstOperator === 9999999999 || secondOperator === 9999999999 || secondOperator === 0) {
     isAnError()
-    return
-
-  } else {
-    if (firstOperator === 9999999999 || secondOperator === 9999999999 || secondOperator === 0) {
-      isAnError()
     
+  } else {
+    if (operator === '+') {
+      result = firstOperator + secondOperator
+
+    } else if (operator === '-') {
+      result = firstOperator - secondOperator
+
+    } else if (operator === '*') {
+      result = firstOperator * secondOperator
+
+    } else if (operator === '/') {
+      result = firstOperator / secondOperator
+
     } else {
-      if (operator === '+') {
-        result = firstOperator + secondOperator;
-
-      } else if (operator === '-') {
-        result = firstOperator - secondOperator;
-
-      } else if (operator === '*') {
-        result = firstOperator * secondOperator;
-
-      } else if (operator === '/') {
-        result = firstOperator / secondOperator;
-
-      }
-
-      if (secondOperator === 0 && operator === '/' || secondOperator === 0) {
-        isAnError()
-      }
-
-      var numTotalBeforeComma = numberBeforeComma(result);
-
-      if (result < 0) {
-        result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
-
-      } else {
-        result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
-
-      }
-      console.log('Memoria: '+firstOperator + " + Display: " + secondOperator + " = " + result)
-      setDisplay(result);
-
-      firstOperator = result;
-      isTheOperationFinisehd = true;
-      operator = null;
+      result = secondOperator
     }
+
+    if (secondOperator === 0 && operator === '/' || secondOperator === 0) {
+      isAnError()
+    }
+
+console.log(firstOperator + " S:" + secondOperator + " R:" + result)
+    var numTotalBeforeComma = numberBeforeComma(result);
+
+    if (result < 0) {
+      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY + 2 - numTotalBeforeComma);
+
+    } else {
+      result = roundToDecimalPlaces(result, MAX_DIGITS_IN_DISPLAY - numTotalBeforeComma);
+
+    }
+    console.log('Memoria: ' + firstOperator + " + Display: " + secondOperator + " = " + result)
+    setDisplay(result);
+
+    firstOperator = result;
+    isTheOperationFinisehd = true;
+    operator = null;
   }
-  
 }
 
 const roundToDecimalPlaces = (value, decimalPlaces) => {
@@ -283,7 +288,7 @@ const roundToDecimalPlaces = (value, decimalPlaces) => {
 };
 
 const numberBeforeComma = (value) => {
-
+   console.log(value)
   var numTotalBeforeComma = value.toString().split('.')[0]
   return numTotalBeforeComma.length
 
@@ -300,6 +305,18 @@ const addInDisplayFirstOperator = () => {
   firstOperator = display.innerHTML;
   firstOperator = firstOperator.replace(DIGITO_COMA, '.')
   firstOperator = parseFloat(firstOperator)
+
+}
+
+const removeCommaResult = (value) => {
+
+  var removeComma
+  
+  if (isMaxLength === true) {
+    return removeComma = value.toString.split(',')[1]
+  } else {
+    return removeComma = value.toString
+  }
 
 }
 
