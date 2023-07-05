@@ -127,6 +127,7 @@ const handlePointClick = () => {
   const currentOperand = getCurrentOperand(currentOperation)
   isDecimal = true
   disableButton('point')
+  enableButton('zero')
   setDisplay(currentOperand)
 }
 
