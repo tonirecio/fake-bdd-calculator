@@ -5,13 +5,13 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 const POINT_LOCALE = ','
 
-let currentOperation
-let previousNumber
-let currentNumber
-let pendingPoint
-let pendingZeros
-let clearDisplay
-let pendingOperation
+let currentOperation = null
+let pendingOperation = false
+let previousNumber = 0
+let currentNumber = 0.0
+let pendingPoint = false
+let pendingZeros = 0
+let clearDisplay = false
 
 const setDisplay = (value) => {
   const display = document.querySelector('div[name="display"] span')
@@ -100,17 +100,42 @@ const disableButton = (buttonName, boolStatus) => {
 }
 
 const highlightButtonLogic = (operationTrigger) => {
-    highlightButton('sum', false)
-    highlightButton('subtract', false)
-    highlightButton('multiply', false)
-    highlightButton('divide', false)
-  if (operationTrigger !== 'clean' && operationTrigger !== 'equal'){
-    highlightButton(operationTrigger, true)
-  } 
+  switch (operationTrigger) {
+    case 'sum':
+      highlightButton('sum', true)
+      highlightButton('subtract', false)
+      highlightButton('multiply', false)
+      highlightButton('divide', false)
+      break
+    case 'subtract':
+      highlightButton('sum', false)
+      highlightButton('subtract', true)
+      highlightButton('multiply', false)
+      highlightButton('divide', false)
+      break
+    case 'multiply':
+      highlightButton('sum', false)
+      highlightButton('subtract', false)
+      highlightButton('multiply', true)
+      highlightButton('divide', false)
+      break
+    case 'divide':
+      highlightButton('sum', false)
+      highlightButton('subtract', false)
+      highlightButton('multiply', false)
+      highlightButton('divide', true)
+      break
+    default:
+      highlightButton('sum', false)
+      highlightButton('subtract', false)
+      highlightButton('multiply', false)
+      highlightButton('divide', false)
+      break
+  }
 }
 
 const highlightButton = (buttonName, boolStatus) => {
-  if(boolStatus){
+  if (boolStatus) {
     document.getElementsByName(buttonName)[0].classList.add('highlighted')
   } else {
     document.getElementsByName(buttonName)[0].classList.remove('highlighted')
@@ -343,7 +368,7 @@ const init = () => {
         break
       case '*':
         buttonOperation('multiply')
-        highlightButtonLogic('multiply')        
+        highlightButtonLogic('multiply')
         break
       case '/':
         buttonOperation('divide')
