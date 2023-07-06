@@ -1,18 +1,19 @@
 const MAX_DIGITS_IN_DISPLAY = 10
-
-const setDisplay = (value) => {
-  display.innerHTML = replaceComma(value)
-}
-
 let currentValue = 0
-let currentValueToString = "0"
 let lastValue = 0
 let operationResult = 0
 let countDigit = 0
 let isDecimal = false
-let isCurrentValueUsingPoint = false
+let pendingComma = false
 let operator
-//  isdisplaytobecleaned
+
+const setDisplay = (value) => {
+  let currentValueToString = replaceComma(value)
+  if(pendingComma == true) {
+    currentValueToString = currentValueToString + ','
+  }
+  display.innerHTML = currentValueToString
+}
 
 const display = document.querySelector('div[name="display"] span')
 
@@ -50,57 +51,51 @@ document.getElementsByName('clean')[0].addEventListener('click', () => {
   reset()
 })
 document.getElementsByName('negate')[0].addEventListener('click', () => {
-  if (!isCurrentValueUsingPoint) {
-    negateButton(currentValue)
-  } else {
-    negateButton(currentValue)
-    setDisplay(currentValue + ',')
-  }
+  negateButton(currentValue)
 })
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  operandButtons("divide")
+  operandButtons("/")
 })
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  operandButtons("multiply")
+  operandButtons("*")
 })
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  operandButtons("sum")
+  operandButtons("+")
 })
 document.getElementsByName('subtract')[0].addEventListener('click', () => { 
-  operandButtons("subtract")
+  operandButtons("-")
 })
 const buttonPointName = document.getElementsByName('point')[0].addEventListener('click', () => {
-  showPointButton('point')
+  showPointButton(',')
 })
+
 document.getElementsByName('equal')[0].addEventListener('click', () => {
-  equalButton()
+  equalButton("=")
 })
 
 const reset = () => {
   currentValue = 0
   lastValue = 0
   operationResult = 0
-  currentValueToString = "0"
   isDecimal = false
-  isCurrentValueUsingPoint = false
+  pendingComma = false
   countDigit = 0
-  operator = ''
+  operator = null
   setDisplay(0)
 }
 
 const resetCurrentValue = () =>{
   currentValue = 0
   isDecimal = false
-  isCurrentValueUsingPoint = false
+  pendingComma = false
 }
 
 const addNumberButtons = (number) => {
   if (!isDecimal) {
     currentValue = appendIntegerNumbers(number)
-    console.log(typeof currentValue)
   } else {
     currentValue = appendDecimalNumbers(number)
-    console.log(typeof currentValue)
+    pendingComma = false
   }
   setDisplay(currentValue)
 }
@@ -114,40 +109,40 @@ const appendIntegerNumbers = (value) => {
       currentValue = value
     }
     countDigit++
-  } else {
-    window.alert("You can't add more values")
   }
   return currentValue
+}
+
+const appendDecimalNumbers = (value) => {
+  let valuetoString = currentValue.toString()
+  if (!valuetoString.includes('.')){
+   valuetoString += '.'
+  }
+  if (countDigit < MAX_DIGITS_IN_DISPLAY) {
+    if (isDecimal) {
+      valuetoString += value
+    }
+    countDigit++
+  }
+  return Number(valuetoString)
 }
 
 const replaceComma = (value) => {
   return value.toString().replace('.',',')
 }
 
-const appendDecimalNumbers = (value) => {
-  if (countDigit < MAX_DIGITS_IN_DISPLAY) {
-    if (isDecimal) {
-      currentValueToString = currentValue + "," + value
-    }
-    countDigit++
-  } else {
-    window.alert("You can't add more values")
-  }
-  return parseFloat(currentValueToString.replace(',', '.'))
-}
-
 const negateButton = (displayValue) => {
   displayValue = displayValue * -1
   currentValue = displayValue
-  setDisplay(displayValue)
+  setDisplay(currentValue)
 }
 
-const showPointButton = (buttonPointName) => {
-  if (buttonPointName === 'point') {
+const showPointButton = (buttonPointSymbol) => {
+  if (buttonPointSymbol === ',') {
     if (!isDecimal && countDigit < MAX_DIGITS_IN_DISPLAY) {
-      setDisplay(currentValue + ',')
+      pendingComma = true
+      setDisplay(currentValue)
       isDecimal = true
-      isCurrentValueUsingPoint = true
     }
   }
 }
@@ -159,27 +154,27 @@ const saveCurrentValue = () => {
   }
 }
 
-const operandButtons = (buttonOperandName) => {
+const operandButtons = (operatorButtons) => {
   saveCurrentValue()
-  operator = buttonOperandName
+  operator = operatorButtons
 }
 
 const performOperation = () => {
   switch(operator) {
-    case "sum":
+    case "+":
       operationResult = lastValue + currentValue
       break
-    case "subtract":
+    case "-":
       operationResult = lastValue - currentValue
       break
-    case "multiply":
+    case "*":
       operationResult = lastValue * currentValue
       break
-    case "divide":
+    case "/":
       operationResult = lastValue / currentValue
       break
     default:
-      window.alert("error")
+      setDisplay('ERROR')
     break
   }
   return operationResult
@@ -190,24 +185,40 @@ const equalButton = () => {
   setDisplay(result)
 }
 
-
-/*keydown numbers, escape, control and comma*/
-
-document.addEventListener("keydown", (event) => {
+const getButtonsKeypad = () => {
+  document.addEventListener("keydown", (event) => {
   const pressedKey = event.key
-  if ((pressedKey >= '0' && pressedKey <= '9') || pressedKey == ',') {
-    if (currentValue != 0 || pressedKey.toString().includes(',')) {
-    currentValue += pressedKey 
+  if(pressedKey >= '0' && pressedKey <= '9'){
+    addNumberButtons(Number(pressedKey))
+  } else {
+    switch (pressedKey) {
+      case "Escape":
+        reset()
+        break
+      case "Control":
+        negateButton(currentValue)
+        break
+      case "+":
+        operandButtons("+")
+        break
+      case "-":
+        operandButtons("-")
+        break
+      case "*":
+        operandButtons("*")
+        break
+      case "divide":
+        operandButtons("/")
+        break
+       case ",":
+        showPointButton(",")
+        break
+      case "=":
+        equalButton("=")
+        break
     }
-    else { 
-    currentValue = pressedKey
-    }
-    setDisplay(currentValue)
-  }
-  if (pressedKey === "Escape") {
-  reset()
-  } 
-  else if (pressedKey === "Control") {
-  negateButton(currentValue)
   }
 })
+}
+
+getButtonsKeypad()

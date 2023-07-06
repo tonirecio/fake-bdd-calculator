@@ -52,6 +52,7 @@ Examples:
 |             1 |     Escape |             0 |
 |             1 |    Control |            -1 |
 |            -1 |    Control |             1 |
+
 @done
 Scenario Outline: Writing numbers 
 Given the user writes the following value: "<displayNumber>"
@@ -127,7 +128,7 @@ Examples:
 |           -10 |      / |          2 |            -5 |
 |           -10 |      / |         -2 |             5 |
 
-@wip7
+@done
 Scenario Outline: Before clicking the equal button
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -141,6 +142,7 @@ Examples:
 |         13,14 |      * |      2,781 |
 |            84 |      / |       -4,3 |
 
+@wip8
 Scenario Outline: Performing two number operations with a result number with more than 10 nondecimal digits
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -167,6 +169,7 @@ Given the user writes the following value: "123"
 When the user presses the "Escape" key
 Then the display should show the following value: "0"
 
+@done
 Scenario Outline: Clicking two different operation buttons
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -181,6 +184,7 @@ Examples:
 |          1234 |      - |       + |         31 |          1265 |
 |          9,26 |      * |       * |       2,15 |        19,909 |
 
+@wip12
 Scenario Outline: Doing a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -194,6 +198,7 @@ Examples:
 |          12,2 |      + |          6 |          18,2 |               13 |
 |    1234567890 |      + |          1 |    1234567891 |              -24 |
 
+@wip13
 Scenario Outline: Using the previous result in a new operation
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<firstButton>" button
@@ -244,12 +249,14 @@ And the user presses the "+" button
 When the user presses the "=" button
 Then the display should show the following value: "ERROR"
 
+@done
 Scenario: Doing an operation without a first number
 Given the user presses the "-" button
 And the user writes the number: "23"
 When the user presses the "=" button
 Then the display should show the following value: "-23"
 
+@done
 Scenario Outline: Showing the first number after pressing operation
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "<button>" button
