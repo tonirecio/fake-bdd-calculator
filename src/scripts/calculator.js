@@ -187,8 +187,8 @@ document.addEventListener('keydown', (event) => {
 
 
 // HIGHLIGHT
-const highlightOperationButtons = (value) => {
-  const currentButton = document.getElementsByName(value)[0]
+const highlightOperationButtons = (operation) => {
+  const currentButton = document.getElementsByName(operation)[0]
 
   currentButton.classList.add('highlighted')
 }
@@ -205,27 +205,27 @@ const removeHighlightOperationButtons = () => {
 
 // Highlighting operator buttons
 document.getElementsByName('sum')[0].addEventListener('click', () => {
-  const value = 'sum'
+  const operation = 'sum'
   removeHighlightOperationButtons()
-  highlightOperationButtons(value)
+  highlightOperationButtons(operation)
 })
 
 document.getElementsByName('subtract')[0].addEventListener('click', () => {
-  const value = 'subtract'
+  const operation = 'subtract'
   removeHighlightOperationButtons()
-  highlightOperationButtons(value)
+  highlightOperationButtons(operation)
 })
 
 document.getElementsByName('multiply')[0].addEventListener('click', () => {
-  const value = 'multiply'
+  const operation = 'multiply'
   removeHighlightOperationButtons()
-  highlightOperationButtons(value)
+  highlightOperationButtons(operation)
 })
 
 document.getElementsByName('divide')[0].addEventListener('click', () => {
-  const value = 'divide'
+  const operation = 'divide'
   removeHighlightOperationButtons()
-  highlightOperationButtons(value)
+  highlightOperationButtons(operation)
 })
 
 
