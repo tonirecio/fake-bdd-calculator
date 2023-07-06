@@ -20,11 +20,6 @@ const setDisplay = (value) => {
     value = value.toString().replace('.', ',')
   }
 
-  if (value === 'ERROR') {
-    disableAllButtons()
-    enableDissableButton('clean', false)
-  }
-
   display.innerHTML = value
 }
 
@@ -379,7 +374,6 @@ const addButtons = () => {
   document.getElementsByName('equal')[0].addEventListener('click', () => {
     operateAndDisplay()
 
-    console.log(lastNumberWrited)
     if (lastNumberWrited === 'ERROR') {
       disableAllButtons()
       enableDissableButton('clean', false)
