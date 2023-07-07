@@ -2,61 +2,107 @@ const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 
 let inputValue = null
-let valueDisplay = ""
 let firstNumber = null
 let operator = null
 let secondNumber = null
 let result = null
-let pendingZeros = false
+let countZeros = 0
+let pendingComma = false
 let isEqualPressed = false
+let numDecimals = 10
 
-const concatInputsNumbers = (value) => { 
-  valueDisplay = inputValue
-  valueDisplay = valueDisplay.toString() + value
-  inputValue = parseFloat(valueDisplay)
-  setDisplay(valueDisplay)
-  return
+
+const concatInputsNumbers = (valueToConcat) => {
+  if(valueToConcat === '.'){
+    pendingComma = true
+    setDisplay(inputValue)
+    return
+  } else if(valueToConcat != '0'){
+    countZeros = 0
+  }
+
+  if(inputValue >= 0){
+    concatPositiveNumbers(valueToConcat)
+  } else if(countZeros === 0) {
+    concatNegativeNumbers(valueToConcat)
+  } 
+  setDisplay(inputValue)
+
+  if(valueToConcat === 0 && inputValue % 1 != 0){
+    countZeros += 1
+    concatZeros()
+  }
 }
+
+const concatZeros = () => {
+  inputValueToString = inputValue.toString()
+
+  for(cont = 0; cont < countZeros; cont++){
+    inputValueToString += '0'
+  }
+
+  if(inputValueToString.length > MAX_DIGITS_IN_DISPLAY){
+    console.log(inputValueToString.length);
+    disableNumericAndPointButtons()
+    return
+  }
+  setDisplay(inputValueToString)
+}
+
+const concatPositiveNumbers = (valueToConcat) => {
+  if(valueToConcat != '.' && inputValue % 1 === 0){
+    inputValue = inputValue * 10 + valueToConcat
+  } else {
+    numDecimals = numDecimals * 10
+    inputValue = (inputValue * numDecimals + valueToConcat) / numDecimals
+    inputValue = inputValue.toPrecision(numDecimals.toString().length)
+    inputValue = parseFloat(inputValue, 10)
+  }
+}
+
+const concatNegativeNumbers = (valueToConcat) => {
+  if(valueToConcat != '.' && inputValue % 1 === 0){
+    inputValue = inputValue * 10 - valueToConcat
+  } else {
+    numDecimals = numDecimals * 10
+    inputValue = (inputValue * numDecimals - valueToConcat) / numDecimals
+    inputValue = inputValue.toPrecision(numDecimals.toString().length)
+    inputValue = parseFloat(inputValue, 10)
+  }
+}
+
+// ACABAR EL ELSEEEEEEEEE
+const putCommaAndConcatNumbers = (valueToConcat) => {
+  if(valueToConcat != 0){
+    if(inputValue >= 0){
+    inputValue = (inputValue * 10 + valueToConcat) / 10
+    } else {
+      inputValue = (inputValue * 10 - valueToConcat) / 10
+    }
+    pendingComma = false
+    setDisplay(inputValue)
+  } else {
+    
+  }
   
-const putZerosAndConcatNumbers = (value) => {
-  valueDisplay = valueDisplay.toString()
-  valueDisplay = valueDisplay + value
-  inputValue = parseFloat(valueDisplay.replace(",", "."))
-  setDisplay(valueDisplay)
-  pendingZeros = false
-  return
-}
-
-const putCommaAndConcatNumbers = (value) => {
-  valueDisplay = inputValue
-  valueDisplay = valueDisplay.toString()
-  valueDisplay = valueDisplay + "." + value
-  inputValue = parseFloat(valueDisplay)
-  setDisplay(valueDisplay)
 }
 
 const negateInputValue = (valueToNegate) => {
   inputValue = valueToNegate * -1
-  if(valueDisplay.slice(-1) === ','){
-    valueDisplay = inputValue
-    valueDisplay = valueDisplay + ','
-  } else {
-    valueDisplay = inputValue
-  }
-  setDisplay(valueDisplay)
-  return
+  setDisplay(inputValue)
 }
 
 const setInputValue = (input) => {
-  if(valueDisplay.replace(",", "").length + 1 >= MAX_DIGITS_IN_DISPLAY && input != '.'){
+  var inputValueToString = inputValue
+  if(inputValueToString.toString().replace(",", "").length + 1 >= MAX_DIGITS_IN_DISPLAY && input != '.'){
     disableNumericAndPointButtons()
   } else {
     changeStateAllButtons(false)
   }
 
-  if(valueDisplay.replace(",", "").length + 1 > MAX_DIGITS_IN_DISPLAY && input > 0){
+  if(inputValueToString.toString().replace(".", "").length + 1 > MAX_DIGITS_IN_DISPLAY && input >= 0){
     return
-  } else if(inputValue === 0 && input != "." && !valueDisplay.includes(",")){
+  } else if(inputValue === 0 && input != "." && pendingComma == false){
     inputValue = input;
     isEqualPressed = false
     setDisplay(inputValue)
@@ -66,16 +112,9 @@ const setInputValue = (input) => {
       inputValue = input
       setDisplay(inputValue)
       isEqualPressed = false
-    }else if(valueDisplay.slice(-1) === ","){
+    }else if(pendingComma === true){
       putCommaAndConcatNumbers(input)
       return
-    } else if(input === 0){
-      valueDisplay = valueDisplay + input
-      inputValue = parseFloat(valueDisplay.replace(",", "."))
-      setDisplay(valueDisplay)
-      return
-    } else if(pendingZeros === true){
-      putZerosAndConcatNumbers(input)
     } else {
       if(handleExponentialNumbers(inputValue, input) === true){
         setDisplay(valueDisplay)
@@ -83,18 +122,16 @@ const setInputValue = (input) => {
       } else {
         concatInputsNumbers(input)
       }
-      return
     } 
   }
 }
 
 const setDisplay = (value) => {
-  valueDisplay = value.toString().replace(".", ",")
-  if(valueDisplay.includes("e-")){
-    handleExponentialNumbers(valueDisplay, null)
+  value = value.toString().replace(".", ",")
+  if(pendingComma === true){
+    value = value + ','
   }
-
-  display.innerHTML = valueDisplay
+  display.innerHTML = value
 }
 
 const handleExponentialNumbers = (value, valueToConcat) => {
@@ -127,15 +164,18 @@ const handleExponentialNumbers = (value, valueToConcat) => {
   return concatened
 }
 
-const resetDisplay = () => {
-  inputValue = 0
-  valueDisplay = '0'
+const resetCalculator = () => {
+  resetDisplay()
   firstNumber = null
   operator = null
   secondNumber = null
   result = null
-  pendingZeros = false
-  display.innerHTML = valueDisplay
+  pendingZeros = 0
+}
+
+const resetDisplay = () => {
+  inputValue = 0
+  setDisplay(inputValue)
 }
 
 const handleOperator = (operation) => {
@@ -148,20 +188,17 @@ const handleOperator = (operation) => {
     firstNumber = result
   }
   operator = operation
-  valueDisplay = firstNumber
-  setDisplay(valueDisplay)
-  inputValue = 0
+  setDisplay(firstNumber)
+  resetDisplay()
+  numDecimals = 10
+  countZeros = 0
   secondNumber = 0
-  valueDisplay = '0'
 }
 
 const handleOperation = () => {
-
-  if(inputValue != 0){
-    secondNumber = inputValue
-  }
-
+  secondNumber = inputValue
   changeStateAllButtons(false)
+
   switch (operator){
     case '+':
       result = sumNumbers(firstNumber, secondNumber)
@@ -179,6 +216,7 @@ const handleOperation = () => {
       result = divideNumbers(firstNumber, secondNumber)
       break;
   } 
+
   if(secondNumber === 0 && operator != null){
     showMessageError()
   } else if(operator === null){
@@ -187,42 +225,34 @@ const handleOperation = () => {
     if(operator === '-' && secondNumber > 0){
       negateInputValue(secondNumber)
     }
-    return
-  } 
-
-  valueDisplay = result
-  valueDisplay = valueDisplay.toString()  
-  controlDecimalsResult()
-  setDisplay(result)
-  firstNumber = null
-  operator = null
-  secondNumber = null
-  inputValue = result
-  valueDisplay = ''
-  return
+  } else {
+    controlDecimalsResult()
+    setDisplay(result)
+    firstNumber = null
+    operator = null
+    secondNumber = null
+    inputValue = result
+  }
 }
 
 const controlDecimalsResult = () => {
-  if(valueDisplay.includes(".")){
-    valueDisplay.replace(".", "")
-    lengthOfResult = valueDisplay.length 
+  inputValueToString = inputValue
+  if(inputValue % 1 != 0){
+    inputValueToString.toString().replace(".", "")
+    lengthOfResult = inputValueToString.length 
     if(lengthOfResult > MAX_DIGITS_IN_DISPLAY){
         lengthOfResult = MAX_DIGITS_IN_DISPLAY
-    }    
+    }   
     result = result.toPrecision(lengthOfResult) * 1
-    return
-  } else if(valueDisplay.length > MAX_DIGITS_IN_DISPLAY){
+    result = parseFloat(result, 10)
+  } else if(inputValueToString.length > MAX_DIGITS_IN_DISPLAY){
     showMessageError()
-    return
   }
 }
 
 const showMessageError = () => {
-  inputValue = 0
-  firstNumber = null
-  operator = null
-  secondNumber = null 
-  result = 'ERROR'
+  resetCalculator()
+  setDisplay('ERROR')
   changeStateAllButtons(true)
   changeButtonState(false ,'clean')
 }
@@ -235,9 +265,9 @@ const changeButtonState = (state, name) => {
 const changeStateAllButtons = (state) => {
   const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
   arrButtons.forEach(button => {
-    document.getElementsByName(button)[0].disabled = state;
+    changeButtonState(state, button)
   });
-  if(valueDisplay.includes(',')){
+  if(inputValue % 1 != 0){
     changeButtonState(true, 'point')
   }
 }
@@ -245,7 +275,7 @@ const changeStateAllButtons = (state) => {
 const disableNumericAndPointButtons = () => {
   const arrButtons = ['seven', 'eight', 'nine', 'four', 'five', 'six', 'one', 'two', 'three', 'zero', 'point']
   arrButtons.forEach(button => {
-  document.getElementsByName(button)[0].disabled = true;
+  changeButtonState(true, button)
   });
 }
 
@@ -261,10 +291,11 @@ const multiplyNumbers = (firstNumber, secondNumber) => {
 const divideNumbers = (firstNumber, secondNumber) => {
   if(secondNumber != 0 && firstNumber != 0){
     return firstNumber / secondNumber
+
   } else {
     changeStateAllButtons(true)
     changeButtonState(false ,'clean')
-    return "ERROR"
+    showMessageError()
   }
 }
 
@@ -302,7 +333,7 @@ const createALlButtonsFunctions = () => {
     pendingZeros = true
   })
   document.getElementsByName('clean')[0].addEventListener('click', () => {
-    resetDisplay()
+    resetCalculator()
     changeStateAllButtons(false)
     changeButtonState(true, 'negate')
     changeButtonState(true, 'zero')
@@ -334,7 +365,7 @@ const createALlButtonsFunctions = () => {
   //Click key buttons
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
-      resetDisplay()
+      resetCalculator()
       changeStateAllButtons(false)
       changeButtonState(true, 'negate')
       changeButtonState(true, 'zero')
@@ -358,6 +389,6 @@ const createALlButtonsFunctions = () => {
   });
 }
 createALlButtonsFunctions();
-resetDisplay()
+ resetCalculator()
 
 
