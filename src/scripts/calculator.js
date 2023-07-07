@@ -268,6 +268,23 @@ const enableButtonsAndPrepareOperation = (operator) => {
     enableAllButtons()
     enableDissableButton('negate', true)
   }
+
+  unHighlightAllButtons(buttons)
+
+  switch (operator) {
+    case '+':
+      changeHighlightStateInButton('sum', true)
+      break
+    case '-':
+      changeHighlightStateInButton('subtract', true)
+      break
+    case '*':
+      changeHighlightStateInButton('multiply', true)
+      break
+    case '/':
+      changeHighlightStateInButton('divide', true)
+      break
+  }
 }
 
 const enableDissableButton = (name, value) => {
@@ -286,6 +303,20 @@ const disableAllButtons = () => {
   for (let x = 0; x < buttons.length; x++) {
     const element = buttons[x]
     element.disabled = true
+  }
+}
+
+const changeHighlightStateInButton = (name, state) => {
+  if (state) {
+    document.getElementsByName(name)[0].classList.add('highlighted')
+  } else {
+    document.getElementsByName(name)[0].classList.remove('highlighted')
+  }
+}
+
+const unHighlightAllButtons = (buttons) => {
+  for (const button of buttons) {
+    button.classList.remove('highlighted')
   }
 }
 
@@ -343,6 +374,9 @@ const addButtons = () => {
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     reset()
     enableDissableButton('zero', true)
+
+    unHighlightAllButtons(buttons)
+    changeHighlightStateInButton('clean', true)
   })
 
   document.getElementsByName('point')[0].addEventListener('click', () => {
@@ -380,6 +414,9 @@ const addButtons = () => {
     } else {
       enableAllButtons()
     }
+
+    unHighlightAllButtons(buttons)
+    changeHighlightStateInButton('equal', true)
   })
 }
 
@@ -401,7 +438,10 @@ const addKeys = () => {
     } else if (event.key === 'Escape') {
       reset()
       enableDissableButton('zero', true)
-    } else if (event.key === 'Enter') {
+
+      unHighlightAllButtons(buttons)
+      changeHighlightStateInButton('clean', true)
+    } else if (event.key === '=') {
       operateAndDisplay()
 
       if (lastNumberWrited === 'ERROR') {
@@ -410,6 +450,9 @@ const addKeys = () => {
       } else {
         enableAllButtons()
       }
+
+      unHighlightAllButtons(buttons)
+      changeHighlightStateInButton('equal', true)
     }
   })
 }
