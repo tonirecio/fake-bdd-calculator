@@ -66,15 +66,14 @@ const negateCurrentValue = () => {
   const hasPoint = currentValue.endsWith('.')
   const currentValueToNumber = parseFloat(currentValue)
 
-  if ((currentValue != 0)) {
     currentValue = (currentValueToNumber * -1).toString()
     if (hasPoint) {
       currentValue += '.'
     }
-  }
-
+  
   return currentValue
 }
+
 
 // ENABLE AND DISABLE BUTTONS
 const changeButtonState = (state, name) => {
@@ -82,7 +81,7 @@ const changeButtonState = (state, name) => {
 }
 
 const changeStateAllButtons = (state) => {
-  const arrButtons = ['clean', 'negate', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'sum', 'zero', 'point', 'equal']
+  const arrButtons = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'clean', 'negate', 'divide', 'multiply', 'subtract', 'sum', 'point', 'equal']
   arrButtons.forEach(button => {
     document.getElementsByName(button)[0].disabled = state
   })
@@ -265,27 +264,28 @@ document.getElementsByName('equal')[0].addEventListener('click', () => {
   if (operator == null && currentValue.endsWith('.')) {
     currentValue = currentValue.replace('.', '')
     setDisplay(currentValue)
-    return
+
   } else if (operator == null) {
     setDisplay(currentValue)
-    return
-  }
-  if (secondOperand === '0' || secondOperand === null) {
+
+  } else if (secondOperand === '0' || secondOperand === null) {
     setDisplay('ERROR')
     changeStateAllButtons(true)
     changeButtonState(false, 'clean')
-    return
+
+  } else {
+    if (result != null) {
+      firstOperand = result
+      isResultUsed = true
+    }
+    isOperatorClicked = false
+    result = calculate(firstOperand, secondOperand, operator)
+    reset()
+    setDisplay(result)
+    isOperandEntered = false
+    removeHighlightOperationButtons()
   }
-  if (result != null) {
-    firstOperand = result
-    isResultUsed = true
-  }
-  isOperatorClicked = false
-  result = calculate(firstOperand, secondOperand, operator)
-  reset()
-  setDisplay(result)
-  isOperandEntered = false
-  removeHighlightOperationButtons()
+
 })
 
 const handleOperation = () => {
