@@ -18,120 +18,97 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
-const disableButtonLogic = (status) => {
+const setStateButtonLogic = (status) => {
   switch (status) {
     case 'clear':
-      disableNumericalButtonSet(false)
-      disableButton('point', false)
-      disableOperationButtonSet(false)
-      disableButton('zero', true)
-      disableNonOperationButtonSet(false)
-      disableButton('negate', true)
+      setStateNumericalButtonSet(true)
+      // setEnableStateButton
+      setStateButton('point', true)
+      setStateOperationButtonSet(true)
+      setStateButton('zero', false)
+      setStateNonOperationButtonSet(true)
+      setStateButton('negate', false)
       break
     case 'resolve':
-      disableNumericalButtonSet(false)
-      disableButton('point', false)
-      disableOperationButtonSet(false)
-      disableButton('negate', false)
+      setStateNumericalButtonSet(true)
+      setStateButton('point', true)
+      setStateOperationButtonSet(true)
+      setStateButton('negate', true)
       break
     case 'max_digits_in_display':
-      disableNumericalButtonSet(true)
-      disableButton('point', true)
+      setStateNumericalButtonSet(false)
+      setStateButton('point', false)
       break
     case 'operator':
-      disableNumericalButtonSet(false)
-      disableButton('point', false)
-      disableOperationButtonSet(false)
-      disableButton('negate', true)
+      setStateNumericalButtonSet(true)
+      setStateButton('point', true)
+      setStateOperationButtonSet(true)
+      setStateButton('negate', false)
       break
     case 'enable_numericals':
-      disableNumericalButtonSet(false)
-      disableButton('negate', false)
+      setStateNumericalButtonSet(true)
+      setStateButton('negate', true)
       break
     case 'existing_point':
-      disableButtonLogic('enable_numericals')
-      disableButton('point', true)
+      setStateButtonLogic('enable_numericals')
+      setStateButton('point', false)
       break
     case 'error':
-      disableNumericalButtonSet(true)
-      disableOperationButtonSet(true)
-      disableNonOperationButtonSet(true)
-      disableButton('clean', false)
+      setStateAllButtons(false)
+      setStateButton('clean', true)
       break
     case 'init':
-      disableNumericalButtonSet(false)
-      disableOperationButtonSet(false)
-      disableNonOperationButtonSet(false)
+      setStateAllButtons(true)
       break
     default:
       console.warn('[WARNING] ' + status + ' logic state not contemplated / implemented.')
   }
 }
-
-const disableNumericalButtonSet = (boolStatus) => {
-  disableButton('zero', boolStatus)
-  disableButton('one', boolStatus)
-  disableButton('two', boolStatus)
-  disableButton('three', boolStatus)
-  disableButton('four', boolStatus)
-  disableButton('five', boolStatus)
-  disableButton('six', boolStatus)
-  disableButton('seven', boolStatus)
-  disableButton('eight', boolStatus)
-  disableButton('nine', boolStatus)
+const setStateAllButtons = (boolStatus) => {
+  setStateNumericalButtonSet(boolStatus)
+  setStateOperationButtonSet(boolStatus)
+  setStateNonOperationButtonSet(boolStatus)
+}
+// agruparlo
+const setStateNumericalButtonSet = (boolStatus) => {
+  setStateButton('zero', boolStatus)
+  setStateButton('one', boolStatus)
+  setStateButton('two', boolStatus)
+  setStateButton('three', boolStatus)
+  setStateButton('four', boolStatus)
+  setStateButton('five', boolStatus)
+  setStateButton('six', boolStatus)
+  setStateButton('seven', boolStatus)
+  setStateButton('eight', boolStatus)
+  setStateButton('nine', boolStatus)
 }
 
-const disableOperationButtonSet = (boolStatus) => {
-  disableButton('sum', boolStatus)
-  disableButton('subtract', boolStatus)
-  disableButton('multiply', boolStatus)
-  disableButton('divide', boolStatus)
+const setStateOperationButtonSet = (boolStatus) => {
+  setStateButton('sum', boolStatus)
+  setStateButton('subtract', boolStatus)
+  setStateButton('multiply', boolStatus)
+  setStateButton('divide', boolStatus)
 }
 
-const disableNonOperationButtonSet = (boolStatus) => {
-  disableButton('clean', boolStatus)
-  disableButton('negate', boolStatus)
-  disableButton('equal', boolStatus)
-  disableButton('point', boolStatus)
+const setStateNonOperationButtonSet = (boolStatus) => {
+  setStateButton('clean', boolStatus)
+  setStateButton('negate', boolStatus)
+  setStateButton('equal', boolStatus)
+  setStateButton('point', boolStatus)
 }
 
-const disableButton = (buttonName, boolStatus) => {
-  document.getElementsByName(buttonName)[0].disabled = boolStatus
+const setStateButton = (buttonName, boolStatus) => {
+  document.getElementsByName(buttonName)[0].disabled = !boolStatus
 }
 
 const highlightButtonLogic = (operationTrigger) => {
-  switch (operationTrigger) {
-    case 'sum':
-      highlightButton('sum', true)
-      highlightButton('subtract', false)
-      highlightButton('multiply', false)
-      highlightButton('divide', false)
-      break
-    case 'subtract':
-      highlightButton('sum', false)
-      highlightButton('subtract', true)
-      highlightButton('multiply', false)
-      highlightButton('divide', false)
-      break
-    case 'multiply':
-      highlightButton('sum', false)
-      highlightButton('subtract', false)
-      highlightButton('multiply', true)
-      highlightButton('divide', false)
-      break
-    case 'divide':
-      highlightButton('sum', false)
-      highlightButton('subtract', false)
-      highlightButton('multiply', false)
-      highlightButton('divide', true)
-      break
-    default:
-      highlightButton('sum', false)
-      highlightButton('subtract', false)
-      highlightButton('multiply', false)
-      highlightButton('divide', false)
-      break
-  }
+    highlightButton('sum', false)
+    highlightButton('subtract', false)
+    highlightButton('multiply', false)
+    highlightButton('divide', false)
+  if (operationTrigger !== 'clean' && operationTrigger !== 'equal'){
+    highlightButton(operationTrigger, true)
+  } 
 }
 
 const highlightButton = (buttonName, boolStatus) => {
@@ -161,7 +138,7 @@ const currentNumberToDisplayableString = () => {
     }
   } else {
     displayValue = 'ERROR'
-    disableButtonLogic('error')
+    setStateButtonLogic('error')
   }
   return displayValue
 }
@@ -191,12 +168,12 @@ const reset = () => {
 }
 
 const clear = () => {
-  disableButtonLogic('clear')
+  setStateButtonLogic('clear')
   reset()
 }
 
 const resolve = () => {
-  disableButtonLogic('resolve')
+  setStateButtonLogic('resolve')
   completeOperation()
 }
 
@@ -213,14 +190,14 @@ const pressNumber = (buttonNumber) => {
   }
   // main number logic
   if (clearDisplay || currentNumber === 'ERROR') {
-    disableButtonLogic('enable_numericals')
+    setStateButtonLogic('enable_numericals')
     currNumString = buttonNumber.toString()
     pendingZeros = 0
     pendingPoint = false
     clearDisplay = false
   } else {
     if (currNumStringSanitized.length < MAX_DIGITS_IN_DISPLAY) {
-      disableButtonLogic('enable_numericals')
+      setStateButtonLogic('enable_numericals')
       if (pendingPoint) {
         if (buttonNumber !== 0 && buttonNumber !== '0') {
           currNumString += buttonNumber
@@ -245,15 +222,14 @@ const pressNumber = (buttonNumber) => {
 
   currNumStringSanitized = sanitizeString(currentNumberToDisplayableString())
   if (currNumStringSanitized.length >= MAX_DIGITS_IN_DISPLAY) {
-    disableButtonLogic('max_digits_in_display')
+    setStateButtonLogic('max_digits_in_display')
   }
 }
 
 const floatCurrentNum = () => {
   const currentNumberDisplayableString = currentNumberToDisplayableString()
   if (!currentNumberDisplayableString.includes(POINT_LOCALE) && currentNumberDisplayableString.length < MAX_DIGITS_IN_DISPLAY) {
-    disableButtonLogic('enable_numericals')
-    disableButton('point', true)
+    setStateButtonLogic('existing_point')
     pendingPoint = true
   }
 }
@@ -306,7 +282,7 @@ const buttonOperation = (buttonName) => {
     completeOperation()
     setDisplay(currentNumberToDisplayableString())
   }
-  disableButtonLogic('operator')
+  setStateButtonLogic('operator')
   currentOperation = buttonName
   previousNumber = currentNumber
   clearDisplay = true
@@ -433,7 +409,7 @@ const init = () => {
   addOperationButtonClickEvent('subtract')
   addOperationButtonClickEvent('divide')
   // force enabled buttons at start
-  disableButtonLogic('init')
+  setStateButtonLogic('init')
 }
 
 // INITIALIZATION
