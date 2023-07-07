@@ -1,7 +1,7 @@
 const { Given, When, Then } = require('@cucumber/cucumber')
 const { expect } = require('@playwright/test')
 
-const url = 'http://127.0.0.1:5500/src/calculator.html'
+const url = 'http://127.0.0.1:5501/src/calculator.html'
 
 async function buttonClick (buttonId) {
   await page.click(`[data-testid="${buttonId}"]`, { force: true })
@@ -65,4 +65,18 @@ Then('the {string} button should be disabled', async (string) => {
 Then('the {string} button should be enabled', async (string) => {
   const locator = page.locator(`[data-testid="${string}"]`)
   await expect(locator).toBeEnabled()
+})
+
+Then('the {string} button should be highlighted', async (string) => {
+  const locator = page.locator(`[data-testid="${string}"]`)
+  await expect(locator).toHaveClass('highlighted')
+})
+
+Then('the {string} button should be unhighlighted', async (string) => {
+  const locator = page.locator(`[data-testid="${string}"]`)
+  await expect(locator).not.toHaveClass('highlighted')
+})
+
+Given('the {string} button is highlighted', async (string) => {
+  await buttonClick(string)
 })
