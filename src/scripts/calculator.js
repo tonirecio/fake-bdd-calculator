@@ -93,6 +93,7 @@ const handleCommaClick = () => {
 const handleOperationClick = (operation) => {
   if (!overrideDisplay && currentOperation !== null) {
     previousOperand = performOperation()
+    if (formatNumberToDisplay(previousOperand) === 'ERROR') setDisplay(formatNumberToDisplay(previousOperand))
   } else if (previousOperand === 0 && currentNumber !== null) {
     previousOperand = currentNumber
   }
@@ -136,15 +137,11 @@ const formatExponentialToDecimalString = (exponentialNumber) => {
   let decimalString = ''
   if (exponent < 0) {
     decimalString = sign + '0.'
-    for (let zeros = 0; zeros < -exponent; zeros++) {
-      decimalString += '0'
-    }
+    decimalString += '0'.repeat(-exponent)
     decimalString += formattedBase
   } else {
     exponent -= formattedBase.length
-    for (let zeros = 0; zeros < exponent; zeros++) {
-      decimalString += '0'
-    }
+    decimalString += '0'.repeat(exponent)
     decimalString = sign + formattedBase + decimalString
   }
   return decimalString
@@ -165,10 +162,7 @@ const addNewDigitAndDisplay = (newDigit) => {
         currentNumber += newDigit / (Math.pow(10, pendingZeros + 1))
         pendingZeros = 0
       } else {
-        let zeroString = ''
-        for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
-          zeroString += '0'
-        }
+        let zeroString = '0'.repeat(pendingZeros)
         if (currentNumber.toString().includes('e')) {
           currentNumber = parseFloat(formatExponentialToDecimalString(currentNumber) + zeroString + newDigit.toString())
         } else {
@@ -233,9 +227,7 @@ const formatNumberToDisplay = (number) => {
     if (numberHasComma && !displayValue.includes(COMMA_SYMBOL)) {
       displayValue += COMMA_SYMBOL
     }
-    for (let putZeros = 0; putZeros < pendingZeros; putZeros++) {
-      displayValue += '0'
-    }
+    displayValue += '0'.repeat(pendingZeros)
   }
   return displayValue
 }
