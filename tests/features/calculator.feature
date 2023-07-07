@@ -280,7 +280,7 @@ Examples:
 |             0 |             0 |
 |            10 |            10 |
 |          -10, |           -10 |
-@currentWIP
+@buttons
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
@@ -307,7 +307,7 @@ Examples:
 |   -  |
 |   *  |
 |   /  |
-@currentWIP
+@buttons
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button
@@ -327,7 +327,7 @@ And the "+" button should be enabled
 And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
-@currentWIP
+
 Scenario: Reenabling buttons with no error using = button
 Given the user writes the following value: "1234567890"
 When the user presses the "=" button
@@ -347,7 +347,7 @@ And the "+" button should be enabled
 And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
-@currentWIP
+@buttons
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled
@@ -368,11 +368,11 @@ Examples:
 |   -1234567890 |
 |   123456789,5 |
 |  -123456789,5 |
-@currentWIP
+@buttons
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
-@currentWIP
+@buttons
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -396,7 +396,7 @@ And the "/" button should be disabled
 And the "+-" button should be disabled
 And the "=" button should be disabled
 And the "C" button should be enabled
-@currentWIP
+@buttons
 Scenario: Reenabling buttons with error
 Given the user writes the following value: "1"
 And the user presses the "/" button
