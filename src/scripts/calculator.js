@@ -1,14 +1,13 @@
 const MAX_DIGITS_IN_DISPLAY = 10
+
 const display = document.querySelector('div[name="display"] span')
 
 let currentNumber = 0
 let previousNumber = 0
 let currentOperationSymbol = ''
-let storedDecimalZeros = ''
+let storedZeros = ''
 let isNextNumberDecimal = false
-// revisar chaining operations, es necesaria? Combinacio de override display y performOperation()
 let chainingOperations = false
-// override new number
 let waitingForNewNumber = false
 let addingZeros = false
 
@@ -23,7 +22,7 @@ const pressKeys = () => {
     } else if (keyPressed === 'Control') {
       pressedNegate()
     } else if (keyPressed === ',') {
-      addPointToCurrentNumber()
+      addPointTocurrentNumber()
     } else if (keyPressed === '+') {
       highLightButton('sum')
       pressedOperator('+')
@@ -74,7 +73,7 @@ const pressButtons = () => {
     addNumberTocurrentNumber(9)
   })
   document.getElementsByName('point')[0].addEventListener('click', () => {
-    addPointToCurrentNumber()
+    addPointTocurrentNumber()
   })
   document.getElementsByName('negate')[0].addEventListener('click', () => {
     pressedNegate()
@@ -106,7 +105,7 @@ const pressButtons = () => {
 const disableButton = (button) => {
   document.getElementsByName(button)[0].disabled = true
 }
-// mateixa solo en una, true o false por parametro
+
 const disableNumberButtons = () => {
   document.getElementsByName('zero')[0].disabled = true
   document.getElementsByName('one')[0].disabled = true
@@ -154,14 +153,12 @@ const performOperation = () => {
   } else if (currentOperationSymbol === '/') {
     currentNumber = previousNumber / currentNumber
   }
-// Return, no display
   displayResultNumber()
 }
 
 const pressedNegate = () => {
   currentNumber = negateNumber(currentNumber)
-// No displays
-  displayCurrentNumber()
+  displaycurrentNumber()
 }
 
 const pressedEqual = () => {
@@ -175,7 +172,7 @@ const pressedEqual = () => {
     waitingForNewNumber = false
   }
 }
-// pasar parametros, solo una funcion
+
 const highLightButton = (button) => {
   unHighlightAllButtons()
   const highlightedButton = document.getElementsByName(button)[0]
@@ -202,20 +199,19 @@ const pressedOperator = (operatorPressed) => {
   waitingForNewNumber = true
   currentOperationSymbol = operatorPressed
 }
-// dos funciones, decimal, no decimal
-// variable string que concatena, solo un parseFloat
+
 const addNumberTocurrentNumber = (newNumber) => {
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     if (isNextNumberDecimal) {
       if (newNumber === 0) {
-        storedDecimalZeros += '0'
+        storedZeros += '0'
         currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
         addingZeros = true
       } else if (addingZeros) {
-        currentNumber = parseFloat(currentNumber.toString() + '.' + storedDecimalZeros + newNumber.toString())
+        currentNumber = parseFloat(currentNumber.toString() + '.' + storedZeros + newNumber.toString())
         isNextNumberDecimal = false
         addingZeros = false
-        storedDecimalZeros = ''
+        storedZeros = ''
         disableButton('point')
       } else {
         currentNumber = parseFloat(currentNumber.toString() + '.' + newNumber.toString())
@@ -229,7 +225,7 @@ const addNumberTocurrentNumber = (newNumber) => {
     enableButton('negate')
   }
 
-  displayCurrentNumber()
+  displaycurrentNumber()
   waitingForNewNumber = false
 
   if (getNumberLength(currentNumber) === MAX_DIGITS_IN_DISPLAY) {
@@ -242,19 +238,19 @@ const negateNumber = (number) => {
   return -number
 }
 
-const addPointToCurrentNumber = () => {
+const addPointTocurrentNumber = () => {
   if (getNumberLength(currentNumber) < MAX_DIGITS_IN_DISPLAY) {
     enableButton('zero')
     if (Number.isInteger(currentNumber)) {
       isNextNumberDecimal = true
     }
   }
-  displayCurrentNumber()
+  displaycurrentNumber()
 }
 
 const cleanDisplay = () => {
+  setDisplay(0)
   currentNumber = 0
-  displayCurrentNumber()
 }
 
 const cleanSavedNumbers = () => {
@@ -313,9 +309,8 @@ const getNumberLength = (number) => {
 
 const roundDecimals = (number) => {
   /* Rounding decimals of result, to avoid numbers like 1,0000000001 */
-  number = number.toFixed(MAX_DIGITS_IN_DISPLAY)
-  number = number.slice(0, MAX_DIGITS_IN_DISPLAY + 1)
-  number = parseFloat(number)
+  number = parseFloat(number.toPrecision(MAX_DIGITS_IN_DISPLAY))
+
 
   return number
 }
@@ -329,7 +324,7 @@ const displayResultNumber = () => {
     }
 
     if (getNumberLength(currentNumber) <= MAX_DIGITS_IN_DISPLAY) {
-      displayCurrentNumber()
+      displaycurrentNumber()
       enableNumberButtons()
       enableButton('point')
     } else {
@@ -340,9 +335,9 @@ const displayResultNumber = () => {
   waitingForNewNumber = false
 }
 
-const displayCurrentNumber = () => {
+const displaycurrentNumber = () => {
   if (isNextNumberDecimal) {
-    setDisplay(currentNumber.toString() + ',' + storedDecimalZeros)
+    setDisplay(currentNumber.toString() + ',' + storedZeros)
   } else {
     setDisplay(currentNumber.toString().replace('.', ','))
   }
