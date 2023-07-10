@@ -20,7 +20,7 @@ const setDisplay = value => {
   display.innerHTML = value
 }
 
-const handleNumberForDisplay = number => {
+const formatNumberForDisplay = number => {
   let displayValue = ''
   if (countDigits(number) <= MAX_DIGITS_IN_DISPLAY && isValidNumber(number)) {
     displayValue = number.toString().replace('.', ',')
@@ -71,14 +71,14 @@ const reset = () => {
   isDecimal = false
   isNewOperation = false
 
-  setAllButtonsDisabled(false)
-  setOperationButtonsHighlighted(false)
+  setAllButtonsDisabledState(false)
+  setOperationButtonsHighlightedState(false)
 }
 
 const resetAndDisplay = () => {
   reset()
-  setButtonDisabled('negate', true)
-  setButtonDisabled('zero', true)
+  setButtonDisabledState('negate', true)
+  setButtonDisabledState('zero', true)
   setDisplay(String(firstOperand))
 }
 
@@ -106,7 +106,8 @@ const setCurrentOperandValue = currentOperand => {
 
 const handleNumberClick = number => {
   if (isNewOperation) {
-    firstOperand = secondOperand = 0
+    firstOperand = 0
+    secondOperand = 0
     isNewOperation = false
   }
 
@@ -118,14 +119,14 @@ const handleNumberClick = number => {
   setCurrentOperandValue(currentOperand)
 
   if (currentOperand > 0) {
-    setButtonDisabled('negate', false)
-    setButtonDisabled('zero', false)
+    setButtonDisabledState('negate', false)
+    setButtonDisabledState('zero', false)
   }
   if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
-    setNumberButtonsDisabled(true)
-    setButtonDisabled('point', true)
+    setNumberButtonsDisabledState(true)
+    setButtonDisabledState('point', true)
   }
-  setDisplay(handleNumberForDisplay(currentOperand))
+  setDisplay(formatNumberForDisplay(currentOperand))
 }
 
 const handlePointClick = () => {
@@ -136,16 +137,16 @@ const handlePointClick = () => {
   }
   isDecimal = true
 
-  setButtonDisabled('point', true)
-  setButtonDisabled('zero', false)
-  setDisplay(handleNumberForDisplay(currentOperand))
+  setButtonDisabledState('point', true)
+  setButtonDisabledState('zero', false)
+  setDisplay(formatNumberForDisplay(currentOperand))
 }
 
 const handleNegateClick = () => {
   let currentOperand = getCurrentOperandValue()
   currentOperand = negateNumber(currentOperand)
   setCurrentOperandValue(currentOperand)
-  setDisplay(handleNumberForDisplay(currentOperand))
+  setDisplay(formatNumberForDisplay(currentOperand))
 }
 
 const handleOperationClick = newOperation => {
@@ -170,12 +171,12 @@ const handleOperationClick = newOperation => {
   decimalMultiplier = 0.1
   isNewOperation = false
 
-  setButtonDisabled('point', false)
-  setButtonDisabled('clean', false)
-  setButtonDisabled('negate', true)
-  setNumberButtonsDisabled(false)
-  setOperationButtonsHighlighted(false)
-  setButtonHighlighted(newOperation, true)
+  setButtonDisabledState('point', false)
+  setButtonDisabledState('clean', false)
+  setButtonDisabledState('negate', true)
+  setNumberButtonsDisabledState(false)
+  setOperationButtonsHighlightedState(false)
+  setButtonHighlightedState(newOperation, true)
 }
 
 const performOperation = (operand1, operand2, operation) => {
@@ -216,17 +217,17 @@ const handleEqualClick = () => {
   }
 
   if (!isError) {
-    setAllButtonsDisabled(false)
+    setAllButtonsDisabledState(false)
     if (numberToBeDisplayed === 0) {
-      setButtonDisabled('negate', true)
-      setButtonDisabled('zero', true)
+      setButtonDisabledState('negate', true)
+      setButtonDisabledState('zero', true)
     }
-    setOperationButtonsHighlighted(false)
-    setDisplay(handleNumberForDisplay(numberToBeDisplayed))
+    setOperationButtonsHighlightedState(false)
+    setDisplay(formatNumberForDisplay(numberToBeDisplayed))
   } else {
-    setAllButtonsDisabled(true)
-    setButtonDisabled('clean', false)
-    setOperationButtonsHighlighted(false)
+    setAllButtonsDisabledState(true)
+    setButtonDisabledState('clean', false)
+    setOperationButtonsHighlightedState(false)
     setDisplay('ERROR')
   }
 }
@@ -248,36 +249,36 @@ const operationButtons = ['sum', 'subtract', 'multiply', 'divide']
 
 const utilityButtons = ['negate', 'point', 'equal', 'clean']
 
-const setButtonDisabled = (buttonName, isDisabled) => {
+const setButtonDisabledState = (buttonName, isDisabled) => {
   document.getElementsByName(buttonName)[0].disabled = isDisabled
 }
 
-const setNumberButtonsDisabled = isDisabled => {
-  numberButtons.forEach(button => setButtonDisabled(button, isDisabled))
+const setNumberButtonsDisabledState = isDisabled => {
+  numberButtons.forEach(button => setButtonDisabledState(button, isDisabled))
 }
 
-const setOperationButtonsDisabled = isDisabled => {
-  operationButtons.forEach(button => setButtonDisabled(button, isDisabled))
+const setOperationButtonsDisabledState = isDisabled => {
+  operationButtons.forEach(button => setButtonDisabledState(button, isDisabled))
 }
 
-const setUtilityButtonsDisabled = isDisabled => {
-  utilityButtons.forEach(button => setButtonDisabled(button, isDisabled))
+const setUtilityButtonsDisabledState = isDisabled => {
+  utilityButtons.forEach(button => setButtonDisabledState(button, isDisabled))
 }
 
-const setAllButtonsDisabled = isDisabled => {
-  setNumberButtonsDisabled(isDisabled)
-  setOperationButtonsDisabled(isDisabled)
-  setUtilityButtonsDisabled(isDisabled)
+const setAllButtonsDisabledState = isDisabled => {
+  setNumberButtonsDisabledState(isDisabled)
+  setOperationButtonsDisabledState(isDisabled)
+  setUtilityButtonsDisabledState(isDisabled)
 }
 
-const setButtonHighlighted = (buttonName, isHighlighted) => {
+const setButtonHighlightedState = (buttonName, isHighlighted) => {
   const button = document.getElementsByName(buttonName)[0]
   button.classList.toggle('highlighted', isHighlighted)
 }
 
-const setOperationButtonsHighlighted = isHighlighted => {
+const setOperationButtonsHighlightedState = isHighlighted => {
   operationButtons.forEach(button =>
-    setButtonHighlighted(button, isHighlighted)
+    setButtonHighlightedState(button, isHighlighted)
   )
 }
 
@@ -313,7 +314,7 @@ document
   .addEventListener('click', () => handleNumberClick(9))
 document
   .getElementsByName('point')[0]
-  .addEventListener('click', handlePointClick)
+  .addEventListener('click', () => handlePointClick())
 document
   .getElementsByName('clean')[0]
   .addEventListener('click', resetAndDisplay)
