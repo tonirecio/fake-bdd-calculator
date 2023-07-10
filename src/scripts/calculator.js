@@ -3,29 +3,42 @@ const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 
 let firstOperand = 0
-let secondOperand = 0
+let secondOperand = null
 let currentOperation = ''
 let decimalMultiplier = 0.1
 let isDecimal = false
 let isNewOperation = false
 
-const add = (a, b) => a + b
-const subtract = (a, b) => a - b
-const multiply = (a, b) => a * b
-const divide = (a, b) => a / b
+const operations = {
+  sum: (a, b) => a + b,
+  subtract: (a, b) => a - b,
+  multiply: (a, b) => a * b,
+  divide: (a, b) => a / b
+}
 
 const setDisplay = value => {
-  let newValue = value.toString().replace('.', ',')
-  if (isDecimal && !newValue.includes(',') && newValue.length < 10) {
-    newValue += ','
-  }
-  if (countDigits(value) > MAX_DIGITS_IN_DISPLAY) {
-    disableAllButtons()
-    enableButton('clean')
+  display.innerHTML = value
+}
 
-    newValue = 'ERROR'
+const handleNumberForDisplay = number => {
+  let displayValue = ''
+  if (countDigits(number) <= MAX_DIGITS_IN_DISPLAY && isValidNumber(number)) {
+    displayValue = number.toString().replace('.', ',')
+    if (
+      isDecimal &&
+      !displayValue.includes(',') &&
+      countDigits(displayValue) < MAX_DIGITS_IN_DISPLAY
+    ) {
+      displayValue += ','
+    }
+  } else {
+    displayValue = 'ERROR'
   }
-  display.innerHTML = newValue
+  return displayValue
+}
+
+const isValidNumber = number => {
+  return Number.isFinite(number) && number !== null
 }
 
 const countDigits = number => {
@@ -50,29 +63,30 @@ const appendDigit = (number, numberToAppend) => {
   return updatedNumber
 }
 
-const resetCalculatorState = () => {
+const reset = () => {
   firstOperand = 0
-  secondOperand = 0
+  secondOperand = null
   currentOperation = ''
   decimalMultiplier = 0.1
   isDecimal = false
   isNewOperation = false
+
   enableAllButtons()
   unlighlightOperationButtons()
 }
 
-const resetCalculatorStateAndClearDisplay = () => {
-  resetCalculatorState()
+const resetAndDisplay = () => {
+  reset()
   disableButton('negate')
   disableButton('zero')
-  setDisplay(firstOperand)
+  setDisplay(String(firstOperand))
 }
 
 const negateNumber = number => {
   return -number
 }
 
-const getCurrentOperand = currentOperation => {
+const getCurrentOperandValue = () => {
   let currentOperand = 0
   if (currentOperation === '') {
     currentOperand = firstOperand
@@ -82,18 +96,14 @@ const getCurrentOperand = currentOperation => {
   return currentOperand
 }
 
-const resetOperands = () => {
-  firstOperand = 0
-  secondOperand = 0
-}
-
-const updateOperands = (currentOperand, currentOperation) => {
+const setCurrentOperandValue = currentOperand => {
   if (currentOperation === '') {
     firstOperand = currentOperand
   } else {
     secondOperand = currentOperand
   }
 }
+
 const updateButtonStates = currentOperand => {
   if (currentOperand > 0) {
     enableButton('negate')
@@ -108,122 +118,117 @@ const updateButtonStates = currentOperand => {
 
 const handleNumberClick = number => {
   if (isNewOperation) {
-    resetOperands()
+    firstOperand = secondOperand = 0
     isNewOperation = false
   }
 
-  let currentOperand = getCurrentOperand(currentOperation)
-
+  let currentOperand = getCurrentOperandValue()
   if (canAddMoreDigits(currentOperand, MAX_DIGITS_IN_DISPLAY)) {
     currentOperand = appendDigit(currentOperand, number)
   }
 
-  updateOperands(currentOperand, currentOperation)
+  setCurrentOperandValue(currentOperand)
   updateButtonStates(currentOperand)
-  setDisplay(currentOperand)
+  setDisplay(handleNumberForDisplay(currentOperand))
 }
 
 const handlePointClick = () => {
-  const currentOperand = getCurrentOperand(currentOperation)
+  let currentOperand = getCurrentOperandValue()
+  if (!isValidNumber(currentOperand)) {
+    currentOperand = 0
+  }
   isDecimal = true
+
   disableButton('point')
   enableButton('zero')
-  setDisplay(currentOperand)
+  setDisplay(handleNumberForDisplay(currentOperand))
 }
 
 const handleNegateClick = () => {
-  let currentOperand = getCurrentOperand(currentOperation)
+  let currentOperand = getCurrentOperandValue()
   currentOperand = negateNumber(currentOperand)
-  updateOperands(currentOperand, currentOperation)
-  setDisplay(currentOperand)
+  setCurrentOperandValue(currentOperand)
+
+  setDisplay(handleNumberForDisplay(currentOperand))
 }
 
 const handleOperationClick = newOperation => {
-  if (currentOperation !== '') {
-    if (
-      (currentOperation === 'multiply' || currentOperation === 'divide') &&
-      secondOperand === 0
-    ) {
-      secondOperand = 1
-    }
+  if (currentOperation !== '' && isValidNumber(secondOperand)) {
     firstOperand = performOperation(
       firstOperand,
       secondOperand,
       currentOperation
     )
     firstOperand = parseFloat(firstOperand.toPrecision(MAX_DIGITS_IN_DISPLAY))
-
     secondOperand = 0
     currentOperation = ''
     isNewOperation = true
   }
-
-  enableButton('point')
-  enableButton('clean')
-  disableButton('negate')
-  enableNumberButtons()
-
-  unlighlightOperationButtons()
-  highlightButton(newOperation)
 
   currentOperation = newOperation
   isDecimal = false
   decimalMultiplier = 0.1
   isNewOperation = false
+
+  enableButton('point')
+  enableButton('clean')
+  disableButton('negate')
+  enableNumberButtons()
+  unlighlightOperationButtons()
+  highlightButton(newOperation)
 }
 
-const performOperation = (operand1, operand2, currentOperation) => {
-  let result
-  switch (currentOperation) {
-    case 'sum':
-      result = add(operand1, operand2)
-      break
-    case 'subtract':
-      result = subtract(operand1, operand2)
-      break
-    case 'multiply':
-      result = multiply(operand1, operand2)
-      break
-    case 'divide':
-      result = divide(operand1, operand2)
-      break
-    default:
-      break
-  }
-  return result
+const performOperation = (operand1, operand2, operation) => {
+  return operations[operation](operand1, operand2)
 }
 
 const handleEqualClick = () => {
-  if (currentOperation !== '' && secondOperand === 0) {
-    setDisplay('ERROR')
-    resetCalculatorState()
+  let numberToBeDisplayed = 0
+  let isError = false
 
+  isDecimal = false
+
+  if (currentOperation === '' && isValidNumber(firstOperand)) {
+    numberToBeDisplayed = firstOperand
+  } else {
+    if (
+      isValidNumber(secondOperand) &&
+      !(currentOperation === 'divide' && secondOperand === 0)
+    ) {
+      let operationResult = performOperation(
+        firstOperand,
+        secondOperand,
+        currentOperation
+      )
+      operationResult = parseFloat(
+        operationResult.toPrecision(MAX_DIGITS_IN_DISPLAY)
+      )
+
+      firstOperand = operationResult
+      secondOperand = 0
+      currentOperation = ''
+      isNewOperation = true
+
+      numberToBeDisplayed = firstOperand
+    } else {
+      isError = true
+    }
+  }
+
+  if (!isError) {
+    setDisplay(handleNumberForDisplay(numberToBeDisplayed))
+    enableAllButtons()
+    unlighlightOperationButtons()
+    if (numberToBeDisplayed === 0) {
+      disableButton('negate')
+      disableButton('zero')
+    }
+  } else {
+    setDisplay('ERROR')
     disableAllButtons()
     enableButton('clean')
     unlighlightOperationButtons()
-    return
   }
-
-  if (currentOperation !== '') {
-    const result = performOperation(
-      firstOperand,
-      secondOperand,
-      currentOperation
-    )
-    firstOperand = parseFloat(result.toPrecision(MAX_DIGITS_IN_DISPLAY))
-
-    secondOperand = 0
-    currentOperation = ''
-    isNewOperation = true
-
-    setDisplay(firstOperand)
-  } else {
-    isDecimal = false
-    setDisplay(firstOperand)
-  }
-
-  enableAllButtons()
-  unlighlightOperationButtons()
 }
 
 const numberButtons = [
@@ -334,7 +339,7 @@ document
   .addEventListener('click', handlePointClick)
 document
   .getElementsByName('clean')[0]
-  .addEventListener('click', resetCalculatorStateAndClearDisplay)
+  .addEventListener('click', resetAndDisplay)
 document
   .getElementsByName('negate')[0]
   .addEventListener('click', handleNegateClick)
@@ -366,7 +371,7 @@ document.body.addEventListener('keydown', event => {
         handlePointClick()
         break
       case 'Escape':
-        resetCalculatorStateAndClearDisplay()
+        resetAndDisplay()
         break
       case 'Control':
         handleNegateClick()
@@ -389,4 +394,4 @@ document.body.addEventListener('keydown', event => {
   }
 })
 
-resetCalculatorStateAndClearDisplay()
+resetAndDisplay()
