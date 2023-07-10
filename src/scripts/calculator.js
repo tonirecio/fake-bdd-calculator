@@ -150,12 +150,16 @@ const handleNegateClick = () => {
 
 const handleOperationClick = newOperation => {
   if (currentOperation !== '' && isValidNumber(secondOperand)) {
-    firstOperand = performOperation(
+    let operationResult = performOperation(
       firstOperand,
       secondOperand,
       currentOperation
     )
-    firstOperand = parseFloat(firstOperand.toPrecision(MAX_DIGITS_IN_DISPLAY))
+    operationResult = parseFloat(
+      operationResult.toPrecision(MAX_DIGITS_IN_DISPLAY)
+    )
+
+    firstOperand = operationResult
     secondOperand = 0
     currentOperation = ''
     isNewOperation = true
