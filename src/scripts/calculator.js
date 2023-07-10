@@ -1,13 +1,13 @@
 const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 
-let currentValue = 0
+let currentValue = '0'
 let firstValue
 let operator
 
-const setDisplay = (value) => {
-  currentValue = value
-  display.innerHTML = currentValue
+const setDisplay = (currentValue) => {
+  const displayValue = currentValue.replace('.', ',')
+  display.innerHTML = displayValue
 }
 
 const reset = () => {
@@ -15,51 +15,52 @@ const reset = () => {
   setDisplay(currentValue)
 }
 
-const appendNumberToDisplay = (value) => {
-  const digitCount = display.innerHTML.replace(/,|-/, '').length
+const appendNumberToCurrentValue = (valueToAppend) => {
+  const digitCount = currentValue.replace(/[.,-]/g, '').length // Regular expresion that found '.' and '-' on currentValue
 
   if (digitCount >= MAX_DIGITS_IN_DISPLAY) {
-    return
+    setDisplay(currentValue)
+  } else if (currentValue === '0') {
+    currentValue = valueToAppend.toString()
+  } else {
+    currentValue += valueToAppend.toString()
   }
 
-  if (display.innerHTML === '0') {
-    display.innerHTML = value
-  } else {
-    display.innerHTML += value
-  }
+  setDisplay(currentValue)
 }
 
 const appendPoint = () => {
-  if (!display.innerHTML.includes(',') && display.innerHTML.length < MAX_DIGITS_IN_DISPLAY) {
-    display.innerHTML += ','
+  if (!currentValue.includes('.') && currentValue.length < MAX_DIGITS_IN_DISPLAY) {
+    currentValue += '.'
+    setDisplay(currentValue)
   }
 }
 
 const setNegation = () => {
-  const displayValue = display.innerHTML
-
-  if (displayValue !== '0' && displayValue !== '0,') {
-    if (displayValue.slice(0, 1) === '-') {
-      display.innerHTML = displayValue.slice(1)
+  if (currentValue !== '0' && currentValue !== '0.') {
+    if (currentValue.slice(0, 1) === '-') {
+      currentValue = currentValue.slice(1)
     } else {
-      display.innerHTML = '-' + displayValue
+      currentValue = '-' + currentValue
     }
   }
+
+  setDisplay(currentValue)
 }
 
 // Input Controllers
 const pressingButtons = () => {
   // Numbers
-  document.getElementsByName('zero')[0].addEventListener('click', () => appendNumberToDisplay(0))
-  document.getElementsByName('one')[0].addEventListener('click', () => appendNumberToDisplay(1))
-  document.getElementsByName('two')[0].addEventListener('click', () => appendNumberToDisplay(2))
-  document.getElementsByName('three')[0].addEventListener('click', () => appendNumberToDisplay(3))
-  document.getElementsByName('four')[0].addEventListener('click', () => appendNumberToDisplay(4))
-  document.getElementsByName('five')[0].addEventListener('click', () => appendNumberToDisplay(5))
-  document.getElementsByName('six')[0].addEventListener('click', () => appendNumberToDisplay(6))
-  document.getElementsByName('seven')[0].addEventListener('click', () => appendNumberToDisplay(7))
-  document.getElementsByName('eight')[0].addEventListener('click', () => appendNumberToDisplay(8))
-  document.getElementsByName('nine')[0].addEventListener('click', () => appendNumberToDisplay(9))
+  document.getElementsByName('zero')[0].addEventListener('click', () => appendNumberToCurrentValue(0))
+  document.getElementsByName('one')[0].addEventListener('click', () => appendNumberToCurrentValue(1))
+  document.getElementsByName('two')[0].addEventListener('click', () => appendNumberToCurrentValue(2))
+  document.getElementsByName('three')[0].addEventListener('click', () => appendNumberToCurrentValue(3))
+  document.getElementsByName('four')[0].addEventListener('click', () => appendNumberToCurrentValue(4))
+  document.getElementsByName('five')[0].addEventListener('click', () => appendNumberToCurrentValue(5))
+  document.getElementsByName('six')[0].addEventListener('click', () => appendNumberToCurrentValue(6))
+  document.getElementsByName('seven')[0].addEventListener('click', () => appendNumberToCurrentValue(7))
+  document.getElementsByName('eight')[0].addEventListener('click', () => appendNumberToCurrentValue(8))
+  document.getElementsByName('nine')[0].addEventListener('click', () => appendNumberToCurrentValue(9))
   // Operators
   document.getElementsByName('sum')[0].addEventListener('click', () => handleOperator())
   document.getElementsByName('subtract')[0].addEventListener('click', () => handleOperator())
@@ -74,7 +75,7 @@ const pressingKeys = () => {
   // Numbers
   document.addEventListener('keydown', (event) => {
     const key = event.key
-    if (key >= '0' && key <= '9') appendNumberToDisplay(key)
+    if (key >= '0' && key <= '9') appendNumberToCurrentValue(key)
     else if (key === ',') appendPoint()
     else if (key === 'Control') setNegation()
     else if (key === 'Escape') reset()
