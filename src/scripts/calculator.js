@@ -71,14 +71,14 @@ const reset = () => {
   isDecimal = false
   isNewOperation = false
 
-  enableAllButtons()
-  unlighlightOperationButtons()
+  setAllButtonsDisabled(false)
+  setOperationButtonsHighlighted(false)
 }
 
 const resetAndDisplay = () => {
   reset()
-  disableButton('negate')
-  disableButton('zero')
+  setButtonDisabled('negate', true)
+  setButtonDisabled('zero', true)
   setDisplay(String(firstOperand))
 }
 
@@ -104,18 +104,6 @@ const setCurrentOperandValue = currentOperand => {
   }
 }
 
-const updateButtonStates = currentOperand => {
-  if (currentOperand > 0) {
-    enableButton('negate')
-    enableButton('zero')
-  }
-
-  if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
-    disableNumberButtons()
-    disableButton('point')
-  }
-}
-
 const handleNumberClick = number => {
   if (isNewOperation) {
     firstOperand = secondOperand = 0
@@ -128,19 +116,28 @@ const handleNumberClick = number => {
   }
 
   setCurrentOperandValue(currentOperand)
-  updateButtonStates(currentOperand)
+
+  if (currentOperand > 0) {
+    setButtonDisabled('negate', false)
+    setButtonDisabled('zero', false)
+  }
+  if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
+    setNumberButtonsDisabled(true)
+    setButtonDisabled('point', true)
+  }
   setDisplay(handleNumberForDisplay(currentOperand))
 }
 
 const handlePointClick = () => {
   let currentOperand = getCurrentOperandValue()
+
   if (!isValidNumber(currentOperand)) {
     currentOperand = 0
   }
   isDecimal = true
 
-  disableButton('point')
-  enableButton('zero')
+  setButtonDisabled('point', true)
+  setButtonDisabled('zero', false)
   setDisplay(handleNumberForDisplay(currentOperand))
 }
 
@@ -148,7 +145,6 @@ const handleNegateClick = () => {
   let currentOperand = getCurrentOperandValue()
   currentOperand = negateNumber(currentOperand)
   setCurrentOperandValue(currentOperand)
-
   setDisplay(handleNumberForDisplay(currentOperand))
 }
 
@@ -170,12 +166,12 @@ const handleOperationClick = newOperation => {
   decimalMultiplier = 0.1
   isNewOperation = false
 
-  enableButton('point')
-  enableButton('clean')
-  disableButton('negate')
-  enableNumberButtons()
-  unlighlightOperationButtons()
-  highlightButton(newOperation)
+  setButtonDisabled('point', false)
+  setButtonDisabled('clean', false)
+  setButtonDisabled('negate', true)
+  setNumberButtonsDisabled(false)
+  setOperationButtonsHighlighted(false)
+  setButtonHighlighted(newOperation, true)
 }
 
 const performOperation = (operand1, operand2, operation) => {
@@ -216,18 +212,18 @@ const handleEqualClick = () => {
   }
 
   if (!isError) {
-    setDisplay(handleNumberForDisplay(numberToBeDisplayed))
-    enableAllButtons()
-    unlighlightOperationButtons()
+    setAllButtonsDisabled(false)
     if (numberToBeDisplayed === 0) {
-      disableButton('negate')
-      disableButton('zero')
+      setButtonDisabled('negate', true)
+      setButtonDisabled('zero', true)
     }
+    setOperationButtonsHighlighted(false)
+    setDisplay(handleNumberForDisplay(numberToBeDisplayed))
   } else {
+    setAllButtonsDisabled(true)
+    setButtonDisabled('clean', false)
+    setOperationButtonsHighlighted(false)
     setDisplay('ERROR')
-    disableAllButtons()
-    enableButton('clean')
-    unlighlightOperationButtons()
   }
 }
 
@@ -248,60 +244,37 @@ const operationButtons = ['sum', 'subtract', 'multiply', 'divide']
 
 const utilityButtons = ['negate', 'point', 'equal', 'clean']
 
-const enableNumberButtons = () => {
-  numberButtons.forEach(button => enableButton(button))
+const setButtonDisabled = (buttonName, isDisabled) => {
+  document.getElementsByName(buttonName)[0].disabled = isDisabled
 }
 
-const disableNumberButtons = () => {
-  numberButtons.forEach(button => disableButton(button))
+const setNumberButtonsDisabled = isDisabled => {
+  numberButtons.forEach(button => setButtonDisabled(button, isDisabled))
 }
 
-const enableOperationButtons = () => {
-  operationButtons.forEach(button => enableButton(button))
+const setOperationButtonsDisabled = isDisabled => {
+  operationButtons.forEach(button => setButtonDisabled(button, isDisabled))
 }
 
-const disableOperationButtons = () => {
-  operationButtons.forEach(button => disableButton(button))
+const setUtilityButtonsDisabled = isDisabled => {
+  utilityButtons.forEach(button => setButtonDisabled(button, isDisabled))
 }
 
-const enableUtilityButtons = () => {
-  utilityButtons.forEach(button => enableButton(button))
+const setAllButtonsDisabled = isDisabled => {
+  setNumberButtonsDisabled(isDisabled)
+  setOperationButtonsDisabled(isDisabled)
+  setUtilityButtonsDisabled(isDisabled)
 }
 
-const disableUtilityButtons = () => {
-  utilityButtons.forEach(button => disableButton(button))
+const setButtonHighlighted = (buttonName, isHighlighted) => {
+  const button = document.getElementsByName(buttonName)[0]
+  button.classList.toggle('highlighted', isHighlighted)
 }
 
-const enableAllButtons = () => {
-  enableNumberButtons()
-  enableOperationButtons()
-  enableUtilityButtons()
-}
-
-const disableAllButtons = () => {
-  disableNumberButtons()
-  disableOperationButtons()
-  disableUtilityButtons()
-}
-
-const disableButton = buttonName => {
-  document.getElementsByName(buttonName)[0].disabled = true
-}
-
-const enableButton = buttonName => {
-  document.getElementsByName(buttonName)[0].disabled = false
-}
-
-const highlightButton = buttonName => {
-  document.getElementsByName(buttonName)[0].classList.add('highlighted')
-}
-
-const unhighlightButton = buttonName => {
-  document.getElementsByName(buttonName)[0].classList.remove('highlighted')
-}
-
-const unlighlightOperationButtons = () => {
-  operationButtons.forEach(button => unhighlightButton(button))
+const setOperationButtonsHighlighted = isHighlighted => {
+  operationButtons.forEach(button =>
+    setButtonHighlighted(button, isHighlighted)
+  )
 }
 
 document
