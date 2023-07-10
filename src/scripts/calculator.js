@@ -10,6 +10,7 @@ let countZeros = 0
 let pendingComma = false
 let isEqualPressed = false
 let numDecimals = 10
+let storedZeros = ''
 
 
 const concatInputsNumbers = (valueToConcat) => {
@@ -17,61 +18,77 @@ const concatInputsNumbers = (valueToConcat) => {
     pendingComma = true
     setDisplay(inputValue)
     return
-  } else if(valueToConcat != '0'){
-    countZeros = 0
-  }
-
+  } 
+   
   if(inputValue >= 0){
     concatPositiveNumbers(valueToConcat)
   } else if(countZeros === 0) {
     concatNegativeNumbers(valueToConcat)
   } 
-  setDisplay(inputValue)
-
+  
   if(valueToConcat === 0 && inputValue % 1 != 0){
+    storedZeros += '0'
     countZeros += 1
     concatZeros()
+    
+  } else if(valueToConcat != 0){
+    countZeros = 0
   }
 }
 
 const concatZeros = () => {
-  inputValueToString = inputValue.toString()
-
-  for(cont = 0; cont < countZeros; cont++){
-    inputValueToString += '0'
-  }
-
+  inputValueToString = inputValue + storedZeros
   if(inputValueToString.length > MAX_DIGITS_IN_DISPLAY){
     console.log(inputValueToString.length);
     disableNumericAndPointButtons()
     return
   }
   setDisplay(inputValueToString)
+  countZeros = 0
 }
 
 const concatPositiveNumbers = (valueToConcat) => {
-  if(valueToConcat != '.' && inputValue % 1 === 0){
+  if(valueToConcat != '.' && inputValue % 1 === 0 && countZeros === 0){
     inputValue = inputValue * 10 + valueToConcat
+    setDisplay(inputValue)
+  } else if(countZeros > 0){
+    var zerosToConcat = '0'
+    numDecimals = numDecimals * 10
+    zerosToConcat = zerosToConcat.repeat(countZeros, '0')
+    valueForDisplay = inputValue + '.' + zerosToConcat + valueToConcat
+    setDisplay(valueForDisplay)
+    inputValue = parseFloat(valueForDisplay)
+    countZeros += 1
   } else {
     numDecimals = numDecimals * 10
     inputValue = (inputValue * numDecimals + valueToConcat) / numDecimals
-    inputValue = inputValue.toPrecision(numDecimals.toString().length)
+    inputValue = inputValue.toFixed(numDecimals.toString().length - 1)
     inputValue = parseFloat(inputValue, 10)
+    setDisplay(inputValue)
   }
 }
 
 const concatNegativeNumbers = (valueToConcat) => {
-  if(valueToConcat != '.' && inputValue % 1 === 0){
+ if(valueToConcat != '.' && inputValue % 1 === 0 && countZeros === 0){
     inputValue = inputValue * 10 - valueToConcat
+    setDisplay(inputValue)
+  } else if(countZeros > 0){
+    var zerosToConcat = '0'
+    numDecimals = numDecimals * 10
+    zerosToConcat = zerosToConcat.repeat(countZeros, '0')
+    valueForDisplay = inputValue + '.' + zerosToConcat + valueToConcat
+    setDisplay(valueForDisplay)
+    inputValue = parseFloat(valueForDisplay)
+    countZeros += 1
   } else {
     numDecimals = numDecimals * 10
     inputValue = (inputValue * numDecimals - valueToConcat) / numDecimals
     inputValue = inputValue.toPrecision(numDecimals.toString().length)
     inputValue = parseFloat(inputValue, 10)
+    setDisplay(inputValue)
   }
 }
 
-// ACABAR EL ELSEEEEEEEEE
 const putCommaAndConcatNumbers = (valueToConcat) => {
   if(valueToConcat != 0){
     if(inputValue >= 0){
@@ -82,9 +99,14 @@ const putCommaAndConcatNumbers = (valueToConcat) => {
     pendingComma = false
     setDisplay(inputValue)
   } else {
-    
+    pendingComma = false
+    countZeros += 1
+    var zerosToConcat = '0'
+
+    zerosToConcat = zerosToConcat.repeat(countZeros)
+    valueToDisplay = inputValue + ',' + zerosToConcat
+    setDisplay(valueToDisplay)
   }
-  
 }
 
 const negateInputValue = (valueToNegate) => {
@@ -102,10 +124,7 @@ const setInputValue = (input) => {
 
   if(inputValueToString.toString().replace(".", "").length + 1 > MAX_DIGITS_IN_DISPLAY && input >= 0){
     return
-  } else if(inputValue === 0 && input != "." && pendingComma == false){
-    inputValue = input;
-    isEqualPressed = false
-    setDisplay(inputValue)
+  } else if(inputValue % 1 != 0 && input === '.'){
     return
   } else {
     if(isEqualPressed === true){
