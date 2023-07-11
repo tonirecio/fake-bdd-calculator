@@ -284,7 +284,7 @@ Examples:
 |            10 |            10 |
 |          -10, |           -10 |
 
-@done
+@done 
 Scenario Outline: Reenabling buttons with no error using operators
 Given the user writes the following value: "1234567890"
 When the user presses the "<button>" button
@@ -312,7 +312,7 @@ Examples:
 |   *  |
 |   /  |
 
-@done
+@done 
 Scenario: Reenabling buttons with no error using C button
 Given the user writes the following value: "1234567890"
 When the user presses the "C" button
@@ -333,7 +333,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
-@done
+@done 
 Scenario: Reenabling buttons with no error using = button
 Given the user writes the following value: "1234567890"
 When the user presses the "=" button
@@ -354,7 +354,7 @@ And the "-" button should be enabled
 And the "*" button should be enabled
 And the "/" button should be enabled
 
-@done
+@done 
 Scenario Outline: Disabling buttons
 Given the user writes the following value: "<displayNumber>"
 Then the "0" button should be disabled
@@ -376,12 +376,12 @@ Examples:
 |   123456789,5 |
 |  -123456789,5 |
 
-@done
+@done 
 Scenario: Disabling the second comma
 Given the user writes the following value: "3,141592"
 Then the "," button should be disabled
 
-@done
+@done 
 Scenario: Disabling because of error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -406,7 +406,7 @@ And the "+-" button should be disabled
 And the "=" button should be disabled
 And the "C" button should be enabled
 
-@done
+@done 
 Scenario: Reenabling buttons with error
 Given the user writes the following value: "1"
 And the user presses the "/" button
@@ -432,7 +432,7 @@ And the "+-" button should be disabled
 And the "=" button should be enabled
 And the "C" button should be enabled
 
-@created @done
+@created @wip
 Scenario Outline: Writing numbers that have zeros in the decimals
 Given the user writes the following value: "<displayNumber>"
 When the user presses the "=" button
@@ -447,7 +447,7 @@ Examples:
 |       3,00102 |       3,00102 |
 |     0,0000001 |     0,0000001 |
 
-@OtherOneTest @done
+@OtherOneTest @wip
 Scenario Outline: Small decimal results
 Given the user writes the following value: "<displayNumber>"
 And the user presses the "<button>" button
@@ -462,18 +462,18 @@ Examples:
 |        0,0001 |      * |       0,0001 |    0,00000001 |
 |       -0,0001 |      * |       0,0001 |   -0,00000001 |
 
-# @OtherOneTest @wip
-# Scenario Outline: Doing operations with complex float number
-# Given the user writes the following value: "<displayNumber>"
-# And the user presses the "<button>" button
-# And the user writes the number: "<userNumber>"
-# When the user presses the "=" button
-# Then the display should show the following value: "<displayResult>"
+@OtherOneTest @wip
+Scenario Outline: Doing operations with complex float number
+Given the user writes the following value: "<displayNumber>"
+And the user presses the "<button>" button
+And the user writes the number: "<userNumber>"
+When the user presses the "=" button
+Then the display should show the following value: "<displayResult>"
 
-# Examples:
-# | displayNumber | button |  userNumber | displayResult |
-# |   0,000000010 |      + | 0,000000011 |   0,000000021 |
-# |            10 |      + | 0,000000068 |   10,00000007 |
-# |      0,010203 |      - |  123,020043 |    -123,00984 |
-# |          1234 |      * | 0,001203040 |    1,48455136 |
-# |          1234 |      / | 0,010203045 |   120944,2867 |
+Examples:
+| displayNumber | button |  userNumber | displayResult |
+|   0,000000010 |      + | 0,000000011 |   0,000000021 |
+|            10 |      + | 0,000000068 |   10,00000007 |
+|      0,010203 |      - |  123,020043 |    -123,00984 |
+|          1234 |      * | 0,001203040 |    1,48455136 |
+|          1234 |      / | 0,010203045 |   120944,2867 |

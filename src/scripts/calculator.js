@@ -1,129 +1,190 @@
-const getNameOperator = (operatorSymbol) => {
-  let operatorName = null
-  switch (operatorSymbol) {
+const highlightOneButton = (button) => {
+  button.classList.add('highlighted')
+}
+
+const unhighlightAllButtons = (buttonsList) => {
+  for (const button of buttonsList) {
+    button.classList.remove('highlighted')
+  }
+}
+
+const updateHighlightStatus = (operatorClicked) => {
+  unhighlightAllButtons(buttons)
+  switch (operatorClicked) {
     case '+':
-      operatorName = 'sum'
+      highlightOneButton(document.getElementsByName('sum')[0]) 
       break
     case '-':
-      operatorName = 'subtract'
+      highlightOneButton(document.getElementsByName('subtract')[0]) 
       break
     case '*':
-      operatorName = 'multiply'
+      highlightOneButton(document.getElementsByName('multiply')[0]) 
       break
     case '/':
-      operatorName = 'divide'
+      highlightOneButton(document.getElementsByName('divide')[0]) 
       break
   }
-  return (operatorName)
 }
 
-const exponentialToString = (exponentialString) => {
-  let stringResultant = ''
+const changeDisableOneButton = (button, hasToBeDisabled) => {
+  button.disabled = hasToBeDisabled
+}
+
+const changeDisableAllButtons = (buttonsList, hasToBeDisabled) => {
+  for (const button of buttonsList) {
+    changeDisableOneButton(button, hasToBeDisabled)
+  }
+}
+
+const changeDisableNumberButtons = (hasToBeDisabled) => {
+  document.getElementsByName('zero')[0].disabled = hasToBeDisabled
+  document.getElementsByName('one')[0].disabled = hasToBeDisabled
+  document.getElementsByName('two')[0].disabled = hasToBeDisabled
+  document.getElementsByName('three')[0].disabled = hasToBeDisabled
+  document.getElementsByName('four')[0].disabled = hasToBeDisabled
+  document.getElementsByName('five')[0].disabled = hasToBeDisabled
+  document.getElementsByName('six')[0].disabled = hasToBeDisabled
+  document.getElementsByName('seven')[0].disabled = hasToBeDisabled
+  document.getElementsByName('eight')[0].disabled = hasToBeDisabled
+  document.getElementsByName('nine')[0].disabled = hasToBeDisabled
+}
+
+const changeDisableWhenError = () => {
+  changeDisableAllButtons(buttons, true)
+  changeDisableOneButton(document.getElementsByName('clean')[0], false)
+}
+
+//  TODO: millorar funció i a les que referencia
+const updateEnableStatus = () => {
+  if (errorType !== '') {
+    changeDisableWhenError()
+  } else {
+    changeDisableAllButtons(buttons, false)
+    if (currentNumberisNull && accumulatedNumber === null) {
+      changeDisableOneButton(document.getElementsByName('zero')[0], true)
+      changeDisableOneButton(document.getElementsByName('negate')[0], true)
+    } else if (currentNumberisNull && currentOperator !== null) {
+      changeDisableOneButton(document.getElementsByName('negate')[0], true)
+    } else {
+      if (currentNumberHasPoint) {
+        changeDisableOneButton(document.getElementsByName('point')[0], true)
+      }
+      if (countDigits(currentNumber, currentNumberPendingZeros) >= MAX_DIGITS_IN_DISPLAY) {
+        changeDisableNumberButtons(true)
+        changeDisableOneButton(document.getElementsByName('point')[0], true)
+      }
+    }
+  }
+}
+
+//  TODO: Arreglar funció perquè s'entengui
+const formatExponentialToDecimal = (exponentialString) => {
+  let decimalString = ''
   const positionOfE = exponentialString.indexOf('e')
   let significand = exponentialString.substring(0, positionOfE)
-  const orderOfMagnitude = exponentialString.substring(positionOfE + 1)
-  console.log('N: ' + exponentialString + 'pE: ' + positionOfE + ' S: ' + significand + '   OM: ' + orderOfMagnitude)
-  if (significand < 0) {
-    stringResultant = stringResultant.concat('-')
-    significand *= -1
+  const orderOfMagnitude = Number(exponentialString.substring(positionOfE + 1))
+  console.log('N: ' + exponentialString + ' pE: ' + positionOfE + ' S: ' + significand + '   OM: ' + orderOfMagnitude)
+  significand = significand.replace('.', '')
+  console.log('N: ' + exponentialString + ' pE: ' + positionOfE + ' S: ' + significand + '   OM: ' + orderOfMagnitude)
+  if (significand.includes('-')) {
+    decimalString = decimalString.concat('-')
+    significand = significand.substring(1)
   }
   if (orderOfMagnitude < 0) {
-    stringResultant = stringResultant.concat('0,')
-    for (let i = -1; i > orderOfMagnitude; i--) {
-      stringResultant = stringResultant.concat('0')
-    }
-    stringResultant = stringResultant.concat(significand)
+    console.log(typeof(significand))
+    decimalString = decimalString.concat('0.')
+    decimalString += '0'.repeat(-Number(orderOfMagnitude)-1)  
+    decimalString = decimalString.concat(significand)
   } else {
-    stringResultant = stringResultant.concat(significand)
-    for (let i = 0; i < orderOfMagnitude; i++) {
-      stringResultant = stringResultant.concat('0')
-    }
+    decimalString = decimalString.concat(significand)
+    decimalString += '0'.repeat(orderOfMagnitude-significand.length+1) 
   }
-  return (stringResultant)
+  return (decimalString)
 }
 
-const lenNumber = (number, pendingZeroDecimals) => {
+const countDigits = (number, pendingZeroDecimals) => {
   let stringNumber = String(number)
   if (stringNumber.includes('e')) {
-    stringNumber = exponentialToString(stringNumber)
+    stringNumber = formatExponentialToDecimal(stringNumber)
   }
   stringNumber = stringNumber.replace('-', '')
   stringNumber = stringNumber.replace('.', '')
   return (stringNumber.length + pendingZeroDecimals)
 }
 
-const roundNumber = (number) => {
-  const maxDecimals = MAX_DIGITS_IN_DISPLAY - lenNumber(Math.round(number), 0)
+const roundNumber = (number, maxDigits) => {
+  const maxDecimals = maxDigits - countDigits(Math.round(number), 0)
   let roundedNumber = number.toFixed(maxDecimals)
   roundedNumber = parseFloat(roundedNumber)
   if (roundedNumber === 0 && number !== roundedNumber) {
-    roundedNumber = 'ERROR'
+    errorType = 'Number too insignificant'
   }
   return (roundedNumber)
+}
+
+const formatNumberToDisplay = (number) => {
+  let displayValue = String(number)
+  if (displayValue.includes('e')) {
+    displayValue = formatExponentialToDecimal(displayValue)
+  } else if (currentNumberHasPoint) {
+    if (!displayValue.includes('.')) {
+      displayValue = displayValue.concat('.')
+    }
+    displayValue += '0'.repeat(currentNumberPendingZeros)
+  }
+  displayValue = displayValue.replace('.', ',')
+  return (displayValue)
 }
 
 const resetCurrentNumber = () => {
   currentNumberisNull = true
   currentNumber = 0
-  pendingZeros = 0
+  currentNumberPendingZeros = 0
   currentNumberHasPoint = false
-}
-
-const reset = () => {
-  operator = null
-  accumulatedNumber = null
-  resetCurrentNumber()
-  setDisplay(0)
-  changeDisableAllButtons(buttons, false)
-  changeDisableOneButton(document.getElementsByName('zero')[0], true)
-  changeDisableOneButton(document.getElementsByName('negate')[0], true)
-  unhighlightAllButtons(buttons)
 }
 
 const setDisplay = (value) => {
   let displayValue
-  if (value === 'ERROR') {
-    displayValue = value
+  if (errorType !== '') {
+    displayValue = 'ERROR'
   } else {
-    displayValue = String(value).replace('.', ',')
-    if (displayValue.includes('e')) {
-      displayValue = exponentialToString(displayValue)
-    } else if (currentNumberHasPoint) {
-      if (!displayValue.includes(',')) {
-        displayValue = displayValue.concat(',')
-      }
-      for (let i = 0; i < pendingZeros; i++) {
-        displayValue = displayValue.concat('0')
-      }
-    }
+    displayValue = formatNumberToDisplay(value)
   }
   display.innerHTML = displayValue
 }
 
-const negateNum = (number) => {
-  number *= -1
-  return (number)
+const reset = () => {
+  currentOperator = null
+  accumulatedNumber = null
+  errorType = ''
+  resetCurrentNumber()
+  setDisplay(0)
+  updateEnableStatus()
+  unhighlightAllButtons(buttons)
 }
 
 const appendNumber = (number, numberToAppend, hasPoint, pendingZeroDecimals) => {
   let result
-  if (lenNumber(number, pendingZeros) < MAX_DIGITS_IN_DISPLAY) {
+  if (countDigits(number, currentNumberPendingZeros) < MAX_DIGITS_IN_DISPLAY) {
     if (hasPoint) {
-      console.log('lenFloat: ' + lenNumber(number, 0) + ' lenInt: ' + lenNumber(Math.round(number)))
-      const numDecimals = lenNumber(number, 0) - lenNumber(Math.round(number), 0) + 1 + pendingZeroDecimals
+      const numDecimals = countDigits(number, 0) - countDigits(Math.round(number), 0) + 1 + pendingZeroDecimals
       result = number + ((numberToAppend * Math.pow(0.1, numDecimals)))
-      console.log('NumDec: ' + numDecimals + ' append: ' + result)
     } else {
       result = number * 10 + numberToAppend
     }
   } else {
     result = currentNumber
   }
-  return (roundNumber(result))
+  return (roundNumber(result, MAX_DIGITS_IN_DISPLAY))
+}
+
+const negateNumber = (number) => {
+  number *= -1
+  return (number)
 }
 
 const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
-  let result
+  let result = 0
   switch (operatorType) {
     case '+':
       result = firstOperant + secondOperant
@@ -136,16 +197,17 @@ const operate = (firstOperant, secondOperant, operatorType, maxDigits) => {
       break
     case '/':
       if (secondOperant === 0) {
-        result = 'ERROR'
+        errorType = 'Division by 0'
       } else {
         result = firstOperant / secondOperant
       }
       break
   }
-  if (result === 'ERROR' || lenNumber(Math.round(result), 0) > maxDigits) {
-    result = 'ERROR'
-  } else {
-    result = roundNumber(result)
+  if (countDigits(Math.round(result), 0) > maxDigits) {
+    errorType = 'Too long number'
+  } 
+  if (errorType === '') {
+    result = roundNumber(result, MAX_DIGITS_IN_DISPLAY)
   }
   return (result)
 }
@@ -154,130 +216,61 @@ const pressingNumber = (newNumber) => {
   if ((currentNumber === 0 && !currentNumberHasPoint) || currentNumberisNull) {
     currentNumber = newNumber
   } else if (newNumber === 0 && currentNumberHasPoint) {
-    pendingZeros++
+    currentNumberPendingZeros++
   } else {
-    currentNumber = appendNumber(currentNumber, newNumber, currentNumberHasPoint, pendingZeros)
-    pendingZeros = 0
+    currentNumber = appendNumber(currentNumber, newNumber, currentNumberHasPoint, currentNumberPendingZeros)
+    currentNumberPendingZeros = 0
   }
   currentNumberisNull = false
   setDisplay(currentNumber)
-  if (currentNumber === 'ERROR') {
-    changeDisableWhenError()
-  } else {
-    changeDisableAllButtons(buttons, false)
-    if (currentNumberHasPoint) {
-      changeDisableOneButton(document.getElementsByName('point')[0], true)
-    }
-    if (lenNumber(currentNumber, pendingZeros) >= MAX_DIGITS_IN_DISPLAY) {
-      changeDisableNumberButtons(true)
-      changeDisableOneButton(document.getElementsByName('point')[0], true)
-    }
-  }
+  updateEnableStatus()
 }
 
 const pressingNegate = () => {
-  currentNumber = negateNum(currentNumber)
+  currentNumber = negateNumber(currentNumber)
   setDisplay(currentNumber)
 }
 
 const pressingPoint = () => {
-  if (!currentNumberHasPoint && lenNumber(currentNumber, pendingZeros) < MAX_DIGITS_IN_DISPLAY) {
+  if (!currentNumberHasPoint && countDigits(currentNumber, currentNumberPendingZeros) < MAX_DIGITS_IN_DISPLAY) {
     currentNumberHasPoint = true
-  }
-  setDisplay(currentNumber)
+  } 
   currentNumberisNull = false
-  changeDisableAllButtons(buttons, false)
-  changeDisableOneButton(document.getElementsByName('point')[0], true)
+  setDisplay(currentNumber)
+  updateEnableStatus()
 }
 
 const pressingOperator = (newOperator) => {
-  if (operator !== null && !currentNumberisNull) {
-    accumulatedNumber = operate(accumulatedNumber, currentNumber, operator, MAX_DIGITS_IN_DISPLAY)
+  if (currentOperator !== null && !currentNumberisNull) {
+    accumulatedNumber = operate(accumulatedNumber, currentNumber, currentOperator, MAX_DIGITS_IN_DISPLAY)
     currentNumberHasPoint = false
     setDisplay(accumulatedNumber)
-    if (accumulatedNumber === 'ERROR') {
-      changeDisableWhenError()
-    } else {
-      changeDisableAllButtons(buttons, false)
-    }
-  } else if (operator === null && accumulatedNumber === null) {
+  } else if (currentOperator === null && accumulatedNumber === null) {
     accumulatedNumber = currentNumber
-    changeDisableAllButtons(buttons, false)
-    changeDisableOneButton(document.getElementsByName('negate')[0], true)
   }
-  operator = newOperator
-  unhighlightAllButtons(buttons)
-  const nameOperator = getNameOperator(operator)
-  if (nameOperator !== null) {
-    highlightOneButton(document.getElementsByName(nameOperator)[0])
-  }
+  currentOperator = newOperator
   resetCurrentNumber()
+  updateEnableStatus()
+  updateHighlightStatus(currentOperator)
 }
 
 const pressingEqual = () => {
-  let displayValue
-  if (currentNumberisNull && operator !== null) {
-    displayValue = 'ERROR'
-    changeDisableWhenError()
+  let displayValue = 0
+  if (currentNumberisNull && currentOperator !== null) {
+    errorType = 'Not numbers to operate'
   } else {
-    if (operator === null) {
+    if (currentOperator === null) {
       accumulatedNumber = currentNumber
     } else {
-      accumulatedNumber = operate(accumulatedNumber, currentNumber, operator, MAX_DIGITS_IN_DISPLAY)
-      operator = null
+      accumulatedNumber = operate(accumulatedNumber, currentNumber, currentOperator, MAX_DIGITS_IN_DISPLAY)
+      currentOperator = null
     }
     resetCurrentNumber()
     displayValue = accumulatedNumber
-    if (displayValue === 'ERROR') {
-      changeDisableWhenError()
-    } else {
-      changeDisableAllButtons(buttons, false)
-    }
   }
+  updateEnableStatus()
   unhighlightAllButtons(buttons)
   setDisplay(displayValue)
-}
-
-const highlightOneButton = (button) => {
-  button.classList.add('highlighted')
-}
-
-const unhighlightOneButton = (button) => {
-  button.classList.remove('highlighted')
-}
-
-const unhighlightAllButtons = (buttonsList) => {
-  for (const button of buttonsList) {
-    unhighlightOneButton(button)
-  }
-}
-
-const changeDisableOneButton = (button, disabled) => {
-  button.disabled = disabled
-}
-
-const changeDisableAllButtons = (buttonsList, disabled) => {
-  for (const button of buttonsList) {
-    changeDisableOneButton(button, disabled)
-  }
-}
-
-const changeDisableNumberButtons = (disabled) => {
-  document.getElementsByName('zero')[0].disabled = disabled
-  document.getElementsByName('one')[0].disabled = disabled
-  document.getElementsByName('two')[0].disabled = disabled
-  document.getElementsByName('three')[0].disabled = disabled
-  document.getElementsByName('four')[0].disabled = disabled
-  document.getElementsByName('five')[0].disabled = disabled
-  document.getElementsByName('six')[0].disabled = disabled
-  document.getElementsByName('seven')[0].disabled = disabled
-  document.getElementsByName('eight')[0].disabled = disabled
-  document.getElementsByName('nine')[0].disabled = disabled
-}
-
-const changeDisableWhenError = () => {
-  changeDisableAllButtons(buttons, true)
-  changeDisableOneButton(document.getElementsByName('clean')[0], false)
 }
 
 const getEventsListenersButtons = () => {
@@ -302,11 +295,11 @@ const getEventsListenersButtons = () => {
 }
 
 const getEventsListenersKeyboard = () => {
-  document.addEventListener('keyup', (key) => {
-    if ((key.key <= 9 && key.key > 0) || key.key === '0') {
-      pressingNumber(Number(key.key))
+  document.addEventListener('keyup', (keyPressed) => {
+    if ((keyPressed.key <= 9 && keyPressed.key > 0) || keyPressed.key === '0') {
+      pressingNumber(Number(keyPressed.key))
     } else {
-      switch (key.key) {
+      switch (keyPressed.key) {
         case 'Control':
           pressingNegate()
           break
@@ -339,13 +332,17 @@ const getEventsListenersKeyboard = () => {
 const MAX_DIGITS_IN_DISPLAY = 10
 const display = document.querySelector('div[name="display"] span')
 const buttons = document.getElementsByName('keypad')[0].getElementsByTagName('button')
-let operator
+let currentOperator
 let accumulatedNumber
 let currentNumberisNull
 let currentNumber
 let currentNumberHasPoint
-let pendingZeros
+let currentNumberPendingZeros
+let errorType
 
 reset()
 getEventsListenersButtons()
 getEventsListenersKeyboard()
+
+//  Mirar si updateButtonsStatus es pot posar al final de algo? (al set display)
+//  Moure crida a la funció format number to display?
