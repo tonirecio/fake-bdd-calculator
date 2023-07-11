@@ -23,7 +23,7 @@ const setDisplay = value => {
 const formatNumberForDisplay = number => {
   let displayValue = ''
   if (countDigits(number) <= MAX_DIGITS_IN_DISPLAY && isValidNumber(number)) {
-    displayValue = number.toString().replace('.', ',')
+    displayValue = String(number).replace('.', ',')
     if (
       isDecimal &&
       !displayValue.includes(',') &&
@@ -71,14 +71,12 @@ const reset = () => {
   isDecimal = false
   isNewOperation = false
 
-  setAllButtonsDisabledState(false)
-  setOperationButtonsHighlightedState(false)
+  updateButtonsDisabledState()
+  updateButtonsHighlightedState()
 }
 
 const resetAndDisplay = () => {
   reset()
-  setButtonDisabledState('negate', true)
-  setButtonDisabledState('zero', true)
   setDisplay(String(firstOperand))
 }
 
@@ -118,14 +116,7 @@ const handleNumberClick = number => {
 
   setCurrentOperandValue(currentOperand)
 
-  if (currentOperand > 0) {
-    setButtonDisabledState('negate', false)
-    setButtonDisabledState('zero', false)
-  }
-  if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
-    setNumberButtonsDisabledState(true)
-    setButtonDisabledState('point', true)
-  }
+  updateButtonsDisabledState()
   setDisplay(formatNumberForDisplay(currentOperand))
 }
 
@@ -137,8 +128,7 @@ const handlePointClick = () => {
   }
   isDecimal = true
 
-  setButtonDisabledState('point', true)
-  setButtonDisabledState('zero', false)
+  updateButtonsDisabledState()
   setDisplay(formatNumberForDisplay(currentOperand))
 }
 
@@ -171,12 +161,8 @@ const handleOperationClick = newOperation => {
   decimalMultiplier = 0.1
   isNewOperation = false
 
-  setButtonDisabledState('point', false)
-  setButtonDisabledState('clean', false)
-  setButtonDisabledState('negate', true)
-  setNumberButtonsDisabledState(false)
-  setOperationButtonsHighlightedState(false)
-  setButtonHighlightedState(newOperation, true)
+  updateButtonsDisabledState()
+  updateButtonsHighlightedState()
 }
 
 const performOperation = (operand1, operand2, operation) => {
@@ -217,19 +203,60 @@ const handleEqualClick = () => {
   }
 
   if (!isError) {
-    setAllButtonsDisabledState(false)
-    if (numberToBeDisplayed === 0) {
-      setButtonDisabledState('negate', true)
-      setButtonDisabledState('zero', true)
-    }
-    setOperationButtonsHighlightedState(false)
     setDisplay(formatNumberForDisplay(numberToBeDisplayed))
   } else {
-    setAllButtonsDisabledState(true)
-    setButtonDisabledState('clean', false)
-    setOperationButtonsHighlightedState(false)
     setDisplay('ERROR')
   }
+  updateButtonsDisabledState()
+}
+
+const updateButtonsDisabledState = () => {
+  const currentOperand = getCurrentOperandValue()
+
+  if (
+    countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY ||
+    currentOperation !== ''
+  ) {
+    setAllButtonsDisabledState(false)
+    setButtonDisabledState('negate', true)
+  } else if (countDigits(currentOperand) === MAX_DIGITS_IN_DISPLAY) {
+    setNumberButtonsDisabledState(true)
+    setButtonDisabledState('point', true)
+  } else if (String(currentOperand).includes('.')) {
+    setButtonDisabledState('point', true)
+  } else if (currentOperation === 'divide' && secondOperand === 0) {
+    setAllButtonsDisabledState(true)
+    setButtonDisabledState('clean', false)
+  } else if (currentOperand > 0) {
+    setButtonDisabledState('negate', false)
+    setButtonDisabledState('zero', false)
+  } else if (currentOperand === 0) {
+    setButtonDisabledState('negate', true)
+    setButtonDisabledState('zero', true)
+  }
+  document.getElementsByName('clean')[0].addEventListener('click', () => {
+    setAllButtonsDisabledState(false)
+    setButtonDisabledState('negate', true)
+    setButtonDisabledState('zero', true)
+  })
+  document.getElementsByName('equal')[0].addEventListener('click', () => {
+    if (countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY) {
+      setAllButtonsDisabledState(false)
+    }
+  })
+}
+
+const updateButtonsHighlightedState = () => {
+  if (currentOperation !== '') {
+    setOperationButtonsHighlightedState(false)
+    setButtonHighlightedState(currentOperation, true)
+  }
+  document.getElementsByName('clean')[0].addEventListener('click', () => {
+    setOperationButtonsHighlightedState(false)
+  })
+  document.getElementsByName('equal')[0].addEventListener('click', () => {
+    setOperationButtonsHighlightedState(false)
+  })
 }
 
 const numberButtons = [
@@ -317,10 +344,10 @@ document
   .addEventListener('click', () => handlePointClick())
 document
   .getElementsByName('clean')[0]
-  .addEventListener('click', resetAndDisplay)
+  .addEventListener('click', () => resetAndDisplay())
 document
   .getElementsByName('negate')[0]
-  .addEventListener('click', handleNegateClick)
+  .addEventListener('click', () => handleNegateClick())
 document
   .getElementsByName('sum')[0]
   .addEventListener('click', () => handleOperationClick('sum'))
@@ -335,7 +362,7 @@ document
   .addEventListener('click', () => handleOperationClick('divide'))
 document
   .getElementsByName('equal')[0]
-  .addEventListener('click', handleEqualClick)
+  .addEventListener('click', () => handleEqualClick())
 
 document.body.addEventListener('keydown', event => {
   const key = event.key
@@ -365,6 +392,9 @@ document.body.addEventListener('keydown', event => {
         break
       case '/':
         handleOperationClick('divide')
+        break
+      case '=':
+        handleEqualClick()
         break
       default:
         break
