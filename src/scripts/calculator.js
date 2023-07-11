@@ -45,9 +45,9 @@ const pressNumber = (buttonNumber) => {
   setDisplay(currentValue)
 
   if (currentValue.length >= MAX_DIGITS_IN_DISPLAY) {
-    disableButtons();
+    disableButtons()
   }
-};
+}
 
 const negateInvertNumber = () => {
   if (currentValue !== '0' && currentValue !== '0.') {
@@ -73,18 +73,18 @@ const floatCurrentValue = () => {
 }
 
 const disableNumericButtonsAndPoint = () => {
-  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point'];
+  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
   buttonNamesArr.forEach(button => {
-    document.getElementsByName(button)[0].disabled = true;
-  });
-};
+    document.getElementsByName(button)[0].disabled = true
+  })
+}
 
 const enableNumericButtonsAndPoint = () => {
-  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point'];
+  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point']
   buttonNamesArr.forEach(button => {
-    document.getElementsByName(button)[0].disabled = false;
-  });
-};
+    document.getElementsByName(button)[0].disabled = false
+  })
+}
 
 const concludeOperation = () => {
   if (currentValueOperator === null) {
