@@ -43,7 +43,11 @@ const pressNumber = (buttonNumber) => {
     }
   }
   setDisplay(currentValue)
-}
+
+  if (currentValue.length >= MAX_DIGITS_IN_DISPLAY) {
+    disableButtons();
+  }
+};
 
 const negateInvertNumber = () => {
   if (currentValue !== '0' && currentValue !== '0.') {
@@ -68,6 +72,20 @@ const floatCurrentValue = () => {
   setDisplay(currentValue)
 }
 
+const disableNumericButtonsAndPoint = () => {
+  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point'];
+  buttonNamesArr.forEach(button => {
+    document.getElementsByName(button)[0].disabled = true;
+  });
+};
+
+const enableNumericButtonsAndPoint = () => {
+  const buttonNamesArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'point'];
+  buttonNamesArr.forEach(button => {
+    document.getElementsByName(button)[0].disabled = false;
+  });
+};
+
 const concludeOperation = () => {
   if (currentValueOperator === null) {
     if (currentValue.endsWith('.')) {
@@ -81,6 +99,10 @@ const concludeOperation = () => {
   let outcome = null
   switch (currentValueOperator) {
     case 'sum':
+      if (secondOperator === firstOperator) {
+        displayError()
+        return
+      }
       outcome = firstOperator + secondOperator
       break
     case 'subtract':
