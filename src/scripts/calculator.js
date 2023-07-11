@@ -153,34 +153,28 @@ const setDisplay = (value) => {
   display.innerHTML = value
 }
 
-const handleExponentialNumbers = (value, valueToConcat) => {
-  concatened = false
-  valueDisplay = value.toString()
-  if(!valueDisplay.includes('e-')){
+const handleExponentialNumbers = (value) => {
+  exponentialNumberToString = value.toString()
+  if(!exponentialNumberToString.includes('e-')){
     return
   }
   negativeNumber = false
-  numZeros = valueDisplay.slice(-1) - 1
-  number = valueDisplay.charAt(0)
+  numZeros = exponentialNumberToString.slice(-1) - 1
+  number = exponentialNumberToString.charAt(0)
   if(number === '-'){
-    number = valueDisplay.charAt(1)
+    number = exponentialNumberToString.charAt(1)
     negativeNumber = true
   }
-  valueDisplay = '0,'
+  valueForDisplay = '0,'
   for(cont = 0; cont < numZeros; cont++){
-    valueDisplay += "0"
+    valueForDisplay += "0"
   }
-  valueDisplay += number
+  valueForDisplay += number
   if(negativeNumber === true){
-    valueDisplay = '-' + valueDisplay
+    valueForDisplay = '-' + valueForDisplay
   }
-
-  if(valueToConcat != null){
-    valueDisplay += valueToConcat
-    concatened = true
-  }
-  inputValue = parseFloat(valueDisplay)
-  return concatened
+  inputValue = parseFloat(valueForDisplay)
+  return valueForDisplay
 }
 
 const resetCalculator = () => {
@@ -247,6 +241,7 @@ const handleOperation = () => {
   } else {
     controlDecimalsResult()
     setDisplay(result)
+    result = parseFloat(result, 10)
     firstNumber = null
     operator = null
     secondNumber = null
@@ -255,15 +250,16 @@ const handleOperation = () => {
 }
 
 const controlDecimalsResult = () => {
-  inputValueToString = inputValue
-  if(inputValue % 1 != 0){
-    inputValueToString.toString().replace(".", "")
-    lengthOfResult = inputValueToString.length 
+  inputValueToString = result
+  if(result % 1 != 0){
+    lengthOfResult = inputValueToString.toString().replace(".", "").length
     if(lengthOfResult > MAX_DIGITS_IN_DISPLAY){
         lengthOfResult = MAX_DIGITS_IN_DISPLAY
-    }   
-    result = result.toPrecision(lengthOfResult) * 1
+    }
+    console.log(lengthOfResult);
+    result = result.toPrecision(lengthOfResult) 
     result = parseFloat(result, 10)
+    result = handleExponentialNumbers(result)
   } else if(inputValueToString.length > MAX_DIGITS_IN_DISPLAY){
     showMessageError()
   }
