@@ -22,7 +22,6 @@ const setStateButtonLogic = (status) => {
   switch (status) {
     case 'clear':
       setStateNumericalButtonSet(true)
-      // setEnableStateButton
       setStateButton('point', true)
       setStateOperationButtonSet(true)
       setStateButton('zero', false)
@@ -69,7 +68,7 @@ const setStateAllButtons = (boolStatus) => {
   setStateOperationButtonSet(boolStatus)
   setStateNonOperationButtonSet(boolStatus)
 }
-// agruparlo
+
 const setStateNumericalButtonSet = (boolStatus) => {
   setStateButton('zero', boolStatus)
   setStateButton('one', boolStatus)
@@ -260,10 +259,11 @@ const completeOperation = () => {
         console.warn('[WARNING] ' + currentOperation + ' has not been implemented yet.')
     }
     if (Math.abs(resultNum) < Math.pow(10, MAX_DIGITS_IN_DISPLAY)) {
-      // character length of the integer number (including - sign if applicable)
-      const integerLength = (Math.round(resultNum)).toString().length
-      // parseFloat forces x to not have trailing 0s
-      resultNum = parseFloat(resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - integerLength))
+      // character length of the whole number (including - sign if applicable)
+      const wholeNumberLength = (Math.round(resultNum)).toString().length
+      // result number has MAX_DIGITS between whole and fractional
+      // parseFloat done to avoid trailing 0s
+      resultNum = parseFloat(resultNum.toFixed(MAX_DIGITS_IN_DISPLAY - wholeNumberLength))
     } else {
       resultNum = NaN
     }
