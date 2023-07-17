@@ -201,8 +201,8 @@ const handleOperator = (operation) => {
     firstNumber = result
   }
   operator = operation
-  setDisplay(firstNumber)
   resetDisplay()
+  setDisplay(firstNumber)
   numDecimals = 10
   countZeros = 0
   secondNumber = 0
