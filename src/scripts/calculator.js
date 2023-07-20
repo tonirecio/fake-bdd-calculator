@@ -8,6 +8,7 @@ let currentOperation = ''
 let decimalMultiplier = 0.1
 let isDecimal = false
 let isNewOperation = false
+let isError = false
 
 const operations = {
   sum: (a, b) => a + b,
@@ -70,6 +71,7 @@ const reset = () => {
   decimalMultiplier = 0.1
   isDecimal = false
   isNewOperation = false
+  isError = false
 
   updateButtonsDisabledState()
   updateButtonsHighlightedState()
@@ -171,7 +173,6 @@ const performOperation = (operand1, operand2, operation) => {
 
 const handleEqualClick = () => {
   let numberToBeDisplayed = 0
-  let isError = false
 
   isDecimal = false
 
@@ -197,6 +198,10 @@ const handleEqualClick = () => {
       isNewOperation = true
 
       numberToBeDisplayed = firstOperand
+      if (countDigits(operationResult) >= MAX_DIGITS_IN_DISPLAY) {
+        console.log('op')
+        isError = true
+      }
     } else {
       isError = true
     }
@@ -212,28 +217,37 @@ const handleEqualClick = () => {
 
 const updateButtonsDisabledState = () => {
   const currentOperand = getCurrentOperandValue()
+  const currentOperandDigitCount = countDigits(currentOperand)
 
-  if (
-    countDigits(currentOperand) >= MAX_DIGITS_IN_DISPLAY ||
-    currentOperation !== ''
-  ) {
-    setAllButtonsDisabledState(false)
-    setButtonDisabledState('negate', true)
-  } else if (countDigits(currentOperand) === MAX_DIGITS_IN_DISPLAY) {
+  if (currentOperandDigitCount >= MAX_DIGITS_IN_DISPLAY) {
     setNumberButtonsDisabledState(true)
     setButtonDisabledState('point', true)
-  } else if (String(currentOperand).includes('.')) {
-    setButtonDisabledState('point', true)
-  } else if (currentOperation === 'divide' && secondOperand === 0) {
-    setAllButtonsDisabledState(true)
-    setButtonDisabledState('clean', false)
-  } else if (currentOperand > 0) {
-    setButtonDisabledState('negate', false)
-    setButtonDisabledState('zero', false)
-  } else if (currentOperand === 0) {
-    setButtonDisabledState('negate', true)
-    setButtonDisabledState('zero', true)
   }
+  if (currentOperation !== '' && !isError) {
+    setAllButtonsDisabledState(false)
+    setButtonDisabledState('negate', true)
+  }
+
+  setButtonDisabledState(
+    'zero',
+    (currentOperand === 0 && currentOperation === '') ||
+      currentOperandDigitCount >= MAX_DIGITS_IN_DISPLAY
+  )
+  setButtonDisabledState(
+    'negate',
+    currentOperand === 0 || currentOperand === null
+  )
+
+  if (isDecimal) {
+    setButtonDisabledState('point', true)
+  }
+
+  if (isError) {
+    setAllButtonsDisabledState(true)
+  }
+
+  setButtonDisabledState('clean', false)
+
   document.getElementsByName('clean')[0].addEventListener('click', () => {
     setAllButtonsDisabledState(false)
     setButtonDisabledState('negate', true)
