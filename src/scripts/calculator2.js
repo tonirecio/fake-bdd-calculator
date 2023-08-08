@@ -11,6 +11,35 @@ let decimalSymbolUsage = false
 let operandSymbolInUse = ''
 let operationResult = 0
 
+
+document.getElementsByName('zero')[0].addEventListener('click', () => {appendNumber(0)})
+document.getElementsByName('one')[0].addEventListener('click', () => {appendNumber(1)})
+document.getElementsByName('two')[0].addEventListener('click', () => {appendNumber(2)})
+document.getElementsByName('three')[0].addEventListener('click', () => {appendNumber(3)})
+document.getElementsByName('four')[0].addEventListener('click', () => {appendNumber(4)})
+document.getElementsByName('five')[0].addEventListener('click', () => {appendNumber(5)})
+document.getElementsByName('six')[0].addEventListener('click', () => {appendNumber(6)})
+document.getElementsByName('seven')[0].addEventListener('click', () => {appendNumber(7)})
+document.getElementsByName('eight')[0].addEventListener('click', () => {appendNumber(8)})
+document.getElementsByName('nine')[0].addEventListener('click', () => {appendNumber(9)})
+
+
+
+v
+
+
+const appendNumber  = (numberValue) => {
+    if (decimalSymbolUsage) {
+        currentValue = appendDecimalNumbers(currentValue, numberValue)
+    } else {
+        currentValue = appendIntegerNumbers(currentValue, numberValue)
+    }
+}
+
+
+
+
+
 const updateDisplay = (value) => {
   value = value.toString().replace('.', ',')
   display.innerHTML = value
